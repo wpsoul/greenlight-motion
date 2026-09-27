@@ -4,7 +4,7 @@
 made of animated UI elements, new motion graphics in the same style, or real 3D scenes.
 By [WPSoul](https://greenlightdash.pro), the makers of [GreenLight Dash](https://greenlightdash.pro).
 
-- **267 GL Motion items** in one clean style: buttons, toggles, forms, cards, charts, dashboards,
+- **275 GL Motion items** in one clean style: buttons, toggles, forms, cards, charts, dashboards,
   checkouts, coupons, countdowns, notifications, chats, AI prompts, galleries, carousels and titles.
   A searchable registry lists every item, and a guide shows the agent how to build new ones in the
   same style.
