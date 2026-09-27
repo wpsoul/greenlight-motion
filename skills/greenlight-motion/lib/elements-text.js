@@ -3,14 +3,14 @@
 const { rect, circle, ellipse, text, path, icon, group, k, enter, exit, pop, press, cursorLayer, stagger } = UIK.h;
 
 // ── local helpers ──
-// Word widths below are measured in Helvetica (the stage font = the Video Editor's) at the given size /
+// Word widths below are measured in Helvetica (the stage font) at the given size /
 // weight / letter-spacing (measured on the stage itself), so words that sit side by side as
 // separate layers keep natural spacing.
 // the kit's opening beat: the main shape pops in from empty
 const popIn = (t = 0.1, from = 0.65) => ({ scale: [from, [t, t + 0.52, 1, 'Back Out']], opacity: [0, [t, t + 0.12, 1, 'Linear']] });
 // fade only (rules, tracks, backdrops)
 const fadeIn = (t, dur = 0.3) => ({ opacity: [0, [t, t + dur, 1, 'Power2 Out']] });
-// time u (0…1) at which a VE easing reaches progress p — to key events on a line that draws with one easing
+// time u (0…1) at which an easing reaches progress p — to key events on a line that draws with one easing
 const invEase = (name, p) => {
   const f = UIK.ease(name); let a = 0, b = 1;
   for (let i = 0; i < 40; i++) { const m = (a + b) / 2; if (f(m) < p) a = m; else b = m; }

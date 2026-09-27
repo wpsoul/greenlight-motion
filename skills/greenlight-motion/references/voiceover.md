@@ -1,7 +1,7 @@
 # Voice-over
 
-Ask the user after they approve the preview; draft the lines from the script, spoken, about **2.5 words
-per second**. Show them the lines before recording.
+Write the lines with the shots (the storyboard shows them, so the user reads them there); record after they
+approve the preview. Spoken, about **2.5 words per second**. Show them the lines before recording.
 
 ## Long takes: the default
 
@@ -35,9 +35,9 @@ artist would give you.
   nearest to where the words put each boundary. Record with `--fit`, or run `--place --fit` afterwards, and
   every scene of the take ends in the pause after its part. The last scene keeps at least its length (a held
   end card) plus a beat after the voice. Without `--fit`, the tool says which scenes are out of step.
-- Give every part enough words for its scene's animation. If an item needs 3.5 s to play and its part is
-  spoken in 2 s, the cut comes before it settles (`--fit` warns). Add words, or pick a shorter item.
-- `--script` shows each take with its parts, their rough spoken length and their scenes' current lengths.
+- Give every part enough words for its scene's animation. If a scene needs 3.5 s to play and its part is
+  spoken in 2 s, the cut comes before it settles (`--fit` warns). Add words, or shorten the scene.
+- `--lines` shows each take with its parts, their rough spoken length and their scenes' current lengths.
 
 ## Short lines (the exception)
 
@@ -57,7 +57,7 @@ name said as it types). A line without `at` starts `--lead` into the scene (defa
 scene's previous line after a short breath.
 
 ```
-node SKILL/tools/voiceover.mjs <project> --script     # lines + scene timing + rough spoken length
+node SKILL/tools/voiceover.mjs <project> --lines      # lines + scene timing + rough spoken length
 ```
 
 ## Recording

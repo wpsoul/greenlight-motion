@@ -1,53 +1,56 @@
 # Contributing to GreenLight Motion
 
-Everything lives in this one folder. `skills/greenlight-motion/lib/` is the library itself: the engine and
-every item. There is no second copy anywhere. GreenLight Dash's Video Editor, its lab page and its
-bundled agent skill all read these same files.
+Everything lives in this one folder. `skills/greenlight-motion/lib/` holds the scene runtime (`clock.js`, `scene.js`,
+`overrides.js`, `editor.js`, `player.js`) and the library: its engine (`engine.js`, `easings.js`, `film.js`,
+`html-export.js`) and every library scene (`elements-*.js`). There is no second copy anywhere. GreenLight Dash's
+Video Editor, its lab page and its bundled agent skill all read these same files.
 
-## Adding or changing items
+## Library scenes
 
-1. Read [skills/greenlight-motion/references/building-items.md](skills/greenlight-motion/references/building-items.md).
-   It covers the item spec, the style and motion rules, recipes and traps. The full API is in
-   [engine-api.md](skills/greenlight-motion/references/engine-api.md).
-2. Add the item to the matching `lib/elements-<category>.js` with `UIK.define({ … })`.
-   - **A new file** goes into `K.FILES` in `lib/catalog.js`, since everything loads exactly that list.
-     In the GreenLight Dash repo, also add its `<script>` tag to `html/ui-motion-kit-lab.html`.
-   - **A new category** needs a `key: 'Label'` entry in `K.CATS` in `catalog.js`. Galleries follow
-     that order, then the order items are defined in.
-3. Rebuild the registry. Agents search this file, so it must match `lib/`:
+A library scene is a `UIK.define({ id, name, cat, T, build(H, P) })` in the matching `lib/elements-<category>.js`:
+a tree of layers (`rect`, `ellipse`, `text`, `path`, `icon`, `group`, `photo`, `canvas`) whose animated values are
+keyframe tracks of `[t0, t1, value, easing]` segments, a pure function of time. The existing files are the reference:
+read two or three scenes of the same category before you write one, and keep to their look (the theme's colours by
+name, Helvetica Neue, one accent) and their motion (the spring curves, one easing table at the top of the file).
+
+1. Add the scene with `UIK.define({ … })`.
+   - **A new file** goes into `K.FILES` in `lib/catalog.js`, since everything loads exactly that list. In the
+     GreenLight Dash repo, also add its `<script>` tag to `html/ui-motion-kit-lab.html`.
+   - **A new category** needs a `key: 'Label'` entry in `K.CATS` in `catalog.js`. Galleries follow that order, then
+     the order scenes are defined in.
+   - Give every text a film may re-word an `id`, and every picture slot an `id` (or a shared `src`).
+2. Rebuild the registry. Agents search this file, so it must match `lib/`:
    `node skills/greenlight-motion/tools/registry.mjs`
-4. Look at the item and run the checks (any folder works as `<dir>`):
+3. Look at the scene and run the checks (any folder works as `<dir>`):
    ```
    node skills/greenlight-motion/tools/stills.mjs <dir> --item <id> --n 6
    node skills/greenlight-motion/tools/stills.mjs <dir> --item <id> --t 1.2,1.5,2 --w 960
    node skills/greenlight-motion/tools/stills.mjs <dir> --item <id> --n 4 --theme dark
    node skills/greenlight-motion/tools/check.mjs  <dir> --item <id>
    ```
-5. **The engine is shared by every item.** Change it only in backward-compatible ways, and run
-   `check.mjs <dir> --all` afterwards. It builds every item and converts it to the Video Editor and
-   After Effects formats.
+4. **The engine is shared by every scene.** Change it only in backward-compatible ways, and run
+   `check.mjs <dir> --all` afterwards: it builds every scene.
 
-### Items drawn in code
+## The scene runtime
 
-A gallery or effect that is easier to draw than to build from layers can be one `canvas` layer with a
-`draw(ctx, { width, height, t, images })` function (see `references/engine-api.md` → Canvas layers).
-Such an item is plain HTML: it declares `formats: ['html']`, has no parameters (one item is one fixed
-look), and takes the scene's pictures as a list. Keep drawing pure: no `Date`, no `Math.random`, no
-state between frames.
+Scene pages ([references/scenes.md](skills/greenlight-motion/references/scenes.md)) get `clock.js` (the page clock),
+`overrides.js` (the user's edits), `scene.js` (the film's colours, pictures, `GLScene`) and, in the preview only,
+`editor.js` (the element picker). `player.js` plays a film's scene pages on one timeline and makes the film page
+renders record. `runtime/motion.js` builds every page from the scenario; `tools/project.mjs` loads a project and
+checks it. A change here reaches every film: run the gates below.
 
 ### In the GreenLight Dash repo
 
-This folder is `plugins/greenlight-motion` there. The repo's own gates cover what a browser or the app is
-needed for:
+This folder is `plugins/greenlight-motion` there. The repo's own gates cover what a browser or the app is needed for:
 
-- `tests/ui-motion-kit-lab/`: contact sheets, frame bounds, text fit, and item-vs-editor render
-  comparisons (`ve_compare.cjs`, under ~2 % of pixels off is glyph-edge noise). It also has the
-  Presets-tab gate `verify_presets_panel.mjs`.
-- `tests/greenlight-motion/`: `verify_board.mjs` runs the skill end to end on a board.
-  `verify_standalone.mjs` runs it from a copy of this folder, outside the repo.
+- `tests/greenlight-motion/`: `verify_scenes.mjs` (the scene runtime, the player, exports), `verify_edits.mjs`
+  (editing in the preview), `verify_board.mjs` (the skill end to end on a board), `verify_standalone.mjs` (from a copy
+  of this folder, outside the repo).
+- `tests/ui-motion-kit-lab/`: contact sheets, frame bounds and text fit for the library, and the Presets-tab gate
+  `verify_presets_panel.mjs`.
 
-The app picks up a library change with its next frontend build. The desktop build copies
-`skills/greenlight-motion` into the app, where the agent terminal's **GL Motion Film** preset points.
+The app picks up a change with its next frontend build. The desktop build copies `skills/greenlight-motion` into the
+app, where the agent terminal's **GL Motion Film** preset points.
 
 ## Releasing a version
 

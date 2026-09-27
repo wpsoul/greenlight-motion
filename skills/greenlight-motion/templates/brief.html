@@ -136,9 +136,6 @@ body { margin: 0; }
 .mubf-opt:hover .mubf-card { border-color: var(--hair); }
 .mubf-opt > input:checked + .mubf-card { border-color: var(--mu-acc); box-shadow: inset 0 0 0 1px var(--mu-acc); background: var(--tint); }
 .mubf-opt > input:focus-visible + .mubf-card { outline: 2px solid var(--mu-txt); outline-offset: 2px; }
-.mubf-opt.is-off { cursor: not-allowed; }
-.mubf-opt.is-off .mubf-card { opacity: 0.45; }
-.mubf-opt.is-off:hover .mubf-card { border-color: var(--mu-line); }
 .mubf-card b { font-weight: 600; font-size: 15px; letter-spacing: -0.01em; line-height: 1.3; }
 .mubf-card-txt { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
 /* a row card: icon | text | indicator (the goal list, and every list on a phone) */
@@ -504,8 +501,7 @@ body { margin: 0; }
       <!-- 3 Look -->
       <section class="mubf-step is-wide" data-i="2" aria-labelledby="mubf-h2" hidden>
         <header class="mubf-sh"><div class="mubf-eyebrow">Step 3 of 6</div><h1 id="mubf-h2" tabindex="-1">The look</h1>
-          <p>How the film is built, where its scenes come from, and the colours they wear.</p></header>
-        <div class="mubf-group" role="radiogroup" aria-labelledby="l-engine"><div class="mubf-label" id="l-engine">Engine</div><div class="mubf-opts is-3" id="g-engine"></div></div>
+          <p>Where the scenes come from, and the colours they wear.</p></header>
         <div class="mubf-group" role="radiogroup" aria-labelledby="l-source" id="g-source-group"><div class="mubf-label" id="l-source">Scenes</div><div class="mubf-opts is-4" id="g-source"></div></div>
         <div class="mubf-row">
           <div class="mubf-group" role="radiogroup" aria-labelledby="l-theme"><div class="mubf-label" id="l-theme">Theme</div><div class="mubf-seg" id="g-theme"></div></div>
@@ -513,7 +509,7 @@ body { margin: 0; }
         </div>
         <div class="mubf-lib" id="g-lib">
           <div class="mubf-lib-head">
-            <div><h2>Pick the items you like</h2><p id="g-lib-sub">Optional. Hover to play, click to pick — your agent uses them where they fit the story.</p></div>
+            <div><h2>Pick the scenes you like</h2><p id="g-lib-sub">Optional. Hover to play, click to pick — your agent uses them where they fit the story.</p></div>
             <div class="mubf-count" id="g-count" aria-live="polite"><span><b id="g-count-n">0</b> picked</span><button type="button" class="mubf-link" id="g-clear">Clear</button></div>
           </div>
           <div class="mubf-tools">
@@ -538,7 +534,8 @@ body { margin: 0; }
       <section class="mubf-step" data-i="4" aria-labelledby="mubf-h4" hidden>
         <header class="mubf-sh"><div class="mubf-eyebrow">Step 5 of 6</div><h1 id="mubf-h4" tabindex="-1">How we work</h1>
           <p>What you see before the render, and what you get at the end.</p></header>
-        <div class="mubf-group" role="radiogroup" aria-labelledby="l-story"><div class="mubf-label" id="l-story">Storyboard</div>
+        <div class="mubf-group" role="radiogroup" aria-labelledby="l-mode"><div class="mubf-label" id="l-mode">How we work</div><div class="mubf-opts is-3" id="g-mode"></div></div>
+        <div class="mubf-group" role="radiogroup" aria-labelledby="l-story" id="g-story-group"><div class="mubf-label" id="l-story">Storyboard</div>
           <p class="mubf-hint">Variants are different takes on the scenario, to choose from before the full preview.</p><div class="mubf-opts is-3" id="g-story"></div></div>
         <div class="mubf-group" role="radiogroup" aria-labelledby="l-voice"><div class="mubf-label" id="l-voice">Voice-over</div>
           <p class="mubf-hint">A spoken line per scene, recorded after you approve the preview.</p><div class="mubf-seg" id="g-voice"></div></div>
@@ -619,17 +616,12 @@ const LANGS = [['en', 'English'], ['es', 'Español', 'Spanish'], ['de', 'Deutsch
   ['ru', 'Русский', 'Russian'], ['ar', 'العربية', 'Arabic'], ['he', 'עברית', 'Hebrew'], ['hi', 'हिन्दी', 'Hindi'], ['id', 'Bahasa Indonesia', 'Indonesian'],
   ['vi', 'Tiếng Việt', 'Vietnamese'], ['th', 'ไทย', 'Thai'], ['ja', '日本語', 'Japanese'], ['ko', '한국어', 'Korean'], ['zh', '简体中文', 'Chinese, Simplified'], ['zh-TW', '繁體中文', 'Chinese, Traditional']];
 const SOURCES = [
-  ['library', 'From the library', `Ready-made items, re-worded with your copy and pictures. Fast, and one consistent look.`, 'grid', 'Library', 'Fastest'],
-  ['new', 'Brand-new motion graphics', 'Every scene designed from scratch for your brand. Slower, and unique.', 'pencil', 'Brand-new'],
-  ['mix', 'Mix', 'Library items, plus new ones wherever nothing fits.', 'layers', 'Mix'],
+  ['library', 'From the library', `Ready-made scenes, re-worded with your copy and pictures. Fast, and one consistent look.`, 'grid', 'Library', 'Fastest'],
+  ['new', 'Brand-new motion graphics', 'Every scene designed from scratch for your brand: type, shapes, pictures, particles, real 3D. Slower, and unique.', 'pencil', 'Brand-new'],
+  ['mix', 'Mix', 'Library scenes, plus new ones wherever nothing fits.', 'layers', 'Mix'],
   ['agent', 'Let the agent decide', 'It chooses scene by scene, from your story.', 'sparkle', 'Any source'],
 ];
 const THEMES = [['light', 'Light', 'sun'], ['dark', 'Dark', 'moon'], ['agent', 'Agent decides', 'sparkle']];
-const ENGINES = [
-  ['default', 'Default', 'Animated UI as layers, with 3D space: cards that turn, depth, camera moves. Every layer editable in the Video Editor and After Effects.', 'layers', 'Default', 'Editable'],
-  ['3d', '3D engine', 'Real 3D: objects, lights, glow and particles. Each scene is its own HTML page: the Video Editor gets it as an HTML scene, and there is no After Effects export.', 'cube', '3D engine'],
-  ['agent', 'Let the agent decide', 'Default, unless your story needs real 3D objects.', 'sparkle', 'Agent decides'],
-];
 const PRESETS = [
   ['spring', 'Spring', 'Calm and premium. Moves leave softly and arrive with a long settle; nothing bounces.', 'Spring Out', 'Default'],
   ['snappy', 'Snappy', 'Fast, decisive arrivals for energetic promos and quick social cuts.', 'Expo Out'],
@@ -638,9 +630,15 @@ const PRESETS = [
   ['elastic', 'Elastic', 'Bouncy, elastic pops, for when the brand wants a wobble.', 'Elastic'],
   ['agent', 'Let the agent decide', 'Your agent picks the feel from your brief: spring, unless it calls for another.', null],
 ];
+const MODES = [
+  ['quick', 'Straight to the preview', 'The agent writes the story and builds the film on its own. You edit it in the preview and approve the render.', 'zap', 'Quick'],
+  ['guided', 'Step by step', 'You approve the story, pick a storyboard direction, then approve the preview.', 'list', 'Step by step'],
+  ['agent', 'Let the agent decide', 'Quick for a short, clear brief; step by step when there is a lot to get right.', 'sparkle', 'Agent decides'],
+];
 const STORY = [[2, 'Show 2 variants', 'Two takes on the scenario to choose from.', 2], [3, 'Show 3 variants', 'Three directions, side by side.', 3], [0, 'Skip — do it in one go', 'Straight from the scenario to the preview.', 0]];
 const VOICE = [['yes', 'Yes', 'mic'], ['no', 'No', 'x'], ['agent', 'Agent decides', 'sparkle']];
-const OUTPUTS = [['render', 'Rendered video', 'MP4, WebM with alpha or ProRes 4444.', 'play'], ['video-editor', 'Video Editor project', 'Every layer editable in GreenLight Dash.', 'sliders'], ['after-effects', 'After Effects', 'A script that builds the comp, keyframes and all.', 'layers']];
+const OUTPUTS = [['render', 'Rendered video', 'MP4, WebM with alpha or ProRes 4444.', 'play'], ['video-editor', 'Video Editor project', 'Every scene as an HTML clip in GreenLight Dash.', 'sliders'],
+  ['after-effects', 'After Effects', 'An agent rebuilds the film in After Effects. It must be installed and open.', 'layers']];
 const label = (list, v) => { const r = list.find((x) => String(x[0]) === String(v)); return r ? r[1] : v; };
 
 const ORDER = Object.keys(K.CATS);
@@ -657,7 +655,7 @@ function normUrl(raw) {
 }
 
 const fresh = () => ({ product: { name: '', url: '', about: '' }, film: { goal: 'agent', cta: '', duration: 20, format: '16:9', language: 'en' },
-  look: { engine: 'default', source: 'library', picks: [], theme: 'agent', accent: 'agent' }, motion: { preset: 'spring' }, workflow: { storyboard: 2, voiceover: 'agent' }, output: ['render'] });
+  look: { source: 'library', picks: [], theme: 'agent', accent: 'agent' }, motion: { preset: 'spring' }, workflow: { mode: 'guided', storyboard: 2, voiceover: 'agent' }, output: ['render'] });
 let S = fresh();
 let finished = false; let stepEls = [];
 const MAC = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
@@ -673,10 +671,10 @@ function adopt(b) {
   S.product = { name: str(p.name), url: str(p.url), about: str(p.about) };
   S.film = { goal: one(f.goal, V.goal, 'agent'), cta: str(f.cta), duration: typeof f.duration === 'number' ? Math.max(10, Math.min(90, Math.round(f.duration))) : 20,
     format: one(f.format, V.format, '16:9'), language: str(f.language) || 'en' };
-  S.look = { engine: one(l.engine, V.engine, 'default'), source: one(l.source, V.source, 'library'), picks: Array.isArray(l.picks) ? l.picks.filter((id) => byId.has(id)) : [],
+  S.look = { source: one(l.source, V.source, 'library'), picks: Array.isArray(l.picks) ? l.picks.filter((id) => byId.has(id)) : [],
     theme: one(l.theme, V.theme, 'agent'), accent: typeof l.accent === 'string' && /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(l.accent) ? normHex(l.accent) : 'agent' };
   S.motion = { preset: one(m.preset, V.preset, 'spring') };
-  S.workflow = { storyboard: one(w.storyboard, V.storyboard, 2), voiceover: one(w.voiceover, V.voiceover, 'agent') };
+  S.workflow = { mode: one(w.mode, V.mode, 'guided'), storyboard: w.mode === 'quick' ? 2 : one(w.storyboard, V.storyboard, 2), voiceover: one(w.voiceover, V.voiceover, 'agent') };
   S.output = Array.isArray(b.output) ? b.output.filter((o) => V.output.includes(o)) : ['render'];
   files = (Array.isArray(p.assets) ? p.assets : []).filter((a) => a && typeof a.url === 'string')
     .map((a) => ({ key: ++fileKey, url: a.url, name: a.name || a.url.split('/').pop(), type: a.type === 'video' ? 'video' : 'image', status: 'ok', thumb: thumbOf(a.url) }));
@@ -784,13 +782,13 @@ $('g-goal').innerHTML = GOALS.map(([v, t, d, ic]) => card('goal', v, t, d, ic)).
 $('g-format').innerHTML = FORMATS.map(([v, t, d, r]) => `<label class="mubf-opt"><input type="radio" name="format" value="${v}"><span class="mubf-card">
   <span class="mubf-card-top"><span class="mubf-glyph"><span class="mubf-frame ${r}"></span></span>${dot()}</span><span class="mubf-card-txt"><b>${v}</b><span class="mubf-fmt-d">${t} · ${d}</span></span></span></label>`).join('');
 $('f-lang').innerHTML = LANGS.map(([v, n, en]) => `<option value="${v}">${esc(en ? `${n} — ${en}` : n)}</option>`).join('');
-$('g-engine').innerHTML = ENGINES.map(([v, t, d, ic, , tag]) => card('engine', v, t, d, ic, tag)).join('');
 $('g-source').innerHTML = SOURCES.map(([v, t, d, ic, , tag]) => card('source', v, t, d, ic, tag)).join('');
 $('g-theme').innerHTML = THEMES.map(([v, t, ic]) => `<label><input type="radio" name="theme" value="${v}"><span>${ico(ic)}${t}</span></label>`).join('');
 $('g-accent').innerHTML = K.ACCENTS.map((c) => `<label class="mubf-sw" title="${c}"><input type="radio" name="accent" value="${c}" aria-label="Accent ${c}"><span style="--c:${c}"></span></label>`).join('')
   + `<label class="mubf-sw is-custom" id="g-custom" title="Your own colour"><input type="color" id="f-color" value="#3E63DD" aria-label="Your own accent colour"><span></span></label>`
   + `<span class="mubf-divider" aria-hidden="true"></span><label class="mubf-pill"><input type="radio" name="accent" value="agent"><span>${ico('sparkle')}Agent decides</span></label>`
   + `<output class="mubf-hex" id="f-hex"></output>`;
+$('g-mode').innerHTML = MODES.map(([v, t, d, ic, , tag]) => card('mode', v, t, d, ic, tag)).join('');
 $('g-story').innerHTML = STORY.map(([v, t, d, n]) => `<label class="mubf-opt"><input type="radio" name="storyboard" value="${v}"><span class="mubf-card">
   <span class="mubf-card-top"><span class="mubf-glyph">${n ? Array.from({ length: n }, () => '<span class="mubf-frame sm"></span>').join('') : `<span class="mubf-ic">${ico('arrow')}</span>`}</span>${dot()}</span>
   <span class="mubf-card-txt"><b>${esc(t)}</b><span class="mubf-card-d">${esc(d)}</span></span></span></label>`).join('');
@@ -919,7 +917,7 @@ function filter() {
     T.el.hidden = !show; if (show) n++;
   }
   const empty = $('g-empty'); empty.hidden = n > 0;
-  if (!n) empty.textContent = cat === 'picked' && !query ? 'Nothing picked yet. Click any item to pick it.' : `No items match “${query.trim()}”${cat !== 'all' ? ' here' : ''}.`;
+  if (!n) empty.textContent = cat === 'picked' && !query ? 'Nothing picked yet. Click any scene to pick it.' : `No scenes match “${query.trim()}”${cat !== 'all' ? ' here' : ''}.`;
   // newly shown tiles that are already in view: the observer does not fire again for them
   for (const T of tiles.values()) if (!T.el.hidden && !T.P && T.vis && !T.q) { T.q = true; queue.push(T); }
   wake();
@@ -957,11 +955,13 @@ function fill() {
   if (!LANGS.some(([v]) => v === S.film.language)) $('f-lang').insertAdjacentHTML('afterbegin', `<option value="${esc(S.film.language)}">${esc(S.film.language)}</option>`);
   $('f-lang').value = S.film.language;
   const dur = $('f-dur'); if (S.film.duration > 60) dur.max = String(S.film.duration); dur.value = String(S.film.duration);
-  setRadio('goal', S.film.goal); setRadio('format', S.film.format); setRadio('engine', S.look.engine); setRadio('source', S.look.source); setRadio('theme', S.look.theme);
-  setRadio('preset', S.motion.preset); setRadio('storyboard', S.workflow.storyboard); setRadio('voiceover', S.workflow.voiceover);
+  setRadio('goal', S.film.goal); setRadio('format', S.film.format); setRadio('source', S.look.source); setRadio('theme', S.look.theme);
+  setRadio('preset', S.motion.preset); setRadio('mode', S.workflow.mode); setRadio('storyboard', S.workflow.storyboard); setRadio('voiceover', S.workflow.voiceover);
   for (const i of form.querySelectorAll('input[name="output"]')) i.checked = S.output.includes(i.value);
-  accentUi(); durUi(); engineUi(); syncPicks();
+  accentUi(); durUi(); sourceUi(); modeUi(); syncPicks();
 }
+// quick mode goes straight to the preview: no storyboard question
+function modeUi() { $('g-story-group').hidden = S.workflow.mode === 'quick'; }
 function accentUi() {
   const a = S.look.accent; const custom = /^#/.test(a) && !K.ACCENTS.includes(a);
   setRadio('accent', custom ? '' : a);
@@ -976,15 +976,7 @@ function durUi() {
   const a = Math.max(1, Math.round(d / 5)), b = Math.max(a, Math.round(d / 3));
   $('f-dur-hint').textContent = `About ${a === b ? a : `${a}–${b}`} scene${b > 1 ? 's' : ''}`;
 }
-function sourceUi() { $('g-lib').hidden = S.look.engine === '3d' || !['library', 'mix'].includes(S.look.source); if (!$('g-lib').hidden) filter(); }
-// the 3D engine builds every scene new (no library items) and has no After Effects export
-function engineUi() {
-  const d3 = S.look.engine === '3d';
-  $('g-source-group').hidden = d3;
-  const ae = form.querySelector('input[name="output"][value="after-effects"]');
-  if (ae) { ae.disabled = d3; if (d3 && ae.checked) { ae.checked = false; S.output = S.output.filter((o) => o !== 'after-effects'); } ae.closest('label').classList.toggle('is-off', d3); }
-  sourceUi();
-}
+function sourceUi() { $('g-lib').hidden = !['library', 'mix'].includes(S.look.source); if (!$('g-lib').hidden) filter(); }
 form.addEventListener('input', (e) => {
   const t = e.target;
   if (t.id === 'f-name') S.product.name = t.value;
@@ -1002,11 +994,11 @@ form.addEventListener('change', (e) => {
     case 'goal': S.film.goal = v; break;
     case 'format': S.film.format = v; break;
     case 'language': S.film.language = v; break;
-    case 'engine': S.look.engine = v; engineUi(); break;
     case 'source': S.look.source = v; sourceUi(); break;
     case 'theme': S.look.theme = v; kitTheme(); break;
     case 'accent': S.look.accent = v === 'agent' ? 'agent' : normHex(v); accentUi(); break;
     case 'preset': S.motion.preset = v; break;
+    case 'mode': S.workflow.mode = v; modeUi(); break;
     case 'storyboard': S.workflow.storyboard = Number(v); break;
     case 'voiceover': S.workflow.voiceover = v; break;
     case 'output': S.output = OUTPUTS.map(([o]) => o).filter((o) => form.querySelector(`input[name="output"][value="${o}"]`).checked); break;
@@ -1038,9 +1030,9 @@ function toBrief() {
   if (ok.length) p.assets = ok.map(({ url, name, type }) => ({ url, name, type }));
   b.product = p;
   b.film = { goal: S.film.goal, ...(t(S.film.cta) ? { cta: t(S.film.cta) } : {}), duration: S.film.duration, format: S.film.format, language: S.film.language };
-  b.look = { engine: S.look.engine, ...(S.look.engine === '3d' ? {} : { source: S.look.source, ...(['library', 'mix'].includes(S.look.source) ? { picks: S.look.picks.slice() } : {}) }), theme: S.look.theme, accent: S.look.accent };
+  b.look = { source: S.look.source, ...(['library', 'mix'].includes(S.look.source) ? { picks: S.look.picks.slice() } : {}), theme: S.look.theme, accent: S.look.accent };
   b.motion = { preset: S.motion.preset };
-  b.workflow = { storyboard: S.workflow.storyboard, voiceover: S.workflow.voiceover };
+  b.workflow = { mode: S.workflow.mode, storyboard: S.workflow.mode === 'quick' ? 0 : S.workflow.storyboard, voiceover: S.workflow.voiceover };
   b.output = S.output.slice();
   return b;
 }
@@ -1051,9 +1043,9 @@ function summary(i) {
   const s = [];
   if (i === 0) { if (S.product.name.trim()) s.push(S.product.name.trim()); const n = files.filter((f) => f.status === 'ok').length; if (n) s.push(`${n} file${n > 1 ? 's' : ''}`); if (!s.length && S.product.about.trim()) s.push('Described'); }
   if (i === 1) s.push(GOALS.find((g) => g[0] === S.film.goal)[4], `${S.film.duration} s`, S.film.format);
-  if (i === 2) { if (S.look.engine === '3d') s.push('3D engine'); else { s.push(SOURCES.find((x) => x[0] === S.look.source)[4]); if (['library', 'mix'].includes(S.look.source) && S.look.picks.length) s.push(`${S.look.picks.length} picked`); } if (S.look.theme !== 'agent') s.push(label(THEMES, S.look.theme)); }
+  if (i === 2) { s.push(SOURCES.find((x) => x[0] === S.look.source)[4]); if (['library', 'mix'].includes(S.look.source) && S.look.picks.length) s.push(`${S.look.picks.length} picked`); if (S.look.theme !== 'agent') s.push(label(THEMES, S.look.theme)); }
   if (i === 3) s.push(S.motion.preset === 'agent' ? 'Agent’s pick' : label(PRESETS, S.motion.preset));
-  if (i === 4) { s.push(S.workflow.storyboard ? `${S.workflow.storyboard} variants` : 'No storyboard'); if (S.workflow.voiceover !== 'agent') s.push(S.workflow.voiceover === 'yes' ? 'voice-over' : 'no voice-over'); }
+  if (i === 4) { s.push(S.workflow.mode === 'quick' ? 'Straight to the preview' : S.workflow.storyboard ? `${S.workflow.storyboard} variants` : 'No storyboard'); if (S.workflow.voiceover !== 'agent') s.push(S.workflow.voiceover === 'yes' ? 'voice-over' : 'no voice-over'); }
   return s.join(' · ');
 }
 const minis = [];
@@ -1061,7 +1053,7 @@ function review() {
   while (minis.length) unmount(minis.pop());
   const url = normUrl(S.product.url);
   const ok = files.filter((f) => f.status === 'ok');
-  const picksOn = S.look.engine !== '3d' && ['library', 'mix'].includes(S.look.source);
+  const picksOn = ['library', 'mix'].includes(S.look.source);
   const acc = /^#/.test(S.look.accent) ? `<span class="mubf-inline"><span class="mubf-sw-sm" style="background:${esc(S.look.accent)}"></span>${esc(S.look.accent)}</span>` : AG;
   const pre = PRESETS.find((p) => p[0] === S.motion.preset);
   const secs = [
@@ -1079,15 +1071,15 @@ function review() {
       ['Language', esc(langName(S.film.language))],
     ]],
     [2, 'Look', [
-      ['Engine', S.look.engine === 'agent' ? AG : esc(label(ENGINES, S.look.engine))],
-      ...(S.look.engine === '3d' ? [] : [['Scenes', S.look.source === 'agent' ? AG : esc(label(SOURCES, S.look.source))]]),
+      ['Scenes', S.look.source === 'agent' ? AG : esc(label(SOURCES, S.look.source))],
       ...(picksOn ? [['Picked items', S.look.picks.length ? `<div class="mubf-minis" id="g-sum-picks"></div>` : AG]] : []),
       ['Theme', S.look.theme === 'agent' ? AG : esc(label(THEMES, S.look.theme))],
       ['Accent', acc],
     ]],
     [3, 'Motion', [['Preset', S.motion.preset === 'agent' ? AG : pre ? `<span class="mubf-inline">${curveSvg(pre[3])}${esc(pre[1])}</span>` : esc(S.motion.preset)]]],
     [4, 'Workflow', [
-      ['Storyboard', esc(label(STORY, S.workflow.storyboard))],
+      ['How we work', S.workflow.mode === 'agent' ? AG : esc(label(MODES, S.workflow.mode))],
+      ...(S.workflow.mode === 'quick' ? [] : [['Storyboard', esc(label(STORY, S.workflow.storyboard))]]),
       ['Voice-over', S.workflow.voiceover === 'agent' ? AG : esc(label(VOICE, S.workflow.voiceover))],
       ['Deliver', S.output.length ? esc(S.output.map((o) => label(OUTPUTS, o)).join(' · ')) : none('Nothing picked — your agent will ask')],
     ]],
@@ -1111,7 +1103,9 @@ function review() {
 // itself goes in (the artifact, or a server that is gone: there is no brief.json to point at)
 function handoff(inline) {
   const P = DATA.paths || {};
-  const L = ['Make a motion design film with the GL Motion skill from my brief. Read the skill first, then follow its workflow from the brief: ask only what it leaves open.', '',
+  const L = [S.workflow.mode === 'quick'
+    ? 'Make a motion design film with the GL Motion skill from my brief. Read the skill first, then follow its quick mode: decide what the brief leaves open yourself, go straight to the preview and ask me to approve it before you render.'
+    : 'Make a motion design film with the GL Motion skill from my brief. Read the skill first, then follow its workflow from the brief: ask only what it leaves open.', '',
     `- Skill: ${P.skill || 'skills/greenlight-motion/SKILL.md'}`];
   if (!inline) L.push(`- Brief: ${P.brief || 'brief.json'}`);
   const also = [];
@@ -1165,8 +1159,8 @@ function done(j) {
   try { localStorage.removeItem(DKEY); } catch (e) { /* storage off */ }
   DATA.stamp = j.createdAt || DATA.stamp;
   const openNames = { 'product.name': 'product name', 'product.url': 'website', 'product.about': 'what to say', 'product.assets': 'pictures', 'film.goal': 'goal', 'film.cta': 'call to action',
-    'film.duration': 'length', 'film.format': 'format', 'film.language': 'language', 'look.engine': 'engine', 'look.source': 'scenes', 'look.picks': 'library items', 'look.theme': 'theme', 'look.accent': 'accent',
-    'motion.preset': 'motion', 'workflow.storyboard': 'storyboard', 'workflow.voiceover': 'voice-over', output: 'what to deliver' };
+    'film.duration': 'length', 'film.format': 'format', 'film.language': 'language', 'look.source': 'scenes', 'look.picks': 'library scenes', 'look.theme': 'theme', 'look.accent': 'accent',
+    'motion.preset': 'motion', 'workflow.mode': 'how we work', 'workflow.storyboard': 'storyboard', 'workflow.voiceover': 'voice-over', output: 'what to deliver' };
   const open = (j.open || []).map((k) => openNames[k] || k);
   $('mubf-hd').textContent = HANDOFF ? 'Your brief is ready' : 'Your brief is in';
   $('g-hand').hidden = !HANDOFF;

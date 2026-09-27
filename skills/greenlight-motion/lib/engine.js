@@ -1,32 +1,26 @@
-/* GL Motion — the engine (it plays every item: the skill's pages, the UI Motion Kit lab, the Video
- * Editor's Presets panel in GreenLight Dash).
+/* GreenLight Motion — the library's engine: it draws every library scene as DOM (each scene's own page, the lab, the
+ * Presets tab in GreenLight Dash).
  *
- * An element is a tree of layers, and every layer is something the Video Editor already has:
- *   rect / ellipse      → shape layer (rectangle with borderRadius / ellipse)
- *   text                → text layer (reveal = typewriter split, symbols)
- *   path / icon / cursor→ line / path shape, or a custom-SVG shape
- *   group               → parent null — or a sequence when the group itself fades, blurs or clips
+ * A library scene is a tree of layers:
+ *   rect / ellipse      → a box (border radius) or an ellipse; a picture fills it
+ *   text                → words (reveal = typewriter, counters and timers)
+ *   path / icon / cursor→ an SVG line or shape, an icon, the pointer
+ *   group               → its children, moved, faded, blurred or clipped together
  * Every animated value is a keyframe TRACK of segments [t0, t1, value, easing]: hold the previous
- * value until t0, ease to `value` by t1. A segment is exactly two VE keys, and the easing is a VE
- * keyframe easing by name (window.UIK_EASINGS). Frames are a pure function of t — no timers, no
- * CSS transitions — so any frame renders on its own.
+ * value until t0, ease to `value` by t1, with an easing by name (window.UIK_EASINGS). Frames are a pure
+ * function of t — no timers, no CSS transitions — so any frame draws on its own.
  */
 (function () {
 'use strict';
 const K = window.UIK = window.UIK || {};
 K.elements = [];
 // each element remembers its source file (a <script src> load) — the HTML export inlines that file
-// formats: how an item may leave the kit — 'layers' (the Video Editor's own shapes / text / keyframes,
-// as Sequence or Layers) and 'html' (one transparent HTML page / clip). Default: both. An item too
-// heavy (or too rich) for editor layers declares formats: ['html'] — every exporter then uses HTML.
-K.formatsOf = (spec) => (spec && Array.isArray(spec.formats) && spec.formats.length ? spec.formats : ['layers', 'html']);
 
 // ───────────────────────── canvas layers ─────────────────────────
 // Content drawn by code (a gallery written as plain canvas drawing): canvas({ w, h, start, images,
 // draw(ctx, { width, height, t, images, scale }) }) — draw is a pure function of t (seconds since
-// `start`, never below 0); `images` are the layer's pictures as { img, loaded, failed } entries. Such an
-// item can't become Video Editor layers: it declares formats: ['html']. K.media.scale lowers the
-// canvas resolution (galleries of small previews); renders await K.media.ready() before a frame.
+// `start`, never below 0); `images` are the layer's pictures as { img, loaded, failed } entries. K.media.scale
+// lowers the canvas resolution (galleries of small previews); renders await K.media.ready() before a frame.
 K.media = {
   cache: new Map(), pending: new Set(), scale: 1,
   get(url) {
@@ -43,7 +37,6 @@ K.media = {
   },
   ready: () => Promise.all([...K.media.pending]).then(() => undefined),
 };
-K.canLayers = (spec) => K.formatsOf(spec).includes('layers');
 K.define = (spec) => {
   const cs = typeof document !== 'undefined' ? document.currentScript : null;
   if (cs && cs.src && !spec.file) spec.file = cs.src.split('/').pop().split('?')[0];
@@ -53,7 +46,7 @@ K.define = (spec) => {
   K.elements.push(spec);
 };
 
-// ───────────────────────── easing (VE catalogue) ─────────────────────────
+// ───────────────────────── easing (by name: window.UIK_EASINGS) ─────────────────────────
 const bezier = (x1, y1, x2, y2) => {
   const cx = 3 * x1, bx = 3 * (x2 - x1) - cx, ax = 1 - cx - bx;
   const cy = 3 * y1, by = 3 * (y2 - y1) - cy, ay = 1 - cy - by;
@@ -105,17 +98,26 @@ K.theme = () => THEME;
 K.TOKENS = Object.keys(K.THEMES.light).filter((k) => k !== 'shadow');
 
 // ───────────────────────── fonts ─────────────────────────
-// The stage font is Helvetica Neue (the Video Editor's text font; items are measured in it). A film may pick another
-// (scenario.font): a web font loads from Google Fonts (renders wait for it); the Video Editor loads it by name; After
-// Effects needs it installed (ps = its PostScript family).
+// The stage font is Helvetica Neue (the library's scenes are measured in it). A film may pick another (scenario.font):
+// a web font loads from Google Fonts (renders wait for it); After Effects needs it installed (ps = its PostScript family).
 K.FONT_DEFAULT = 'Helvetica Neue';
 K.FONTS = {
-  'Helvetica Neue': { stack: "'Helvetica Neue', Helvetica, Arial, sans-serif", ps: 'HelveticaNeue', note: 'the Video Editor’s text font' },
+  'Helvetica Neue': { stack: "'Helvetica Neue', Helvetica, Arial, sans-serif", ps: 'HelveticaNeue', note: 'the library’s own type' },
   Inter: { stack: "Inter, 'Helvetica Neue', Arial, sans-serif", google: 'Inter:wght@300..800', ps: 'Inter' },
   Geist: { stack: "Geist, 'Helvetica Neue', Arial, sans-serif", google: 'Geist:wght@300..800', ps: 'Geist' },
   Manrope: { stack: "Manrope, 'Helvetica Neue', Arial, sans-serif", google: 'Manrope:wght@300..800', ps: 'Manrope' },
   'DM Sans': { stack: "'DM Sans', 'Helvetica Neue', Arial, sans-serif", google: 'DM+Sans:opsz,wght@9..40,300..800', ps: 'DMSans' },
   Fraunces: { stack: 'Fraunces, Georgia, serif', google: 'Fraunces:opsz,wght@9..144,300..800', ps: 'Fraunces' },
+  // display faces for brand-new films (references/original-films.md): big type with a character of its own
+  'Space Grotesk': { stack: "'Space Grotesk', 'Helvetica Neue', Arial, sans-serif", google: 'Space+Grotesk:wght@300..700', ps: 'SpaceGrotesk' },
+  'Bricolage Grotesque': { stack: "'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif", google: 'Bricolage+Grotesque:opsz,wght@12..96,200..800', ps: 'BricolageGrotesque' },
+  Syne: { stack: "Syne, 'Helvetica Neue', Arial, sans-serif", google: 'Syne:wght@400..800', ps: 'Syne' },
+  Unbounded: { stack: "Unbounded, 'Helvetica Neue', Arial, sans-serif", google: 'Unbounded:wght@200..900', ps: 'Unbounded' },
+  Sora: { stack: "Sora, 'Helvetica Neue', Arial, sans-serif", google: 'Sora:wght@100..800', ps: 'Sora' },
+  Outfit: { stack: "Outfit, 'Helvetica Neue', Arial, sans-serif", google: 'Outfit:wght@100..900', ps: 'Outfit' },
+  Archivo: { stack: "Archivo, 'Helvetica Neue', Arial, sans-serif", google: 'Archivo:wght@100..900', ps: 'Archivo' },
+  'Instrument Sans': { stack: "'Instrument Sans', 'Helvetica Neue', Arial, sans-serif", google: 'Instrument+Sans:wght@400..700', ps: 'InstrumentSans' },
+  'Playfair Display': { stack: "'Playfair Display', Georgia, serif", google: 'Playfair+Display:wght@400..900', ps: 'PlayfairDisplay' },
 };
 K.fontOf = (name) => K.FONTS[name] || K.FONTS[K.FONT_DEFAULT];
 K.fontUrl = (name) => { const f = K.FONTS[name]; return f && f.google ? `https://fonts.googleapis.com/css2?family=${f.google}&display=block` : null; };
@@ -233,10 +235,8 @@ K.ICONS = {
 
 // ───────────────────────── layer model ─────────────────────────
 // numeric props with defaults; colour props; every one of them can carry a track in `k`
-// 3D space (the Video Editor's and After Effects' own): rx / ry = rotation around X / Y in degrees (+rx tilts the top
-// away, +ry turns the right edge toward the viewer), depth = px toward the camera
 const NUM = { x: 0, y: 0, w: 0, h: 0, r: 0, opacity: 1, scale: 1, sx: 1, sy: 1, rot: 0, blur: 0, sw: 0,
-              size: 40, ls: 0, trimS: 0, trimE: 100, trimO: 0, reveal: 1, value: 0, rx: 0, ry: 0, depth: 0 };
+              size: 40, ls: 0, trimS: 0, trimE: 100, trimO: 0, reveal: 1, value: 0 };
 const COL = { fill: null, stroke: null, color: null };
 K.PROPS = Object.keys(NUM).concat(Object.keys(COL));
 
@@ -255,7 +255,7 @@ const normTrack = (arr, prop) => {
 };
 const isCol = (p) => p in COL;
 // A segment that starts before the previous one ends INTERRUPTS it: it eases on from wherever the
-// value had got to at its t0 (no jump). The VE converter writes a key with that sampled value at t0.
+// value had got to at its t0 (no jump).
 const evalTrack = (tr, base, t, col) => {
   const segs = tr.segs;
   let from = col ? resolve(tr.init !== undefined ? tr.init : base) : (tr.init !== undefined ? tr.init : base);
@@ -276,7 +276,7 @@ const evalTrack = (tr, base, t, col) => {
   return from;
 };
 
-// internals shared with the Video Editor converter (converter.js)
+// internals the film runtime and the preview use (colours, tracks)
 K._int = { normTrack, evalTrack, resolve, css, NUM, COL };
 
 // ───────────────────────── authoring helpers (UIK.h) ─────────────────────────
@@ -372,7 +372,7 @@ H.cursorLayer = (keys, clicks = [], drags = [], o = {}) => {
   return H.cursor({ id: 'cursor', x: keys[0][1], y: keys[0][2], size: o.size || 46, k: H.k(k, o.k) });
 };
 // sample: turn motion computed by a formula (a point on an ellipse, a value derived from another
-// track) into the fewest Linear segments that stay within `tol` of it — VE keys are the budget.
+// track) into the fewest Linear segments that stay within `tol` of it.
 //   k: { x: [f(0), ...sample((t) => f(t), 0.4, 2.0, { tol: 1 })] }
 H.sample = (f, t0, t1, o = {}) => {
   const tol = o.tol ?? 1, fps = o.fps ?? 60, n = Math.max(1, Math.ceil((t1 - t0) * fps));
@@ -399,9 +399,9 @@ H.valueAt = (arr, base, t) => evalTrack(normTrack(arr, 'x'), base, t, false);
 H.stagger = (n, t, gap) => Array.from({ length: n }, (_, i) => t + i * gap);
 
 // photo: a stand-in picture for galleries — an abstract composition in the kit's palette, clipped to
-// a rounded box. In the VE it is ONE image layer (a media slot the user fills with their own picture),
-// so describe() does not walk into it. v picks the composition (0…PHOTO_N-1, wraps). Copies/tiles of
-// the SAME picture (blinds, mosaic, lens) share `src: 'name'` so the converter links them to one media.
+// a rounded box: ONE picture slot a film fills with its own picture (scene images). v picks the composition
+// (0…PHOTO_N-1, wraps). Copies / tiles of the SAME picture (blinds, mosaic, lens) share `src: 'name'`, so one
+// picture fills them all.
 //   photo({ id, x, y, w, h, r, v, src, k, ch })   — any rect prop works (k tracks, pin, shadow…)
 const f2 = (n) => +n.toFixed(1);
 const PHOTOS = [
@@ -539,14 +539,13 @@ const fmtNum = (v, o) => {
 };
 K._int.fmtNum = fmtNum;
 // ───────────────────────── text placeholders: {{{COUNTER:…}}} / {{{TIMER:…}}} ─────────────────────────
-// The Video Editor's dynamic number units, ported from frontend/src/components/videoEditor/
-// textCounter.js (parse + frame math, verbatim) and textPlaceholders.js (token options), so a lab
-// text and the VE text layer it converts to show the same digits at every t — the text is copied
-// into the VE as is. Each token carries its own settings after `;`:
+// Dynamic numbers, ported from GreenLight Dash's text counters (frontend/src/components/videoEditor/textCounter.js:
+// parse + frame math, verbatim; textPlaceholders.js: token options), so a number rolls exactly like it does in the
+// Video Editor. Each token carries its own settings after `;`:
 //   {{{COUNTER:0-2,480; style=odometer; start=0.45; duration=1.8; easing=power3_out}}}
 //   {{{TIMER:00:10-00:00}}}                     a real clock: count style, 10 s, linear
 //   {{{COUNTER:0-100; kf=1}}} + k: { 'ph:1': [0, [t0, t1, 100, 'Power3 Out']] }   keyed progress 0–100
-// Lab gaps (VE-only polish): spin blur, digits=natural.
+// Not drawn here: spin blur, digits=natural.
 const PH = (() => {
   const MAX_COLUMNS = 15;
   const RANGE_SEP = '\\s*(?:\\.\\.|→|–|—|to|-)\\s*';
@@ -691,7 +690,7 @@ const PH = (() => {
   };
   // motionSign: +1 = a rising digit enters from below
   const motion = (spec, s) => { const dir = spec.to >= spec.from ? 1 : -1; return s.direction === 'up' ? dir : s.direction === 'down' ? -dir : 1; };
-  // rawP 0…1; `ease` shapes it (the VE: the token's easing when timed, identity when keyed)
+  // rawP 0…1; `ease` shapes it (the token's easing when timed, identity when keyed)
   const frame = (spec, s, rawP, ease = (p) => p) => {
     const p = clamp01(rawP);
     return s.style === 'count' ? countFrame(spec, ease(p)) : s.style === 'roll' ? rollFrame(spec, ease(p)) : odometerFrame(spec, p, ease, s);
@@ -713,9 +712,8 @@ const PH = (() => {
     if (last < text.length) out.push({ lit: text.slice(last) });
     return any ? out : null;
   };
-  // The older lab counter — text({ num: { pre, suf, dec, sep, pad, floor }, k: { value } }) — as the
-  // VE COUNTER token it converts to: Count style, keyed by 'ph:1' = map(value). The lab draws it
-  // through the same token path, so both print the same digits in the same digit cells.
+  // A keyed counter — text({ num: { pre, suf, dec, sep, pad, floor }, k: { value } }) — as a COUNTER token:
+  // Count style, keyed by 'ph:1' = map(value), drawn through the same token path (the same digits in the same cells).
   const numToken = (L, vtr) => {
     const o = L.num; const dec = o.dec || 0; const vb = L.value ?? 0;
     if (!vtr || !vtr.segs.length) return null;
@@ -765,15 +763,6 @@ K.paramsOf = (spec, values) => {
   return Object.assign(P, values || {});
 };
 K.build = (spec, values) => spec.build(H, K.paramsOf(spec, values));
-// the Video Editor's camera distance per px of frame height: (1 / 2) / tan(28° / 2)
-K.PERSPECTIVE = 0.5 / Math.tan((14 * Math.PI) / 180);
-// does a spec (or its built layers) use 3D space — rx / ry / depth on a layer, or a tilting / dollying camera?
-K.is3d = (spec, layers) => {
-  const cam = spec && typeof spec.cam === 'object' ? spec.cam : null;
-  if (cam && (cam.tiltX || cam.tiltY || cam.dolly || (cam.k && (cam.k.tiltX || cam.k.tiltY || cam.k.dolly)))) return true;
-  const has = (L) => !!(L.rx || L.ry || L.depth || (L.k && (L.k.rx || L.k.ry || L.k.depth)) || (L.ch || []).some(has));
-  return (layers || []).some(has);
-};
 
 class Instance {
   constructor(spec, host) {
@@ -791,28 +780,21 @@ class Instance {
     if (spec.font && spec.font !== K.FONT_DEFAULT) stage.style.fontFamily = K.useFont(spec.font);
     this.layers = layers;
     this.root = root;
-    // camera: spec.cam = zoom number, or { zoom, x, y, tiltX, tiltY, dolly, k: { … } } — x/y is the world point
-    // framed at the centre; tiltX / tiltY turn the world around it (degrees, the senses of rx / ry) and dolly moves
-    // the camera in (px). The export: a root joint (and a tilt joint) the layers hang from.
+    // camera: spec.cam = zoom number, or { zoom, x, y, k: { … } } — x/y is the world point framed at the centre
     const cam = typeof spec.cam === 'number' ? { zoom: spec.cam } : (spec.cam || {});
-    this.cam = { zoom: cam.zoom ?? 1, x: cam.x ?? 0, y: cam.y ?? 0, tiltX: cam.tiltX ?? 0, tiltY: cam.tiltY ?? 0, dolly: cam.dolly ?? 0, tracks: {} };
+    this.cam = { zoom: cam.zoom ?? 1, x: cam.x ?? 0, y: cam.y ?? 0, tracks: {} };
     for (const key of Object.keys(cam.k || {})) this.cam.tracks[key] = normTrack(cam.k[key], 'x');
-    // 3D space: a film or item that uses rx / ry / depth or a tilting / dollying camera plays in the Video Editor's
-    // perspective (K.is3d). CSS flattens a subtree under opacity / filter, so a node with 3D below passes its fade
-    // and blur down to its children instead of taking them itself.
-    this.is3d = K.is3d(spec, layers);
-    if (this.is3d) root.style.transformStyle = 'preserve-3d';
     for (const L of layers) this.make(L, root, 0, null);
-    if (this.is3d) for (let i = this.recs.length - 1; i >= 0; i--) { const r = this.recs[i]; if (r.parent && (r.own3d || r.d3below)) r.parent.d3below = true; }
   }
   camAt(t) {
     const c = this.cam, g = (p) => (c.tracks[p] ? evalTrack(c.tracks[p], c[p], t, false) : c[p]);
-    return { zoom: g('zoom'), x: g('x'), y: g('y'), tiltX: g('tiltX'), tiltY: g('tiltY'), dolly: g('dolly') };
+    return { zoom: g('zoom'), x: g('x'), y: g('y') };
   }
   make(L, parent, depth, prec) {
     const n = document.createElement('div'); n.className = 'uik-n'; parent.appendChild(n);
+    // a film's layer carries its key (its id, or ~<path>): the preview's element picker and the user's edits address it
+    if (L._key != null) n.setAttribute('data-gl', L._key);
     const rec = { L, n, depth, tracks: {}, parent: prec };
-    if (this.is3d) { n.style.transformStyle = 'preserve-3d'; rec.own3d = !!(L.rx || L.ry || L.depth || (L.k && (L.k.rx || L.k.ry || L.k.depth))); }
     for (const key of Object.keys(L.k || {})) rec.tracks[key] = normTrack(L.k[key], key);
     let into = n;
     if (L.type === 'rect' || L.type === 'ellipse' || (L.type === 'group' && L.clip)) {
@@ -828,10 +810,7 @@ class Instance {
         b.appendChild(im);
       }
       const c = rec.cen = document.createElement('div'); c.className = 'uik-c';
-      // 3D: the children sit beside the box (not in it), so the box's own fade doesn't flatten them — unless it
-      // clips (a clip flattens its content onto it anyway, which is what a card's content should do)
-      if (this.is3d && !L.clip) { rec.cenBeside = true; n.appendChild(c); c.style.transformStyle = 'preserve-3d'; } else b.appendChild(c);
-      if (this.is3d && L.clip) b.style.transformStyle = 'flat';
+      b.appendChild(c);
       into = c;
     } else if (L.type === 'text') {
       const t = rec.txt = document.createElement('div'); t.className = 'uik-t'; n.appendChild(t);
@@ -854,7 +833,7 @@ class Instance {
               if (part.s.fit) { w.style.display = 'inline-flex'; w.style.justifyContent = 'center'; }
               return { w };
             }
-            // the VE's digit cell: as wide as the widest digit, the digit centred (an invisible
+            // a digit cell: as wide as the widest digit, the digit centred (an invisible
             // stack of 0–9 in the same grid cell sizes it)
             w.className = 'uik-dw';
             const sz = document.createElement('span'); sz.className = 'uik-dz'; sz.innerHTML = '0<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9';
@@ -872,7 +851,7 @@ class Instance {
       if (L.upper) t.style.textTransform = 'uppercase';
       if (L.wrap) { t.style.whiteSpace = 'normal'; t.style.width = L.wrap + 'px'; t.style.textAlign = L.align || (L.ax === 0 ? 'left' : L.ax === 1 ? 'right' : 'center'); }
       if (L.lh) t.style.lineHeight = L.lh;
-      // proportional digits like the VE's text (counters get the VE's own digit cells below)
+      // proportional digits (counters get their own digit cells below)
       if (L.tnum === true) t.style.fontFeatureSettings = '"tnum" 1';
     } else if (L.type === 'path' || L.type === 'icon') {
       const s = rec.svg = document.createElementNS(svgNS, 'svg'); s.setAttribute('class', 'uik-svg'); n.appendChild(s);
@@ -896,9 +875,7 @@ class Instance {
     if (L.blend) n.style.mixBlendMode = L.blend;
     if (L.z != null) n.style.zIndex = L.z;
     this.recs.push(rec);
-    // z-index doesn't order 3D-transformed siblings: in 3D they are made in z order (the export sorts the same way)
-    const kids = this.is3d ? (L.ch || []).slice().sort((a, b) => (a.z || 0) - (b.z || 0)) : (L.ch || []);
-    for (const ch of kids) this.make(ch, into, depth + 1, rec);
+    for (const ch of L.ch || []) this.make(ch, into, depth + 1, rec);
   }
   val(rec, p, t) {
     const L = rec.L, tr = rec.tracks[p];
@@ -911,25 +888,13 @@ class Instance {
   seek(t) {
     this.t = t;
     const cam = this.camAt(t);
-    const d3 = this.is3d;
-    if (d3) {
-      // the Video Editor's camera: vertical field of view 28° → distance = (H / 2) / tan 14°, the frame at z = 0 is 1:1
-      const sh = parseFloat(this.stage.style.height) || this.stage.offsetHeight || 1080;
-      put(this.stage, 'perspective', (sh * K.PERSPECTIVE).toFixed(2) + 'px');
-      put(this.root, 'transformStyle', 'preserve-3d');
-      put(this.root, 'transform', `translate3d(0px,0px,${cam.dolly.toFixed(2)}px) rotateX(${cam.tiltX.toFixed(3)}deg) rotateY(${(-cam.tiltY).toFixed(3)}deg)`
-        + ` translate(${(-cam.x * cam.zoom).toFixed(2)}px,${(-cam.y * cam.zoom).toFixed(2)}px) scale3d(${cam.zoom.toFixed(5)},${cam.zoom.toFixed(5)},${cam.zoom.toFixed(5)})`);
-    } else put(this.root, 'transform', `scale(${cam.zoom.toFixed(5)}) translate(${(-cam.x).toFixed(2)}px,${(-cam.y).toFixed(2)}px)`);
+    put(this.root, 'transform', `scale(${cam.zoom.toFixed(5)}) translate(${(-cam.x).toFixed(2)}px,${(-cam.y).toFixed(2)}px)`);
     for (const rec of this.recs) {
       const L = rec.L, n = rec.n, v = (p) => this.val(rec, p, t);
-      // 3D: the fade and blur a parent passed down (it has 3D below it)
-      const pp = d3 && rec.parent ? rec.parent : null;
-      const op = v('opacity') * (pp ? pp._pOp : 1);
-      if (op < 0.002) { put(n, 'display', 'none'); rec._pOp = 0; rec._pBl = 0; continue; }
+      const op = v('opacity');
+      if (op < 0.002) { put(n, 'display', 'none'); continue; }
       put(n, 'display', '');
-      const x = v('x'), y = v('y'), rot = v('rot'), bl = v('blur') + (pp ? pp._pBl : 0);
-      const pass = d3 && rec.d3below && !(rec.box && L.clip);
-      rec._pOp = pass ? op : 1; rec._pBl = pass ? bl : 0;
+      const x = v('x'), y = v('y'), rot = v('rot'), bl = v('blur');
       // the cursor keeps one size on screen whatever the camera zoom
       const sc = v('scale') / (L.type === 'cursor' ? cam.zoom : 1), sx = v('sx') * sc, sy = v('sy') * sc;
       let w = v('w'), h = v('h');
@@ -943,30 +908,15 @@ class Instance {
         ox = -w * 3 / 28; oy = -h * 2.2 / 28;
         put(n, 'width', w.toFixed(2) + 'px'); put(n, 'height', h.toFixed(2) + 'px');
       }
-      if (d3) {
-        const rx = v('rx'), ry = v('ry'), dz = v('depth');
-        put(n, 'transform', `translate3d(${(x + ox).toFixed(2)}px,${(y + oy).toFixed(2)}px,${dz.toFixed(2)}px)` +
-          (rx ? ` rotateX(${rx.toFixed(3)}deg)` : '') + (ry ? ` rotateY(${(-ry).toFixed(3)}deg)` : '') +
-          (rot ? ` rotate(${rot.toFixed(3)}deg)` : '') + (sx !== 1 || sy !== 1 ? ` scale(${sx.toFixed(4)},${sy.toFixed(4)})` : ''));
-      } else {
-        put(n, 'transform', `translate(${(x + ox).toFixed(2)}px,${(y + oy).toFixed(2)}px)` +
-          (rot ? ` rotate(${rot.toFixed(3)}deg)` : '') + (sx !== 1 || sy !== 1 ? ` scale(${sx.toFixed(4)},${sy.toFixed(4)})` : ''));
-      }
+      put(n, 'transform', `translate(${(x + ox).toFixed(2)}px,${(y + oy).toFixed(2)}px)` +
+        (rot ? ` rotate(${rot.toFixed(3)}deg)` : '') + (sx !== 1 || sy !== 1 ? ` scale(${sx.toFixed(4)},${sy.toFixed(4)})` : ''));
       // transform origin: the pin point unless `origin` says otherwise (fractions of the box, -0.5…0.5)
       const org = L.type === 'cursor' ? [3 / 28, 2.2 / 28] : L.origin || [-ox / (w || 1), -oy / (h || 1)];
       put(n, 'transformOrigin', `${(org[0] * w).toFixed(2)}px ${(org[1] * h).toFixed(2)}px`);
       const notched = rec.box && L.notches;
       const fx = [bl > 0.05 ? `blur(${bl.toFixed(2)}px)` : '', notched && L.shadow ? DROP_SHADOWS[L.shadow](THEME.shadow) : ''].filter(Boolean).join(' ');
-      if (pass) {
-        // the node's own paint takes the fade; its children got it passed down
-        put(n, 'opacity', ''); put(n, 'filter', '');
-        const own = rec.box || rec.txt || rec.svg || rec.cv;
-        if (own) { put(own, 'opacity', op >= 0.999 ? '' : op.toFixed(4)); put(own, 'filter', fx); }
-      } else {
-        put(n, 'opacity', op >= 0.999 ? '' : op.toFixed(4));
-        put(n, 'filter', fx);
-        if (d3) { const own = rec.box || rec.txt || rec.svg || rec.cv; if (own && own._s && own._s.opacity) { put(own, 'opacity', ''); put(own, 'filter', ''); } }
-      }
+      put(n, 'opacity', op >= 0.999 ? '' : op.toFixed(4));
+      put(n, 'filter', fx);
       if (rec.box) {
         const b = rec.box, r = L.type === 'ellipse' ? Math.min(w, h) / 2 : Math.min(v('r'), w / 2, h / 2);
         put(b, 'left', (-w / 2).toFixed(2) + 'px'); put(b, 'top', (-h / 2).toFixed(2) + 'px');
@@ -974,7 +924,7 @@ class Instance {
         put(b, 'borderRadius', L.type === 'ellipse' ? '50%' : L.radii ? L.radii : r.toFixed(2) + 'px');
         put(b, 'background', css(v('fill')));
         const sw = v('sw'), st = v('stroke');
-        // dash: true → a dashed border (VE borderStyle 'dashed'); otherwise the stroke is an inset ring
+        // dash: true → a dashed border; otherwise the stroke is an inset ring
         if (L.dash) put(b, 'border', sw > 0 && st ? `${sw.toFixed(2)}px dashed ${css(st)}` : '');
         put(b, 'boxShadow', [sw > 0 && st && !L.dash ? `inset 0 0 0 ${sw.toFixed(2)}px ${css(st)}` : '', L.shadow && !notched ? SHADOWS[L.shadow](THEME.shadow) : ''].filter(Boolean).join(','));
         if (notched) {
@@ -990,9 +940,8 @@ class Instance {
         // children sit around the box centre — or, with chAt: 'pin', around the pinned point, so a
         // shape growing from one edge doesn't drag its content along
         const cp = L.chAt === 'pin' ? pin : 'c';
-        const bx = rec.cenBeside ? -w / 2 : 0, by = rec.cenBeside ? -h / 2 : 0;   // beside the box: from the node's origin
-        put(rec.cen, 'left', (bx + (cp.includes('l') ? 0 : cp.includes('r') ? w : w / 2)).toFixed(2) + 'px');
-        put(rec.cen, 'top', (by + (cp.includes('t') ? 0 : cp.includes('b') ? h : h / 2)).toFixed(2) + 'px');
+        put(rec.cen, 'left', (cp.includes('l') ? 0 : cp.includes('r') ? w : w / 2).toFixed(2) + 'px');
+        put(rec.cen, 'top', (cp.includes('t') ? 0 : cp.includes('b') ? h : h / 2).toFixed(2) + 'px');
       } else if (rec.txt) {
         const el = rec.txt, ax = L.ax ?? 0.5;
         put(el, 'transform', `translate(${(-ax * 100).toFixed(1)}%,-50%)`);
@@ -1082,61 +1031,4 @@ class Instance {
 }
 K.Instance = Instance;
 
-// ───────────────────────── describe (VE mapping for the inspector) ─────────────────────────
-const TRACK_VE = {
-  x: 'translateX', y: 'translateY', scale: 'scale', sx: 'scaleX', sy: 'scaleY', rot: 'rotate', opacity: 'opacity', blur: 'blur',
-  w: 'shapeWidthPx', h: 'shapeHeightPx', trimS: 'lineTrimStart', trimE: 'lineTrimEnd', trimO: 'lineTrimOffset', sw: 'lineWidth',
-  ls: 'letterSpacing', reveal: 'Reveal track (textRevealProgress)', r: 'borderRadius',
-  value: 'text counter · textCounterProgress',
-};
-// what the VE cannot animate today (flagged in the inspector)
-const GAP = { size: 'fontSize / size' };
-K.describe = (spec) => {
-  let layers = [];
-  try { layers = K.build(spec); } catch (e) { return { error: String(e), rows: [] }; }
-  const rows = []; let keys = 0; const gaps = new Set();
-  const walk = (L, depth) => {
-    const tracks = Object.keys(L.k || {});
-    if (L.media != null) {   // photo(): one image layer in the VE — its composition is only a stand-in
-      keys += tracks.reduce((a, p) => a + normTrack(L.k[p], p).segs.length, 0) * 2;
-      rows.push({ id: L.id || 'photo', type: 'photo', depth, ve: 'Image · media slot' + (L.img ? ` · ${L.img}` : L.src ? ` "${L.src}"` : ''),
-        tracks: tracks.map((p) => ({ p, ve: p === 'w' || p === 'h' ? 'crop · clipPath' : TRACK_VE[p] || p })) });
-      for (const ch of (L.ch || []).slice(L._n || 0)) walk(ch, depth + 1);   // layers the author put on top
-      return;
-    }
-    const segs = tracks.reduce((a, p) => a + normTrack(L.k[p], p).segs.length, 0);
-    let ve;
-    if (L.type === 'rect') ve = L.clip ? 'Shape · rectangle · masks its children (track matte)' : 'Shape · rectangle';
-    else if (L.type === 'ellipse') ve = L.w === L.h ? 'Shape · circle' : 'Shape · ellipse';
-    else if (L.type === 'text') { const ph = L.num ? null : PH.parse(String(L.text ?? '')); ve = L.num ? 'Text · counter' : ph ? 'Text · ' + ph.filter((u) => u.spec).map((u) => `${u.spec.kind === 'timer' ? 'TIMER' : 'COUNTER'} placeholder (${u.s.style})`).join(' + ') : 'Text'; }
-    else if (L.type === 'path') ve = L.fill ? 'Shape · path' : 'Shape · line';
-    else if (L.type === 'icon') ve = 'Shape · custom SVG';
-    else if (L.type === 'cursor') ve = 'Shape · custom SVG (cursor)';
-    else ve = (L.clip || tracks.some((p) => p === 'opacity' || p === 'blur')) ? 'Sequence (precomp)' : 'Parent null';
-    const tv = tracks.map((p) => {
-      let name = TRACK_VE[p];
-      if (p === 'fill') name = L.type === 'text' ? 'textBgColor' : 'shapeFill';
-      if (p === 'color') name = L.type === 'text' ? 'textColor' : 'shapeFill';
-      if (p === 'stroke') name = L.type === 'path' ? 'shapeFill (stroke paint)' : 'borderColor';
-      if (p === 'sw' && L.type !== 'path') name = 'borderWidth';
-      if (/^ph:/.test(p)) name = `placeholder progress track ${p}`;
-      if (!name && GAP[p]) { gaps.add(GAP[p]); return { p, ve: GAP[p], gap: true }; }
-      return { p, ve: name || p };
-    });
-    if (L.type === 'icon' && tracks.some((p) => p === 'trimS' || p === 'trimE' || p === 'trimO')) { gaps.add('trim on an icon (becomes a line path)'); }
-    if (L.pin && L.pin !== 'c' && tracks.some((p) => p === 'w' || p === 'h')) tv.push({ p: 'pin', ve: `pinned ${L.pin} → translate compensation keys` });
-    keys += segs * 2;
-    rows.push({ id: L.id || '', type: L.type, depth, ve, tracks: tv, text: L.text, icon: L.icon });
-    for (const ch of L.ch || []) walk(ch, depth + 1);
-  };
-  for (const L of layers) walk(L, 0);
-  const cam = typeof spec.cam === 'number' ? { zoom: spec.cam } : spec.cam;
-  if (cam) {
-    const ct = Object.keys(cam.k || {});
-    keys += ct.reduce((a, p) => a + normTrack(cam.k[p], 'x').segs.length * 2, 0);
-    rows.unshift({ id: 'camera', type: 'camera', depth: 0, ve: ct.length ? 'Camera clip' : `Camera clip · zoom ${cam.zoom ?? 1}`,
-      tracks: ct.map((p) => ({ p, ve: { zoom: 'camZoom', x: 'camX', y: 'camY' }[p] || p })) });
-  }
-  return { rows, keys, gaps: [...gaps] };
-};
 })();

@@ -27,14 +27,13 @@ field left out, is yours to decide. Choose well and say what you chose.
     "language": "en"
   },
   "look": {
-    "engine": "default",
     "source": "library",
     "picks": ["feature-relay", "screen-wall"],
     "theme": "light",
     "accent": "#3E63DD"
   },
   "motion": { "preset": "spring" },
-  "workflow": { "storyboard": 2, "voiceover": "agent" },
+  "workflow": { "mode": "guided", "storyboard": 2, "voiceover": "agent" },
   "output": ["render", "video-editor"]
 }
 ```
@@ -50,15 +49,15 @@ field left out, is yours to decide. Choose well and say what you chose.
 | `film.duration` | seconds (10–90) | The target length. Plan 1 scene per 3–5 s. |
 | `film.format` | `16:9` · `9:16` · `1:1` | Sets `size`: 1920×1080 · 1080×1920 · 1080×1080. |
 | `film.language` | ISO code | The language of all copy and the voice-over. |
-| `look.engine` | `default` · `3d` · `agent` | How the film is built. `default`: GL Motion items and new items as layers — every layer editable in the Video Editor and After Effects, with 3D space (turning cards, depth, a camera that tilts and dollies). `3d`: the 3D engine — each scene an HTML page with real 3D (three.js: objects, lights, glow, particles); the Video Editor gets each scene as an HTML clip (edited as code), no After Effects. `scenario.engine`; see [3d-engine.md](3d-engine.md). With `agent`, choose `default` unless the brief asks for real 3D objects. |
-| `look.source` | `library` · `new` · `mix` · `agent` | The SKILL.md step 1 question, answered: ready-made items, brand-new motion graphics, or both. (The 3D engine builds every scene new.) |
-| `look.picks[]` | item ids | Items the user liked in the gallery. Use them where they fit a beat, and offer them as alternatives otherwise. |
+| `look.source` | `library` · `new` · `mix` · `agent` | The SKILL.md step 1 question, answered: ready-made library scenes, brand-new motion graphics (every scene a page you write), or both. With `agent`, choose by the brief: `new` for a brand, a launch or anything that must look like no one else; `library` for a quick, clean UI film. |
+| `look.picks[]` | library scene ids | Library scenes the user liked. Use them where they fit a beat, and offer them as alternatives otherwise. |
 | `look.theme` | `light` · `dark` · `agent` | `scenario.theme`. |
 | `look.accent` | hex · `agent` | `scenario.accent`. With `agent`, take the brand colour from `site.json` or the logo. |
 | `motion.preset` | `spring` · `snappy` · `gentle` · `playful` · `elastic` · `agent` | `scenario.motion` ([easing.md](easing.md)). |
-| `workflow.storyboard` | `0` (skip) · `2` · `3` | The number of storyboard variants to show before the preview (SKILL.md step 4). With `0`, go straight from the approved scenario to the preview. |
-| `workflow.voiceover` | `yes` · `no` · `agent` | Whether step 6 records a voice-over. |
-| `output[]` | `render` · `video-editor` · `after-effects` | What step 7 delivers: a rendered video, a Video Editor project (GLEA with layers; with the 3D engine, HTML scenes), and/or an After Effects export (not with the 3D engine). |
+| `workflow.mode` | `quick` · `guided` · `agent` | How the film is made. `quick`: straight to the preview. You decide every open answer yourself, write the story and the shots without stopping, and the preview is the one approval (SKILL.md → Quick mode). `guided`: the user approves the story, then a storyboard direction, then the preview. With `agent`, choose `quick` when the request is short and clear, `guided` when there is a lot to get right. |
+| `workflow.storyboard` | `0` (skip) · `2` · `3` | The number of storyboard variants to show before the preview (SKILL.md step 3). With `0`, go straight from the approved scenario to the preview. |
+| `workflow.voiceover` | `yes` · `no` · `agent` | Whether step 5 records a voice-over. |
+| `output[]` | `render` · `video-editor` · `after-effects` | What step 6 delivers: a rendered video, a Video Editor project (GLEA: every scene an HTML clip), and/or an After Effects project built by an agent from the After Effects package (After Effects must be installed and open; [export.md](export.md)). |
 
 Keep the brief in the project folder as `brief.json`. If it came from a board URL, save a copy there.
 `node SKILL/tools/brief.mjs --check <file>` validates a brief and prints what it leaves open.

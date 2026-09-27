@@ -10,22 +10,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style id="mu-tokens">@@TOKENS@@</style>
 <style>
-/* the kit's stage (items are laid out 1:1 around the film's centre) */
-.uik-stage { position: absolute; left: 0; top: 0; overflow: hidden; transform-origin: 0 0; background: transparent;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #0B0B0B; -webkit-font-smoothing: antialiased; }
-.uik-root { position: absolute; left: 50%; top: 50%; width: 0; height: 0; }
-.uik-n { position: absolute; left: 0; top: 0; width: 0; height: 0; }
-.uik-b { position: absolute; box-sizing: border-box; }
-.uik-c { position: absolute; width: 0; height: 0; }
-.uik-t { position: absolute; left: 0; top: 0; white-space: nowrap; line-height: 1.15; }
-.uik-svg { position: absolute; left: 0; top: 0; width: 1px; height: 1px; overflow: visible; }
-.uik-dw { display: inline-grid; position: relative; justify-items: center; vertical-align: top; clip-path: inset(calc((1lh - 1.1em) / 2) -0.5em); }
-.uik-dz { grid-area: 1 / 1; visibility: hidden; height: 1lh; overflow: hidden; }
-.uik-ds { grid-area: 1 / 1; position: relative; }
-.uik-d1 { position: absolute; left: 0; right: 0; top: 1.1em; text-align: center; }
-.uik-caret { display: inline-block; width: .085em; height: 1.02em; vertical-align: -0.15em; margin: 0 .03em; border-radius: 2px; }
-.uik-cursor svg { filter: drop-shadow(0 2px 3px rgba(0,0,0,.28)); }
-
 /* ── preview chrome: "studio inspector" + the theatre's Export panel and full stage — every colour is a token (mu-tokens) ── */
 .mupv-app { --side-w: clamp(336px, 26.5vw, 384px); --ease: cubic-bezier(.22, .8, .24, 1); --dur: 300ms;
   position: fixed; inset: 0; box-sizing: border-box; display: grid; overflow: hidden; overflow: clip;
@@ -127,10 +111,10 @@
 .mupv-strip { position: absolute; left: 0; right: 0; top: 24px; height: 70px; }
 .mupv-seg { position: absolute; top: 0; height: 70px; min-width: 0; container-type: inline-size; }
 .mupv-seg-th { position: relative; height: 48px; border-radius: 4px; overflow: hidden; background: var(--mu-soft); }
-.mupv-seg-th > .uik-stage { opacity: .74; transition: opacity .18s; }
+.mupv-seg-th > .gl-stage { opacity: .74; transition: opacity .18s; }
+.mupv-seg:hover .mupv-seg-th > .gl-stage { opacity: .9; }
+.mupv-seg.is-on .mupv-seg-th > .gl-stage { opacity: 1; }
 .mupv-seg-th::after { content: ''; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px var(--mu-line); pointer-events: none; }
-.mupv-seg:hover .mupv-seg-th > .uik-stage { opacity: .9; }
-.mupv-seg.is-on .mupv-seg-th > .uik-stage { opacity: 1; }
 .mupv-seg.is-on .mupv-seg-th::after { box-shadow: inset 0 0 0 2px var(--mu-acc); }
 .mupv-seg-cap { display: flex; gap: 6px; align-items: baseline; margin-top: 5px; padding: 0 6px 0 1px; font-size: 11.5px; line-height: 16px; color: var(--mu-sub); white-space: nowrap; overflow: hidden; }
 .mupv-seg-cap b { font-weight: 600; font-variant-numeric: tabular-nums; flex: none; }
@@ -266,6 +250,9 @@
 .mupv-opt b { font-weight: 500; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .mupv-opt b em { font-style: normal; font-size: 10.5px; font-weight: 600; line-height: 16px; padding: 0 6px; border-radius: 4px; background: var(--mu-acc); color: var(--mu-on-acc); }
 .mupv-opt span { color: var(--mu-sub); font-size: 12px; line-height: 1.4; }
+.mupv-aenote { margin: 0; padding: 9px 11px; border-radius: 8px; background: color-mix(in srgb, var(--mu-warn) 12%, transparent); color: var(--mu-txt); font-size: 12px; line-height: 1.45; }
+.mupv-status code { font-size: 11.5px; overflow-wrap: anywhere; }
+.mupe-tip { margin: 0; }
 .mupv-app .mupv-go { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; height: 42px; margin-top: 2px; border: 0; border-radius: 10px; padding: 0 14px;
   background: var(--mu-acc); color: var(--mu-on-acc); font-size: 13.5px; font-weight: 600; cursor: pointer; transition: filter .15s, transform .15s var(--ease); }
 .mupv-app .mupv-go svg { width: 15px; height: 15px; }
@@ -372,10 +359,9 @@
 .mupv-app .mupe-ibtn:disabled { opacity: .35; cursor: default; background: transparent; }
 
 /* stage: hover, selection (the Video Editor's violet), the name tag */
-.mupv-frame .uik-n { pointer-events: auto; }
-.mupv-frame .mupe-ghost { pointer-events: none; }
-.mupv-frame .mupe-photo .uik-c, .mupv-frame .mupe-photo .uik-c .uik-n { pointer-events: none; }
-.mupv-frame .uik-cursor { pointer-events: none; }
+.mupv-view { -webkit-user-select: none; user-select: none; }
+.mupv-frame { cursor: default; }
+.mupv-frame.is-moving { cursor: grabbing; }
 .mupe-ov { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 2; }
 .mupe-box { position: absolute; left: 0; top: 0; box-sizing: border-box; border-radius: 2px; }
 .mupe-box.is-hover { box-shadow: 0 0 0 1.5px var(--mupe-sel); }
@@ -610,10 +596,10 @@ body.mupe-scrub, body.mupe-scrub * { cursor: ew-resize !important; user-select: 
           <section class="mupv-sec" aria-labelledby="mupv-h-export">
             <h3 class="mupv-h" id="mupv-h-export">Export for editing</h3>
             <div class="mupv-opts" id="mupv-opts" role="radiogroup" aria-labelledby="mupv-h-export">
-              <label class="mupv-opt"><input type="radio" name="mupv-ex" value="glea-layers" checked><b>GLEA with layers <em>Recommended</em></b><span>Every shape, text and keyframe as its own Video Editor layer, ready to edit.</span></label>
-              <label class="mupv-opt"><input type="radio" name="mupv-ex" value="glea-html"><b>GLEA with HTML cards</b><span>Each scene as one HTML clip. Looks exactly like this preview; you edit the HTML.</span></label>
-              <label class="mupv-opt"><input type="radio" name="mupv-ex" value="ae"><b>As After Effects</b><span>A script that builds the comp from native shape and text layers.</span></label>
+              <label class="mupv-opt"><input type="radio" name="mupv-ex" value="glea" checked><b>GLEA</b><span>For the GreenLight Dash Video Editor: every scene as an HTML clip that looks exactly like this preview, with the voice-over and sound effects on their own tracks.</span></label>
+              <label class="mupv-opt"><input type="radio" name="mupv-ex" value="ae"><b>After Effects <em>Built by an agent</em></b><span>A package with a prompt: an agent rebuilds the film in After Effects as native layers and keyframes, matching this preview.</span></label>
             </div>
+            <p class="mupv-aenote" id="mupv-aenote" hidden>After Effects must be installed and open while the agent builds the project. Nothing runs in After Effects until you ask for it.</p>
             <button type="button" class="mupv-go" id="mupv-export"></button>
             <div class="mupv-status" id="mupv-estatus" role="status"></div>
           </section>
@@ -645,20 +631,20 @@ let sc = withEdits();
 const W = sc.size.w, H = sc.size.h, FPS = sc.fps;
 const MODE = DATA.mode || { kind: 'static' };
 K.setTheme(sc.theme, sc.accent, sc.colors);
-// a 3D-engine film: its scenes are HTML pages (lib/scene-host.js plays them); otherwise the layers film
-const ENGINE3D = sc.engine === '3d';
-const scriptText = (name) => { const el = document.querySelector(`script[data-mu-src="${name}"]`); return el ? el.textContent : ''; };
-const scenePlan = () => K.scenePlan(sc, DATA.scenes || []);
-let film = ENGINE3D ? null : MU.film(sc);
-const T = ENGINE3D ? scenePlan().T : film.T;
-const FRAMES = Math.round(T * FPS);
+// every scene is a page in its own frame (lib/player.js); the preview's pages carry the element picker (lib/editor.js)
+const SRC = MU.pageSources(document, DATA.scenes);
+const planOf = () => MU.plan(sc, SRC, { editor: true });
 const timing = MU.timing(sc);
+const T = timing.length ? timing[timing.length - 1].end : 0;
+const FRAMES = Math.round(T * FPS);
 const fmt = (t) => { const m = Math.floor(t / 60), s = t - m * 60; return `${m}:${s.toFixed(2).padStart(5, '0')}`; };
 const secs = (t) => `${(Math.round(t * 10) / 10).toFixed(1)} s`;
 const voice = DATA.voice || [];
 const sfx = DATA.sfx || [];   // sound effects: { url, start, duration, vol, label }
-const specOf = (i) => K.elements.find((e) => e.id === timing[i].item);
-const titleOf = (i) => sc.scenes[i].title || specOf(i)?.name || timing[i].item;
+const isPage = (i) => !!sc.scenes[i].html;
+const specOf = (i) => (isPage(i) ? null : K.elements.find((e) => e.id === sc.scenes[i].item) || null);
+const kindLabel = (i) => (isPage(i) ? sc.scenes[i].html.split('/').pop() : (specOf(i) && specOf(i).name) || sc.scenes[i].item);
+const titleOf = (i) => sc.scenes[i].title || kindLabel(i);
 
 const svg = (body, fill) => `<svg viewBox="0 0 16 16" aria-hidden="true" ${fill ? 'fill="currentColor"' : 'fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"'}>${body}</svg>`;
 const ICON = {
@@ -689,7 +675,7 @@ $('mupv-badge').innerHTML = [`${W}×${H}`, `${FPS} fps`, `${T.toFixed(2)} s`, `$
 const ON_DISK = MODE.kind === 'board' && location.protocol === 'file:';
 const SERVED = ON_DISK && MODE.app && MODE.mediaPrefix ? `${MODE.app}${MODE.mediaPrefix}/${location.pathname.split('/').pop()}` : '';
 const modeEl = $('mupv-mode');
-modeEl.querySelector('span').textContent = ON_DISK ? 'Opened from disk' : MODE.kind === 'board' ? `On the board${MODE.boardName ? ' · ' + MODE.boardName : ''}` : MODE.kind === 'local' ? 'Local · render and export on' : 'Preview only';
+modeEl.querySelector('span').textContent = ON_DISK ? 'Opened from disk' : MODE.kind === 'board' ? `On the board${MODE.boardName ? ' · ' + MODE.boardName : ''}` : MODE.kind === 'local' ? (MODE.agent ? 'Local · your edits go to the agent' : 'Local · render and export on') : 'Preview only';
 modeEl.classList.toggle('is-live', MODE.kind !== 'static' && !ON_DISK);
 modeEl.classList.toggle('is-disk', ON_DISK);
 const openX = $('mupv-open-export');
@@ -698,23 +684,27 @@ $('mupv-show').innerHTML = `${ICON.show}<span>Show panels</span><kbd>F</kbd>`;
 openX.setAttribute('aria-label', 'Export'); $('mupv-show').setAttribute('aria-label', 'Show panels');
 // Under a board the agent delivers: after the user approves this preview (the film's pipeline gate), its Render &
 // export step renders the film with the soundtrack and exports it. No Export here, one line saying how it goes on.
-const AGENT_DELIVERS = MODE.kind === 'board';
+// Quick mode (MODE.agent) works the same way off the board: the agent asks for the approval, then renders.
+const AGENT_DELIVERS = MODE.kind === 'board' || !!MODE.agent;
+const AGENT_LINE = MODE.kind === 'board' ? 'Approve it in the chat, and the agent renders and exports it' : 'Edit what you like. Approve it in the chat, and the agent renders it';
 if (AGENT_DELIVERS) {
   openX.hidden = true;
   const by = document.createElement('span'); by.className = 'mupv-agentline'; by.id = 'mupv-agentline';
-  by.textContent = 'Approve it in the chat, and the agent renders and exports it';
+  by.textContent = AGENT_LINE;
   openX.after(by);
 }
 
-// ── the stage ──
+// ── the stage: the scene pages, played by the player, scaled to fit ──
 const view = $('mupv-view'), frameEl = $('mupv-frame');
 if (sc.background) frameEl.style.background = sc.background; else frameEl.classList.add('is-clear');
-let inst = ENGINE3D ? new K.SceneFilm(scenePlan(), frameEl, { three: scriptText('three.js'), runtime: scriptText('scene.js') }) : new K.Instance(film, frameEl);
-Object.assign(inst.stage.style, { width: W + 'px', height: H + 'px' });
+const infoCache = new Map();
+const player = new GLPlayer(planOf(), frameEl, { onSwap: () => { infoCache.clear(); lastSig = null; } });
+let scaleK = 1;
 const fit = () => {
   const vw = view.clientWidth, vh = view.clientHeight, k = Math.min(vw / W, vh / H);
+  scaleK = k || 1;
   Object.assign(frameEl.style, { width: W * k + 'px', height: H * k + 'px', left: (vw - W * k) / 2 + 'px', top: (vh - H * k) / 2 + 'px' });
-  inst.stage.style.transform = `scale(${k})`;
+  player.stage.style.transform = `scale(${k})`;
 };
 new ResizeObserver(fit).observe(view); fit();
 
@@ -738,7 +728,7 @@ const vos = voice.length
   : timing.map((tm, i) => { const txt = lineOf(i); if (!txt) return null; const d = document.createElement('div'); d.className = 'mupv-vo is-script'; Object.assign(d.style, { left: `calc(${(tm.start / T) * 100}% + 4px)`, width: `calc(${((tm.end - tm.start) / T) * 100}% - 11px)` }); d.title = `Script: ${txt}`; lane.appendChild(d); return { d, a: tm.start, b: tm.end }; }).filter(Boolean);
 sfx.forEach((v) => { const d = document.createElement('div'); d.className = 'mupv-sfx'; d.style.left = (Math.max(0, v.start) / T) * 100 + '%'; d.title = v.label || 'Sound effect'; lane.appendChild(d); });
 const scriptLines = timing.map((tm, i) => lineOf(i)).filter(Boolean).length;
-$('mupv-legend').innerHTML = (voice.length ? `<i></i>Voice-over · ${voice.length} clip${voice.length > 1 ? 's' : ''}` : scriptLines ? '<i class="is-script"></i>Voice-over script · not recorded' : '')
+$('mupv-legend').innerHTML = (voice.length ? `<i></i>Voice-over · ${voice.length} clip${voice.length > 1 ? 's' : ''}` : scriptLines ? '<i class="is-script"></i>Voice-over · written, not recorded' : '')
   + (sfx.length ? `${voice.length || scriptLines ? ' · ' : ''}Sound effects · ${sfx.length}` : '');
 const ruler = $('mupv-ruler');
 const drawRuler = () => {
@@ -756,42 +746,49 @@ const drawRuler = () => {
 };
 const sceneAt = (t) => { let k = 0; timing.forEach((tm, i) => { if (t >= tm.start - 1e-6) k = i; }); return k; };
 
-// ── scene thumbnails: each scene alone (compose … { scene }), seeked to its settled moment, built once when idle ──
+// ── scene thumbnails: each scene's page on its own, at its settled moment, made once when idle (in the list and in the
+// strip). A still costs no WebGL: its canvases become pictures and give their context back (a page has only so many) ──
 const thumbBg = (el) => { if (sc.background) el.style.background = sc.background; else el.classList.add('mupv-clear'); };
 const fitThumb = (stage, box, cover) => {
   const bw = box.clientWidth, bh = box.clientHeight; if (!stage || !bw || !bh) return;
   const k = cover ? Math.max(bw / W, bh / H) : Math.min(bw / W, bh / H);
   stage.style.transform = `translate(${((bw - W * k) / 2).toFixed(2)}px, ${((bh - H * k) / 2).toFixed(2)}px) scale(${k.toFixed(5)})`;
 };
-const thumbs = [];
-const fitSegThumbs = () => { if (!ENGINE3D) segs.forEach((s, i) => thumbs[i] && fitThumb(thumbs[i].seg, s.firstChild, true)); };
-const buildThumb = (i) => {
-  const tm = timing[i], box = segs[i].firstChild;
-  let ti;
-  if (ENGINE3D) {
-    // a scene page: a still of its 3D canvas at the settled moment
-    inst.ready.then(() => {
-      const url = inst.capture(i, 0.72 * tm.duration); if (!url) return;
-      if (thumbs[i]) { thumbs[i].seg.remove(); thumbs[i].row.remove(); }
-      const still = (into, fit) => { const im = document.createElement('img'); im.src = url; im.alt = ''; im.style.cssText = `position:absolute;left:0;top:0;width:100%;height:100%;object-fit:${fit};`; into.appendChild(im); return im; };
-      thumbs[i] = { seg: still(box, 'cover'), row: still(sceneRows[i].querySelector('.mupv-sth'), 'contain') };
-    });
-    return;
+// WebGL keeps its picture (preserveDrawingBuffer) so the still can be taken after the frame is drawn
+const KEEP_GL = '<script>(function(){var g=HTMLCanvasElement.prototype.getContext;HTMLCanvasElement.prototype.getContext=function(t,a){if(/webgl/i.test(String(t)))a=Object.assign({},a,{preserveDrawingBuffer:true});return g.call(this,t,a);};})();<\/script>';
+const freeze = (w) => {
+  if (!w) return;
+  for (const c of w.document.querySelectorAll('canvas')) {
+    let gl = null; try { gl = c.getContext('webgl2') || c.getContext('webgl'); } catch (e) { gl = null; }
+    if (!gl) continue;
+    try {
+      // a 2D copy in its place (drawImage keeps WebGL's premultiplied glow; a PNG of it would blow out)
+      const k = w.document.createElement('canvas');
+      for (const at of c.attributes) k.setAttribute(at.name, at.value);
+      k.width = c.width; k.height = c.height;
+      k.getContext('2d').drawImage(c, 0, 0);
+      c.replaceWith(k);
+      const ext = gl.getExtension('WEBGL_lose_context'); if (ext) ext.loseContext();
+    } catch (e) { /* a canvas it can't read: it keeps its context */ }
   }
-  if (thumbs[i]) { thumbs[i].seg.remove(); thumbs[i].row.remove(); thumbs[i] = null; }
-  try { ti = new K.Instance(K.compose(sc, { scene: i }), box); } catch (e) { return; }
-  Object.assign(ti.stage.style, { width: W + 'px', height: H + 'px' });
-  ti.seek((tm.start - tm.from) + 0.72 * tm.duration);
-  // the list's copy: a clone (canvases copied by hand)
-  const cl = ti.stage.cloneNode(true);
-  const from = ti.stage.querySelectorAll('canvas'), to = cl.querySelectorAll('canvas');
-  from.forEach((c, j) => { try { to[j].getContext('2d').drawImage(c, 0, 0); } catch (e) { /* tainted or empty */ } });
-  const rowBox = sceneRows[i].querySelector('.mupv-sth');
-  rowBox.appendChild(cl);
-  thumbs[i] = { seg: ti.stage, row: cl };
-  fitThumb(ti.stage, box, true);
-  fitThumb(cl, rowBox, false);
 };
+const thumbs = [], thumbPages = [];
+const stillOf = (i, box, page, cover) => {
+  const tm = timing[i];
+  const p = new GLPlayer({ W, H, T: tm.duration, background: sc.background,
+    scenes: [{ kind: MU.kindOf(sc.scenes[i]), start: 0, end: tm.duration, from: 0, to: tm.duration, duration: tm.duration, page }] }, box);
+  fitThumb(p.stage, box, cover);
+  p.ready.then(() => p.seek(0.72 * tm.duration)).then(() => freeze(p.win(0)));
+  return p;
+};
+const buildThumb = (i) => {
+  const page = MU.scenePage(sc, i, SRC, { hosted: true }).replace(/\x3chead([^>]*)>/i, (m) => m + KEEP_GL);   // (\x3c: no document tag in this page's own text)
+  if (thumbs[i] && thumbPages[i] === page) return;
+  if (thumbs[i]) { thumbs[i].row.destroy(); thumbs[i].seg.destroy(); }
+  thumbPages[i] = page;
+  thumbs[i] = { row: stillOf(i, sceneRows[i].querySelector('.mupv-sth'), page, false), seg: stillOf(i, segs[i].firstChild, page, true) };
+};
+const fitThumbs = () => thumbs.forEach((t, i) => { if (t) { fitThumb(t.row.stage, sceneRows[i].querySelector('.mupv-sth'), false); fitThumb(t.seg.stage, segs[i].firstChild, true); } });
 segs.forEach((s) => thumbBg(s.firstChild));
 
 // ── transport ──
@@ -817,7 +814,7 @@ const timeEl = $('mupv-time'), nowEl = $('mupv-now');
 const draw = () => {
   if (cur === drawn) return;
   drawn = cur;
-  inst.seek(Math.min(cur, T));
+  player.seek(Math.min(cur, T));
   head.style.left = (cur / T) * 100 + '%';
   miniFill.style.transform = `scaleX(${(cur / T).toFixed(5)})`;
   bar.setAttribute('aria-valuenow', cur.toFixed(2));
@@ -867,7 +864,7 @@ bar.onpointermove = (e) => { if (e.pointerType === 'mouse') { bar.classList.add(
 bar.onpointerup = bar.onpointercancel = () => { drag = false; bar.classList.remove('is-drag'); };
 bar.onpointerleave = () => bar.classList.remove('is-hover');
 bar.ondblclick = (e) => seek(timing[sceneAt(tAt(e))].start + 0.001);
-new ResizeObserver(() => { drawRuler(); fitSegThumbs(); }).observe(bar);
+new ResizeObserver(() => { drawRuler(); fitThumbs(); }).observe(bar);
 
 // ── inspector tabs (Scenes · Design) ──
 const tabs = [...document.querySelectorAll('.mupv-tab')];
@@ -975,17 +972,17 @@ addEventListener('keydown', (e) => {
   else if (e.code === 'Home') seek(0); else if (e.code === 'End') seek(T);
 });
 
-// ── Scenes: thumbnail, timing, the item, the voice line ──
+// ── Scenes: thumbnail, timing, what the scene is, the voice line ──
 $('mupv-scount').textContent = timing.length;
-$('mupv-sdur').innerHTML = `<b>${timing.length} scenes</b> · ${T.toFixed(1)} s`;
+$('mupv-sdur').innerHTML = `<b>${timing.length} scene${timing.length === 1 ? '' : 's'}</b> · ${T.toFixed(1)} s`;
 const sceneRows = timing.map((tm, i) => {
-  const s = sc.scenes[i], spec = specOf(i);
+  const s = sc.scenes[i];
   const b = document.createElement('button'); b.type = 'button'; b.className = 'mupv-scene';
-  const copy = Object.values(s.text || {}).join(' · ');
+  const copy = isPage(i) ? '' : Object.values(s.text || {}).join(' · ');
   const txt = lineOf(i);
   b.innerHTML = `<span class="mupv-sth"><span class="mupv-sprog"></span></span><span class="mupv-sbody">`
     + `<span class="mupv-shead"><i>${i + 1}</i><b>${esc(titleOf(i))}</b><span>${fmt(tm.start)}</span></span>`
-    + `<span class="mupv-smeta">${secs(tm.duration)}${i ? ` · ${s.transition === 'fade' ? 'fade in' : 'cut'}` : ''} · ${esc(spec?.name || tm.item)}${copy ? ' · ' + esc(copy) : ''}</span>`
+    + `<span class="mupv-smeta">${secs(tm.duration)}${i ? ` · ${s.transition === 'fade' ? 'fade in' : 'cut'}` : ''} · ${esc(kindLabel(i))}${copy ? ' · ' + esc(copy) : ''}</span>`
     + (txt ? `<span class="mupv-sline" title="${esc(txt)}">${ICON.wave}<span>${esc(txt)}</span></span>` : '')
     + '</span>';
   b.setAttribute('aria-label', `Scene ${i + 1}, ${titleOf(i)}, at ${fmt(tm.start)}`);
@@ -994,38 +991,33 @@ const sceneRows = timing.map((tm, i) => {
   $('mupv-scenes').appendChild(b);
   return b;
 });
-// voice-over: clips or the script's lines (shown per scene above)
+// voice-over: clips or the written lines (shown per scene above)
 const lines = timing.map((tm, i) => lineOf(i)).filter(Boolean);
-$('mupv-vocount').textContent = voice.length ? `Voice-over · ${voice.length} clip${voice.length > 1 ? 's' : ''}` : lines.length ? 'Voice-over · script only' : 'No voice-over';
+$('mupv-vocount').textContent = voice.length ? `Voice-over · ${voice.length} clip${voice.length > 1 ? 's' : ''}` : lines.length ? 'Voice-over · written, not recorded' : 'No voice-over';
 const voNote = $('mupv-vo');
 if (!voice.length) {
   voNote.hidden = false;
-  voNote.textContent = lines.length ? 'The voice-over is a script, not recorded yet. The agent asks about a voice-over once you approve the preview.'
+  voNote.textContent = lines.length ? 'The voice-over is written, not recorded yet. The agent asks about recording it once you approve the preview.'
     : 'No voice-over. The agent asks about one once you approve the preview.';
 }
 
-// ── Export panel: render a video (format cards, motion blur) · export for editing (3 options) ──
+// ── Export panel: render a video (format cards, motion blur) · export for editing (GLEA, After Effects) ──
 const status = (el, text, cls) => { el.className = 'mupv-status' + (cls ? ' is-' + cls : ''); el.innerHTML = text; };
 const FMT_LABEL = { mp4: 'MP4', 'webm-alpha': 'WebM alpha', mov: 'ProRes 4444' };
-const EXPORT_LABEL = { 'glea-layers': 'GLEA with layers', 'glea-html': 'GLEA with HTML cards', ae: 'After Effects' };
-$('mupv-where').textContent = ON_DISK ? 'Rendering and exporting run in GreenLight Dash.'
-  : MODE.kind === 'board' ? 'Renders land in the pipeline’s Final film. GLEA exports open in the Video Editor.'
-  : MODE.kind === 'local' ? 'Renders and exports are saved in the project folder.'
-    : 'This page is a file: each button gives you the command to run in the project folder.';
+const EXPORT_LABEL = { glea: 'GLEA', ae: 'the After Effects package' };
+$('mupv-where').textContent = MODE.kind === 'local' ? 'Renders and exports are saved in the project folder.'
+  : 'This page is a file: each button gives you the command to run in the project folder.';
 $('mupv-spec').textContent = `${W}×${H} · ${FPS} fps`;
 const fmtSel = $('mupv-fmt'); let outFmt = 'mp4';
 const exportKind = () => document.querySelector('input[name="mupv-ex"]:checked').value;
 const renderBtn = $('mupv-render'), exportBtn = $('mupv-export');
-const DISK_MSG = `Opened from disk, so this page can't reach GreenLight Dash. ${SERVED ? `<a href="${esc(SERVED)}">Open it in GreenLight Dash</a> (the app must be running), or` : 'Use'} the card on the board.`;
-if (ON_DISK) $('mupv-dbody').insertAdjacentHTML('afterbegin', `<div class="mupv-disk" id="mupv-disk"><b>Opened from disk</b><span>This is the card's file. Render and Export work in GreenLight Dash: open this preview there, or use the card on the board.</span>${SERVED ? `<a href="${esc(SERVED)}">Open in GreenLight Dash</a>` : ''}</div>`);
 const labelRender = () => { if (!renderBtn.disabled) setLabel(renderBtn, 'render', `Render ${FMT_LABEL[outFmt]}`); };
-const labelExport = () => { if (!exportBtn.disabled) { const k = exportKind(); setLabel(exportBtn, 'export', k === 'ae' ? 'Export for After Effects' : `Export ${EXPORT_LABEL[k]}`); } };
+const labelExport = () => {
+  const k = exportKind();
+  $('mupv-aenote').hidden = k !== 'ae';
+  if (!exportBtn.disabled) setLabel(exportBtn, 'export', k === 'ae' ? 'Make the After Effects package' : 'Export GLEA');
+};
 fmtSel.onclick = (e) => { const b = e.target.closest('button[data-v]'); if (!b) return; outFmt = b.dataset.v; fmtSel.querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === b))); labelRender(); };
-// a 3D-engine film: its scenes go into the Video Editor as HTML clips, and there is no After Effects export
-if (ENGINE3D) {
-  for (const v of ['glea-layers', 'ae']) { const o = document.querySelector(`input[name="mupv-ex"][value="${v}"]`); if (o) o.closest('label').hidden = true; }
-  const h = document.querySelector('input[name="mupv-ex"][value="glea-html"]'); if (h) { h.checked = true; h.closest('label').querySelector('b').innerHTML = 'GLEA with HTML scenes <em>3D engine</em>'; }
-}
 document.querySelectorAll('input[name="mupv-ex"]').forEach((x) => x.addEventListener('change', labelExport));
 labelRender(); labelExport();
 // a dot on the toolbar's Export button: working, done, failed
@@ -1034,16 +1026,6 @@ const setJob = (which, state) => {
   jobs[which] = state;
   const s = jobs.render === 'busy' || jobs.export === 'busy' ? 'busy' : (jobs.render === 'bad' || jobs.export === 'bad') ? 'bad' : jobs.render || jobs.export;
   $('mupv-jobdot').className = 'mupv-dot' + (s ? ' is-' + s : '');
-};
-
-// the page's own copies of the library: a film or scene page is built from them
-const src = (name) => { const el = document.querySelector(`script[data-mu-src="${name}"]`); return el ? el.textContent : ''; };
-const sources = () => {
-  const files = {};
-  document.querySelectorAll('script[data-mu-src]').forEach((el) => { const n = el.dataset.muSrc; if (!['easings.js', 'engine.js', 'catalog.js', 'film.js', 'converter.js', 'html-export.js', 'ae-export.js', 'motion.js', 'scene.js', 'scene-host.js', 'three.js'].includes(n)) files[n] = el.textContent; });
-  const out = { easings: src('easings.js'), engine: src('engine.js'), film: src('film.js'), files };
-  if (ENGINE3D) Object.assign(out, { scenes: DATA.scenes || [], sceneRuntime: src('scene.js'), sceneHost: src('scene-host.js'), three: src('three.js') });
-  return out;
 };
 const cmdBox = (cmd) => `<div class="mupv-cmd"><code>${esc(cmd)}</code><button type="button" class="mupv-btn" data-copy="${esc(cmd)}">Copy</button></div>`;
 document.addEventListener('click', (e) => { const b = e.target.closest('[data-copy]'); if (!b) return; try { navigator.clipboard.writeText(b.dataset.copy).then(() => { b.textContent = 'Copied'; }, () => {}); } catch (err) { /* select the text instead */ } });
@@ -1060,44 +1042,21 @@ const upload = async (name, blob, folder) => {
   const fd = new FormData(); fd.append('file', blob, name);
   return api('POST', `/api/upload?board_id=${encodeURIComponent(MODE.boardId)}&defer_derivatives=true&folder=${encodeURIComponent(folder)}`, fd, true);
 };
-// a scene page goes up once per content (uploads never overwrite: a second copy would get a new name)
-const scenePages = new Map();
-const uploadScene = async (i, html) => {
-  const key = `${i}:${html.length}:${html.slice(-400)}`;
-  if (!scenePages.has(key)) scenePages.set(key, (await upload(`scene-${i + 1}.html`, new Blob([html], { type: 'text/html' }), MODE.folder)).url);
-  return scenePages.get(key);
-};
-// board media URLs: the pictures and voice clips are paths relative to the board folder
-const boardUrl = (p) => (/^(https?:|data:|\/)/.test(p) ? p : `${MODE.mediaPrefix}/${p}`);
-const relFrom = (fromDir, p) => { if (/^(https?:|data:|\/)/.test(p)) return p; const a = fromDir.split('/').filter(Boolean), b = p.split('/'); let i = 0; while (i < a.length && i < b.length - 1 && a[i] === b[i]) i++; return '../'.repeat(a.length - i) + b.slice(i).join('/'); };
-const voiceFor = (toUrl) => voice.map((v) => ({ url: toUrl(v.url), start: v.start, duration: v.duration, name: v.name || `Voice ${v.scene || ''}`.trim() }));
-const sfxFor = (toUrl) => sfx.map((v) => ({ url: toUrl(v.url), start: v.start, duration: v.duration, vol: v.vol, name: v.label }));
-const rebased = (dir) => Object.assign({}, sc, { scenes: sc.scenes.map((s) => (s.images ? Object.assign({}, s, { images: Object.fromEntries(Object.entries(s.images).map(([k, v]) => [k, relFrom(dir, v)])) }) : s)) });
 
 renderBtn.onclick = async () => {
   const btn = renderBtn, st = $('mupv-rstatus'), res = $('mupv-rresult'); res.innerHTML = '';
   const mb = $('mupv-mb').checked, fmtNow = outFmt;
-  if (ON_DISK) { status(st, DISK_MSG, 'bad'); return; }
-  if (MODE.kind === 'static') {
+  if (MODE.kind !== 'local') {
     status(st, `<span>Rendering needs the local server or the agent. Run this in the project folder:</span>${cmdBox(`${DATA.cmd.render} --format ${fmtNow}${mb ? ' --motion-blur 4' : ''}`)}${leafCount() ? '<span>Your changes are in this browser: Changes › Copy for the agent first, so the render has them.</span>' : ''}`);
     return;
   }
   busy(btn, true, 'render', 'Rendering…'); setJob('render', 'busy');
   status(st, `Rendering ${FRAMES} frames${mb ? ' with motion blur' : ''}. This takes about as long as the film, or longer with blur.`);
   try {
-    if (MODE.kind === 'board') {
-      const html = MU.pageHtml(sc, sources(), {});
-      const out = await api('POST', '/api/html/render', { html, width: W, height: H, fps: FPS, duration: T, format: fmtNow, motion_blur: mb ? 4 : 1, board_id: MODE.boardId, title: sc.name });
-      let placed = false;
-      try { await api('POST', `/api/moodboards/${MODE.boardId}/media/place`, { url: out.url, title: `${sc.name} · render`, x: MODE.place ? MODE.place.x : undefined, y: MODE.place ? MODE.place.y : undefined, width: MODE.place && MODE.place.w ? MODE.place.w : undefined, height: MODE.place && MODE.place.h ? MODE.place.h : undefined }); placed = true; } catch (e) { /* the file is still in the board folder */ }
-      status(st, `Done${placed ? ' and placed on the board' : ''}: <a href="${esc(out.url)}" target="_blank" rel="noopener">${esc(out.filename || out.url)}</a>${voice.length || sfx.length ? '. The soundtrack is not in this file: run render.mjs (it mixes the voice-over and the sound effects), or export GLEA with layers and render the project.' : ''}`, 'good');
-      if (fmtNow !== 'mov') res.innerHTML = `<video src="${esc(out.url)}" controls playsinline></video>`;
-    } else {
-      await flushSave();   // the server renders scenario.json: the edits first
-      const out = await api('POST', '/mu/render', { format: fmtNow, motionBlur: mb });
-      status(st, `Done: <a href="${esc(out.url)}" download>${esc(out.file)}</a>${out.audio ? ' · with sound' : ''}`, 'good');
-      if (fmtNow !== 'mov') res.innerHTML = `<video src="${esc(out.url)}" controls playsinline></video>`;
-    }
+    await flushSave();   // the server renders scenario.json: the edits first
+    const out = await api('POST', '/mu/render', { format: fmtNow, motionBlur: mb });
+    status(st, `Done: <a href="${esc(out.url)}" download>${esc(out.file)}</a>${out.audio ? ' · with sound' : ''}`, 'good');
+    if (fmtNow !== 'mov') res.innerHTML = `<video src="${esc(out.url)}" controls playsinline></video>`;
     setJob('render', 'good');
     // bring the result into view inside the panel (never scroll the page or the sliding track)
     if (res.firstChild) { const body = $('mupv-dbody'); body.scrollTo({ top: Math.max(0, res.offsetTop + res.offsetHeight + 24 - body.clientHeight), behavior: reduceMq.matches ? 'auto' : 'smooth' }); }
@@ -1107,64 +1066,29 @@ renderBtn.onclick = async () => {
 
 exportBtn.onclick = async () => {
   const btn = exportBtn, st = $('mupv-estatus'), kind = exportKind();
-  if (ON_DISK) { status(st, DISK_MSG, 'bad'); return; }
-  if (MODE.kind === 'static') {
+  if (MODE.kind !== 'local') {
     status(st, `<span>Exports are written by the agent. Run this in the project folder:</span>${cmdBox(`${DATA.cmd.export} --format ${kind}`)}`);
     return;
   }
   busy(btn, true, 'export', 'Exporting…'); setJob('export', 'busy');
-  status(st, `Building ${EXPORT_LABEL[kind]}…`);
+  status(st, `Making ${EXPORT_LABEL[kind]}…`);
   try {
-    if (MODE.kind === 'local') {
-      await flushSave();
-      const out = await api('POST', '/mu/export', { format: kind });
-      status(st, `Saved <a href="${esc(out.url)}" download>${esc(out.file)}</a>. ${esc(out.hint || '')}`, 'good');
-    } else if (kind === 'glea-layers') {
-      const sizes = DATA.imageSizes || {};
-      // an HTML-only scene (an item too heavy for editor layers) goes in as its HTML clip
-      const htmlUrls = [];
-      for (const i of MU.htmlOnlyScenes(sc)) {
-        status(st, `Saving scene ${i + 1} as an HTML clip…`);
-        htmlUrls[i] = await uploadScene(i, MU.pageHtml(rebased(MODE.folder), sources(), { scene: i }));
-      }
-      const p = MU.veLayers(sc, { imageSizes: sizes, url: boardUrl, voice: voiceFor(boardUrl), sfx: sfxFor(boardUrl), htmlUrls });
-      const made = await api('POST', `/api/moodboards/${MODE.boardId}/video-projects`, { name: p.name, data: p.data });
-      status(st, `Created “${esc(made.name || p.name)}” in the Video Editor, ${p.data.channels.length} layers. Open the Video Editor to edit it.`, 'good');
-    } else if (kind === 'glea-html') {
-      const folder = MODE.folder;
-      const urls = [];
-      for (let i = 0; i < timing.length; i++) {
-        status(st, `Saving scene ${i + 1} of ${timing.length}…`);
-        urls.push(await uploadScene(i, MU.pageHtml(rebased(folder), sources(), { scene: i })));
-      }
-      const p = MU.veHtmlCards(sc, { htmlUrls: urls, voice: voiceFor(boardUrl), sfx: sfxFor(boardUrl) });
-      const made = await api('POST', `/api/moodboards/${MODE.boardId}/video-projects`, { name: `${p.name} (HTML)`, data: p.data });
-      status(st, `Created “${esc(made.name)}” in the Video Editor: ${timing.length} HTML clips.`, 'good');
-    } else {
-      const ae = MU.aeScript(sc, { imageSizes: DATA.imageSizes || {} });
-      const entries = [{ name: `${sc.id}.jsx`, data: ae.jsx }];
-      for (const [u, rel] of Object.entries(ae.files)) { const r = await fetch(u); if (r.ok) entries.push({ name: rel, data: new Uint8Array(await r.arrayBuffer()) }); }
-      // HTML-only scenes: recorded by the app as ProRes 4444 footage the script places at their time
-      for (const r of ae.renders) {
-        status(st, `Recording scene ${r.scene + 1} as footage…`);
-        const out = await api('POST', '/api/html/render', { html: MU.pageHtml(sc, sources(), { scene: r.scene }), width: W, height: H, fps: FPS,
-          duration: r.duration, format: 'mov', board_id: MODE.boardId, title: `${sc.name} scene ${r.scene + 1}` });
-        const got = await fetch(out.url); if (got.ok) entries.push({ name: r.file, data: new Uint8Array(await got.arrayBuffer()) });
-      }
-      const zip = MU.zip(entries);
-      const up = await upload(`${sc.id}-after-effects.zip`, new Blob([zip], { type: 'application/zip' }), MODE.folder);
-      status(st, `Saved to the board folder: <a href="${esc(up.url)}" target="_blank" rel="noopener">${esc(up.filename || up.url)}</a>. Unzip it and run ${esc(sc.id)}.jsx in After Effects (File › Scripts › Run Script File).`, 'good');
-    }
+    await flushSave();
+    const out = await api('POST', '/mu/export', { format: kind });
+    if (kind === 'ae') {
+      status(st, `Saved <a href="${esc(out.url)}" download>${esc(out.file)}</a>. Give your agent <code>${esc(out.prompt || '')}</code> with After Effects open: it builds the project there.`, 'good');
+    } else status(st, `Saved <a href="${esc(out.url)}" download>${esc(out.file)}</a>. ${esc(out.hint || '')}`, 'good');
     setJob('export', 'good');
   } catch (err) { status(st, `Export failed. ${esc(err.message)}`, 'bad'); setJob('export', 'bad'); }
   busy(btn, false);
 };
 
 // ── Edits: the user's changes as data (EDITS → scenario.json → edits) on the film as the agent made it (BASE).
-// Design: the film's tokens. Elements: click anything in the film (it pauses) — the agent's panel for it and every
-// option it has; the agent's panels for what is on screen now; the scene's effects (item params). The list of changes
-// sits in the top bar (revert one, undo / redo, reset, copy for the agent). Saved per mode: scenario.json (serve.mjs),
-// the card (a board), else this browser. Every field shows a green dot off the agent's value; the dot resets it. ──
+// Elements: click anything in the film (it pauses) — its options, and the agent's panel for it; drag it to move it;
+// double-click words to type over them. The agent's panels for what is on screen now; the scene's effects (params).
+// Design: the film's colours and font. The list of changes sits in the top bar (revert one, undo / redo, reset, copy
+// for the agent). Saved per mode: scenario.json (serve.mjs), the card (a board), else this browser. Every field shows a
+// green dot off the agent's value; the dot resets it. ──
 const has = (o, k) => !!o && k != null && Object.prototype.hasOwnProperty.call(o, k);
 const div = (cls, html) => { const d = document.createElement('div'); if (cls) d.className = cls; if (html != null) d.innerHTML = html; return d; };
 const capw = (s) => String(s || '').charAt(0).toUpperCase() + String(s || '').slice(1);
@@ -1192,6 +1116,9 @@ const IC = {
 };
 
 // ── names ──
+const KIND = { text: 'Text', image: 'Picture', shape: 'Shape', drawing: 'Drawing', group: 'Group' };
+const KGLYPH = { text: IC.text, image: IC.image, shape: IC.rect, drawing: IC.path, group: IC.group };
+// a library scene's layers (built from its item): their names and the agent's panels
 const TYPE = { text: 'Text', rect: 'Shape', ellipse: 'Circle', icon: 'Icon', path: 'Line', group: 'Group', canvas: 'Drawing', cursor: 'Cursor' };
 const isPic = (L) => (L.type === 'rect' || L.type === 'ellipse') && (L.media != null || !!L.img);
 const typeName = (L) => (isPic(L) ? 'Picture' : TYPE[L.type] || 'Layer');
@@ -1205,13 +1132,21 @@ const layerLabel = (L) => (L.type === 'text' && textOf(L) ? `“${trunc(textOf(L
 const ROLE = { bg: 'Canvas', card: 'Surface', panel: 'Panel', ink: 'Text', inv: 'Text on dark', muted: 'Secondary text', line: 'Hairlines',
   skel: 'Skeleton', soft: 'Soft fill', dim: 'Dim fill', acc: 'Accent', bad: 'Error', shade: 'Near-black', white: 'White' };
 
-// ── colours ──
-const resolveC = (v) => { try { return K._int.resolve(v); } catch (e) { return null; } };
-const cssOf = (v) => { const c = resolveC(v); return c ? K._int.css(c) : 'transparent'; };
+// ── colours: film colours by name (acc, ink, acc/40), hex, and what a page reports (rgb(…)) ──
 const hex2 = (n) => Math.round(Math.max(0, Math.min(255, n))).toString(16).padStart(2, '0').toUpperCase();
+const RGB = /^rgba?\(\s*([\d.]+)[,\s]+([\d.]+)[,\s]+([\d.]+)(?:[,\s/]+([\d.]+%?))?\s*\)$/i;
+const resolveC = (v) => {
+  const m = RGB.exec(String(v || '').trim());
+  if (m) { const a = m[4] == null ? 1 : /%$/.test(m[4]) ? parseFloat(m[4]) / 100 : +m[4]; return [+m[1], +m[2], +m[3], a]; }
+  try { return K._int.resolve(v); } catch (e) { return null; }
+};
+const cssOf = (v) => { const c = resolveC(v); return c ? K._int.css(c) : 'transparent'; };
 const hexOf = (v) => { const c = resolveC(v); return c ? '#' + hex2(c[0]) + hex2(c[1]) + hex2(c[2]) : ''; };
 const alphaOf = (v) => { const c = resolveC(v); return c ? c[3] : 1; };
+// a page's colour → the value a field shows and an edit stores (#RRGGBB, #RRGGBBAA)
+const hexA = (v) => { const c = resolveC(v); if (!c) return null; return '#' + hex2(c[0]) + hex2(c[1]) + hex2(c[2]) + (c[3] < 0.995 ? hex2(c[3] * 255) : ''); };
 const tokenOf = (v) => { if (typeof v !== 'string') return null; const n = v.split('/')[0]; return has(K.THEMES.light, n) && n !== 'shadow' ? n : null; };
+const sameColor = (a, b) => hexOf(a) === hexOf(b) && Math.abs(alphaOf(a) - alphaOf(b)) < 0.01;
 const colorName = (v) => {
   if (v == null || v === '') return 'None';
   const t = tokenOf(v); const a = Math.round(alphaOf(v) * 100);
@@ -1219,7 +1154,7 @@ const colorName = (v) => {
 };
 const eq = (a, b) => {
   if (typeof a === 'number' && typeof b === 'number') return Math.abs(a - b) < 1e-9;
-  if (typeof a === 'string' && typeof b === 'string' && (/^#/.test(a) || /^#/.test(b))) return K.style.sameColor(a, b);
+  if (typeof a === 'string' && typeof b === 'string' && resolveC(a) && resolveC(b) && (/^(#|rgb)/i.test(a) || /^(#|rgb)/i.test(b))) return sameColor(a, b);
   return a === b || (a == null && b == null);
 };
 
@@ -1230,39 +1165,39 @@ const prune = () => {
   clean(EDITS.film); clean(EDITS.scenes);
 };
 const editsOut = () => { prune(); return Object.keys(EDITS.film).length || Object.keys(EDITS.scenes).length ? JSON.parse(JSON.stringify(EDITS)) : null; };
-const paramDefs = (i) => (ENGINE3D ? ((inst.defs && inst.defs(i)) || {}).params || {} : (specOf(i) && specOf(i).params) || {});
-const specParams = (i) => (ENGINE3D ? { params: paramDefs(i) } : specOf(i));
-const paramsNow = (i) => K.paramsOf(specParams(i), sc.scenes[i].params);
-const paramsBase = (i) => K.paramsOf(specParams(i), BASE.scenes[i].params);
-// scene i's layers as the agent made them (with the scene's current params): what a field starts from
+// a scene's effects: a library scene's params, or the ones a page declared (GLScene)
+const paramDefs = (i) => (isPage(i) ? (player.defs(i) || {}).params || {} : (specOf(i) && specOf(i).params) || {});
+const paramsNow = (i) => K.paramsOf({ params: paramDefs(i) }, sc.scenes[i].params);
+const paramsBase = (i) => K.paramsOf({ params: paramDefs(i) }, BASE.scenes[i].params);
+// a library scene's layers as the agent made them (with the scene's current params): names and the agent's panels
 const origCache = new Map();
 const origLayers = (i) => {
-  if (ENGINE3D) return new Map();   // a scene page has no layers: its editable elements come from the page (data-ui)
+  if (isPage(i)) return new Map();
   const P = paramsNow(i), ck = i + ':' + JSON.stringify(P);
   if (origCache.has(ck)) return origCache.get(ck);
   const b = Object.assign({}, BASE, { scenes: BASE.scenes.map((s, j) => (j === i ? Object.assign({}, s, { params: P }) : s)) });
   const map = new Map();
   const walk = (L) => { if (L._scene === i) map.set(L._key, L); (L.ch || []).forEach(walk); };
-  try { K.build(K.compose(b, { scene: i })).forEach(walk); } catch (e) { /* the scene can't build: no fields */ }
+  try { K.build(K.compose(b, { scene: i })).forEach(walk); } catch (e) { /* the scene can't build: no panels */ }
   if (origCache.size > 48) origCache.clear();
   origCache.set(ck, map);
   return map;
 };
-// every colour the film uses (its items' own values, before any recolor) and its type
+// the film's colours: the ones every page gets (--gl-*), the library scenes' own, and the type they set
 let PAL = null;
+const COLS = ['fill', 'stroke', 'color'];
+const trackVals = (tr) => (Array.isArray(tr) ? tr.map((x) => (Array.isArray(x) ? (x.length === 2 ? x[1] : x[2]) : x)) : [tr]);
 const palette = () => {
   if (PAL) return PAL;
-  // a 3D-engine film: the scenes use the theme's tokens (ctx.color, --mu-*) — all of them are the film's colours
-  if (ENGINE3D) return (PAL = { tokens: K.TOKENS.map((name) => ({ name, uses: 1 })), literals: [], type: [] });
   const tokens = new Map(), lits = new Map(), type = new Map();
   const note = (v) => {
     if (typeof v !== 'string' || !v) return;
     const n = v.split('/')[0];
     if (has(K.THEMES.light, n) && n !== 'shadow') tokens.set(n, (tokens.get(n) || 0) + 1);
-    else if (/^#[0-9a-f]{3,8}$/i.test(n)) { const h = K.style.normHex(n); lits.set(h, (lits.get(h) || 0) + 1); }
+    else if (/^#[0-9a-f]{3,8}$/i.test(n)) { const h = K.normHex(n); lits.set(h, (lits.get(h) || 0) + 1); }
   };
   const walk = (L) => {
-    for (const p of K.style.COLORS) { note(L[p]); if (L.k && L.k[p] !== undefined) K.style.mapTrack(L.k[p], (x) => { note(x); return x; }); }
+    for (const p of COLS) { note(L[p]); if (L.k && L.k[p] !== undefined) trackVals(L.k[p]).forEach(note); }
     if ((L.type === 'text' || L.type === 'icon') && L.color == null && !(L.k && L.k.color)) note('ink');
     if (L.type === 'text') {
       const w = L.weight || 400, t = type.get(w) || { weight: w, sizes: new Set(), sample: '' };
@@ -1273,43 +1208,88 @@ const palette = () => {
     }
     (L.ch || []).forEach(walk);
   };
-  try { K.build(K.compose(Object.assign({}, BASE, { recolor: null }))).forEach(walk); } catch (e) { /* nothing to list */ }
+  const raw = Object.assign({}, BASE, { recolor: null });
+  timing.forEach((tm, i) => { if (!isPage(i)) { try { K.build(K.compose(raw, { scene: i })).forEach(walk); } catch (e) { /* nothing to list */ } } });
+  // a scene page uses the film's colours through its CSS variables: its main ones are listed
+  if (timing.some((tm, i) => isPage(i))) for (const n of ['acc', 'ink', 'muted', 'card', 'soft', 'line']) if (!tokens.has(n)) tokens.set(n, 1);
   PAL = {
     tokens: [...tokens.entries()].sort((a, b) => b[1] - a[1]).map(([name, uses]) => ({ name, uses })),
+    custom: Object.keys(BASE.colors || {}).filter((n) => !has(K.THEMES.light, n)),
     literals: [...lits.entries()].sort((a, b) => b[1] - a[1]).map(([value, uses]) => ({ value, uses })),
     type: [...type.values()].sort((a, b) => a.weight - b.weight).map((t) => ({ weight: t.weight, sizes: [...t.sizes].sort((a, b) => a - b), sample: t.sample })),
   };
   return PAL;
 };
 
+// ── the scene pages: what each one shows, kept in step with the edits ──
+const edWin = (i) => { const w = player.win(i); return w && w.__glEditor ? w : null; };
+// an element as its page reports it (lib/editor.js): kind, words, picture, its own values (colours as hex)
+const infoOf = (i, id) => {
+  const key = i + ':' + id; if (infoCache.has(key)) return infoCache.get(key);
+  const w = edWin(i); let f = null;
+  try { f = w ? w.__glEditor.info(id) : null; } catch (e) { f = null; }
+  if (f) {
+    const n = f.natural || {};
+    for (const p of ['color', 'fill', 'stroke']) n[p] = n[p] && n[p] !== 'none' ? hexA(n[p]) : null;
+    infoCache.set(key, f);
+  }
+  return f;
+};
+const rectOf = (i, id) => { const w = edWin(i); if (!w || !sceneOn(i, cur)) return null; try { return w.__glEditor.rect(id); } catch (e) { return null; } };
+// what a page gets live: its style (both kinds), its words and pictures (a scene page; a library scene rebuilds)
+const pageEdits = (i) => { const s = sc.scenes[i]; return isPage(i) ? { style: s.style || {}, text: s.text || {}, images: s.images || {} } : { style: s.style || {} }; };
+const call = (i, fn, ...a) => { const w = player.win(i); try { if (w && typeof w[fn] === 'function') { w[fn](...a); return true; } } catch (e) { /* the page's own error */ } return false; };
+const live = (i) => call(i, '__glApplyEdits', pageEdits(i));
+// every scene's page made again from the film with the edits: a page that already shows them keeps playing (the new one
+// is kept for its next fresh copy); the others load it
+const needReload = new Set();
+let pagesT = 0;
+const syncPages = () => {
+  clearTimeout(pagesT); pagesT = 0;
+  if (typing) { pagesT = setTimeout(syncPages, 300); return; }
+  planOf().scenes.forEach((s, i) => player.setPage(i, s.page, { reload: needReload.has(i) }));
+  needReload.clear(); infoCache.clear(); lastSig = null;
+};
+const queuePages = (i) => { if (i != null) needReload.add(i); clearTimeout(pagesT); pagesT = setTimeout(syncPages, i != null ? 90 : 400); };
+
 // ── the loop: set (live) → apply → commit (an undo step, saved, thumbnails, the list) ──
 let hist = [JSON.stringify(EDITS)], hpos = 0;
-let rebuildQ = 0, thumbT = 0;
+let thumbT = 0;
 const fields = new Set();
 const updateFields = () => { for (const f of fields) if (f.el.isConnected) f.update(); else fields.delete(f); };
 const redraw = () => { drawn = -1; draw(); };
-const rebuildFilm = () => {
-  if (ENGINE3D) { inst.update(scenePlan()); redraw(); lastSig = null; return; }
-  film = MU.film(sc);
-  const old = inst; inst = new K.Instance(film, frameEl);
-  Object.assign(inst.stage.style, { width: W + 'px', height: H + 'px' });
-  old.destroy(); fit(); redraw(); index(); lastSig = null;
-};
-const queueRebuild = () => { if (!rebuildQ) rebuildQ = requestAnimationFrame(() => { rebuildQ = 0; rebuildFilm(); }); };
-const rethumb = () => { const running = nextThumb < timing.length; nextThumb = 0; if (!running) idle(buildNext); };
 const paintBackground = () => {
   const bg = sc.background;
   frameEl.style.background = bg || ''; frameEl.classList.toggle('is-clear', !bg);
   document.querySelectorAll('.mupv-seg-th, .mupv-sth').forEach((el) => { el.style.background = bg || ''; el.classList.toggle('mupv-clear', !bg); });
 };
-const apply = (kind) => {
+// kind: 'style' / 'content' (the page shows it live), 'images' / 'params' (a scene page's pictures by key, its effects),
+// 'theme' (the film's colours and font), 'bg', 'rebuild' (a library scene's words, pictures, effects), 'library' (every
+// library scene: its colours swapped)
+const apply = (kind, i) => {
   prune(); sc = withEdits();
-  if (kind === 'theme' && !ENGINE3D) { K.setTheme(sc.theme, sc.accent, sc.colors); redraw(); }
-  else if (kind === 'bg') paintBackground();
-  else { K.setTheme(sc.theme, sc.accent, sc.colors); queueRebuild(); if (kind === 'font' && $('mupe-spec')) renderSpecimen(); }
+  K.setTheme(sc.theme, sc.accent, sc.colors);
+  if (kind === 'bg') paintBackground();
+  else if (kind === 'style' || kind === 'content') { live(i); queuePages(); }
+  else if (kind === 'images') { call(i, '__glSetImages', sc.scenes[i].images || {}); live(i); queuePages(); }
+  else if (kind === 'params') { if (call(i, '__glSetParams', paramsNow(i))) { queuePages(); redraw(); } else queuePages(i); }
+  else if (kind === 'theme') {
+    timing.forEach((tm, j) => { if (isPage(j)) call(j, '__glSetTheme', MU.sceneTheme(sc)); else needReload.add(j); });
+    queuePages(); if ($('mupe-spec')) renderSpecimen();
+  } else if (kind === 'library') { timing.forEach((tm, j) => { if (!isPage(j)) needReload.add(j); }); queuePages(); }
+  else queuePages(i);
   updateFields(); updateBadge();
 };
-const applyAll = () => { sc = withEdits(); K.setTheme(sc.theme, sc.accent, sc.colors); paintBackground(); rebuildFilm(); updateFields(); updateBadge(); if ($('mupe-spec')) renderSpecimen(); };
+// everything again (undo, redo, reset, the card's saved edits): scene pages live, library scenes reloaded
+const applyAll = () => {
+  prune(); sc = withEdits(); K.setTheme(sc.theme, sc.accent, sc.colors); paintBackground();
+  timing.forEach((tm, i) => {
+    if (!isPage(i)) { needReload.add(i); return; }
+    call(i, '__glSetTheme', MU.sceneTheme(sc)); call(i, '__glSetImages', sc.scenes[i].images || {}); call(i, '__glSetParams', paramsNow(i)); live(i);
+  });
+  syncPages(); redraw(); updateFields(); updateBadge(); if ($('mupe-spec')) renderSpecimen();
+};
+const rethumb = () => { const running = nextThumb < timing.length; nextThumb = 0; if (!running) idle(buildNext); };
 const commit = () => {
   prune();
   const s = JSON.stringify(EDITS);
@@ -1317,13 +1297,13 @@ const commit = () => {
   hist = hist.slice(0, hpos + 1); hist.push(s); hpos = hist.length - 1;
   if (hist.length > 120) { hist.shift(); hpos--; }
   persist();
-  clearTimeout(thumbT); thumbT = setTimeout(rethumb, 350);
+  clearTimeout(thumbT); thumbT = setTimeout(rethumb, 500);
   renderChanges();
 };
 const travel = (d) => {
   const to = hpos + d; if (to < 0 || to >= hist.length) return;
   hpos = to; setEdits(JSON.parse(hist[hpos])); applyAll();
-  persist(); clearTimeout(thumbT); thumbT = setTimeout(rethumb, 350);
+  persist(); clearTimeout(thumbT); thumbT = setTimeout(rethumb, 500);
   renderChanges();
 };
 
@@ -1369,82 +1349,50 @@ const storePicture = async (file) => {
 };
 
 // ── bindings: where a control reads and writes ──
-const layerBinding = (i, keys, prop) => {
-  const origOf = (k) => {
-    const L = origLayers(i).get(k); const s = BASE.scenes[i];
-    if (prop === 'text') return s.text && has(s.text, k) ? String(s.text[k]) : L ? String(L.text ?? '') : '';
-    if (prop === 'image') return s.images && has(s.images, k) ? s.images[k] : (L && L.img) || '';
-    return L ? K.style.restOf(L, prop) : null;
-  };
-  const editOf = (k) => {
+const STYLE = new Set(['color', 'fill', 'stroke', 'size', 'weight', 'ls', 'upper', 'italic', 'r', 'x', 'y', 'scale', 'rotate', 'hide']);
+// an element's value: the user's edit, else the agent's (scenario text / images / style), else the page's own
+const elementBinding = (i, id, prop) => {
+  const s0 = BASE.scenes[i], page = isPage(i);
+  const f = () => infoOf(i, id);
+  let orig, bucket, key = id, kind;
+  if (prop === 'text') {
+    bucket = 'text'; kind = page ? 'content' : 'rebuild';
+    orig = () => {
+      if (s0.text && has(s0.text, id)) return String(s0.text[id]);
+      const L = page ? null : origLayers(i).get(id);
+      if (L) return String(L.text ?? '');
+      const x = f(); return x ? String(x.originalText ?? x.text ?? '') : '';
+    };
+  } else if (prop === 'image') {
+    // a picture a page names by key (data-image="logo") is the scene's picture "logo"; any other by the element's id
+    const x = f(); key = (page && x && x.imageKey) || id;
+    bucket = 'images'; kind = page ? (key !== id ? 'images' : 'content') : 'rebuild';
+    orig = () => { if (s0.images && has(s0.images, key)) return s0.images[key]; const y = f(); return y ? (y.originalImage ?? y.image ?? '') : ''; };
+  } else {
+    bucket = 'style'; kind = 'style';
+    orig = () => { const st = s0.style && s0.style[id]; if (st && has(st, prop)) return st[prop]; const y = f(); return y && y.natural ? y.natural[prop] ?? null : null; };
+  }
+  const editOf = () => {
     const e = sceneEdits(i);
-    if (prop === 'text' && k[0] !== '~') return e.text && has(e.text, k) ? { v: e.text[k] } : null;
-    if (prop === 'image') return e.images && has(e.images, k) ? { v: e.images[k] } : null;
-    const st = e.style && e.style[k]; return st && has(st, prop) ? { v: st[prop] } : null;
+    if (bucket === 'style') { const st = e.style && e.style[id]; return st && has(st, prop) ? { v: st[prop] } : null; }
+    return e[bucket] && has(e[bucket], key) ? { v: e[bucket][key] } : null;
   };
-  const write = (k, v, drop) => {
+  const write = (v, drop) => {
     const e = sceneEdits(i, true);
-    if (prop === 'text' && k[0] !== '~') { e.text = e.text || {}; if (drop) delete e.text[k]; else e.text[k] = v; return; }
-    if (prop === 'image') { e.images = e.images || {}; if (drop) delete e.images[k]; else e.images[k] = v; return; }
-    e.style = e.style || {}; const st = e.style[k] = e.style[k] || {}; if (drop) delete st[prop]; else st[prop] = v;
+    if (bucket === 'style') { e.style = e.style || {}; const st = e.style[id] = e.style[id] || {}; if (drop) delete st[prop]; else st[prop] = v; return; }
+    e[bucket] = e[bucket] || {}; if (drop) delete e[bucket][key]; else e[bucket][key] = v;
   };
   return {
-    kind: 'rebuild',
-    get: () => { const ed = editOf(keys[0]); return ed ? ed.v : origOf(keys[0]); },
-    orig: () => origOf(keys[0]),
-    changed: () => keys.some((k) => !!editOf(k)),
-    set: (v) => { for (const k of keys) write(k, v, eq(v, origOf(k))); },
-    reset: () => { for (const k of keys) write(k, null, true); },
-  };
-};
-// a colour that animates (text that turns accent) has one row per colour it shows: each swaps that colour on the
-// layer (style: { color: { acc: '#F00' } })
-const colorsOf = (L, prop) => {
-  const out = []; const add = (v) => { if (typeof v === 'string' && v && !out.some((x) => K.style.sameColor(x, v))) out.push(v); };
-  const tr = L.k && L.k[prop], a = tr === undefined ? [] : Array.isArray(tr) ? tr : [tr];
-  if (L[prop] != null) add(L[prop]); else if (!a.length || Array.isArray(a[0])) add(K.style.restOf(Object.assign({}, L, { k: null }), prop));
-  a.forEach((x) => add(Array.isArray(x) ? (x.length === 2 ? x[1] : x[2]) : x));
-  return out;
-};
-const swapBinding = (i, keys, prop, from) => {
-  const mapOf = (k, make) => {
-    const e = sceneEdits(i, make); if (!make && !e.style) return null;
-    if (make) e.style = e.style || {};
-    const st = e.style[k] || (make ? (e.style[k] = {}) : null); if (!st) return null;
-    if (!(st[prop] && typeof st[prop] === 'object')) { if (!make) return null; st[prop] = {}; }
-    return st[prop];
-  };
-  const cur = (k) => { const m = mapOf(k, false); return m && has(m, from) ? m[from] : null; };
-  const write = (k, v) => { const m = mapOf(k, true); if (v == null || eq(v, from)) delete m[from]; else m[from] = v; };
-  return {
-    kind: 'rebuild',
-    get: () => cur(keys[0]) ?? from, orig: () => from,
-    changed: () => keys.some((k) => cur(k) != null),
-    set: (v) => { for (const k of keys) write(k, v); },
-    reset: () => { for (const k of keys) if (mapOf(k, false)) write(k, null); },
-  };
-};
-// a scene page's element (3D engine): text / images / style by its data-ui-id (a picture by its data-image key)
-const sceneBinding = (i, key, prop, orig) => {
-  const bucket = (e, make) => {
-    const k = prop === 'text' ? 'text' : prop === 'image' ? 'images' : 'style';
-    if (!e[k] && make) e[k] = {};
-    if (k !== 'style') return e[k];
-    if (e.style && !e.style[key] && make) e.style[key] = {};
-    return e.style && e.style[key];
-  };
-  const field = prop === 'text' || prop === 'image' ? key : prop;
-  return {
-    kind: 'rebuild',
-    get: () => { const b = bucket(sceneEdits(i), false); return b && has(b, field) ? b[field] : orig; },
-    orig: () => orig,
-    changed: () => { const b = bucket(sceneEdits(i), false); return !!b && has(b, field); },
-    set: (v) => { const b = bucket(sceneEdits(i, true), true); if (eq(v, orig) || (typeof v === 'string' && typeof orig === 'string' && hexOf(v) && hexOf(v) === hexOf(orig))) delete b[field]; else b[field] = v; },
-    reset: () => { const b = bucket(sceneEdits(i), false); if (b) delete b[field]; },
+    kind, scene: i,
+    get: () => { const ed = editOf(); return ed ? ed.v : orig(); },
+    orig,
+    changed: () => !!editOf(),
+    set: (v) => write(v, eq(v, orig())),
+    reset: () => write(null, true),
   };
 };
 const paramBinding = (i, name) => ({
-  kind: 'rebuild',
+  kind: isPage(i) ? 'params' : 'rebuild', scene: i,
   get: () => paramsNow(i)[name], orig: () => paramsBase(i)[name],
   changed: () => has(sceneEdits(i).params, name),
   set: (v) => { const e = sceneEdits(i, true); e.params = e.params || {}; if (eq(v, paramsBase(i)[name])) delete e.params[name]; else e.params[name] = v; },
@@ -1469,7 +1417,7 @@ const tokenBinding = (name) => ({
 });
 const recolorBase = (hex) => (BASE.recolor && BASE.recolor[hex]) || hex;
 const recolorBinding = (hex) => ({
-  kind: 'rebuild',
+  kind: 'library',
   get: () => (EDITS.film.recolor && EDITS.film.recolor[hex]) || recolorBase(hex), orig: () => recolorBase(hex),
   changed: () => has(EDITS.film.recolor, hex),
   set: (v) => { const r = EDITS.film.recolor = EDITS.film.recolor || {}; if (eq(v, recolorBase(hex))) delete r[hex]; else r[hex] = v; },
@@ -1480,22 +1428,20 @@ const recolorBinding = (hex) => ({
 const PROPS = {
   text: { kind: 'text', label: 'Text' },
   color: { kind: 'color', label: 'Colour' }, fill: { kind: 'color', label: 'Fill' }, stroke: { kind: 'color', label: 'Stroke' },
-  size: { kind: 'number', label: 'Size', unit: 'px', min: 6, max: 400, step: 1 },
-  weight: { kind: 'select', label: 'Weight', options: [[300, 'Light'], [400, 'Regular'], [500, 'Medium'], [600, 'Semibold'], [700, 'Bold'], [800, 'Heavy']] },
+  size: { kind: 'number', label: 'Size', unit: 'px', min: 6, max: 600, step: 1 },
+  weight: { kind: 'select', label: 'Weight', options: [[100, 'Thin'], [200, 'Extra light'], [300, 'Light'], [400, 'Regular'], [500, 'Medium'], [600, 'Semibold'], [700, 'Bold'], [800, 'Heavy'], [900, 'Black']] },
   upper: { kind: 'seg', label: 'Case', options: [[false, 'As typed'], [true, 'UPPER']] },
   italic: { kind: 'toggle', label: 'Italic' },
-  ls: { kind: 'number', label: 'Tracking', unit: '%', scale: 100, min: -10, max: 40, step: 0.5 },
-  r: { kind: 'number', label: 'Corners', unit: 'px', min: 0, max: 600, step: 1 },
-  sw: { kind: 'number', label: 'Line', unit: 'px', min: 0, max: 40, step: 0.5 },
+  ls: { kind: 'number', label: 'Tracking', unit: '%', scale: 100, min: -20, max: 60, step: 0.5 },
+  r: { kind: 'number', label: 'Corners', unit: 'px', min: 0, max: 2000, step: 1 },
   image: { kind: 'image', label: 'Picture' },
+  x: { kind: 'number', label: 'Move X', unit: 'px', min: -8000, max: 8000, step: 1 },
+  y: { kind: 'number', label: 'Move Y', unit: 'px', min: -8000, max: 8000, step: 1 },
+  scale: { kind: 'number', label: 'Scale', unit: '%', scale: 100, min: 0, max: 2000, step: 1 },
+  rotate: { kind: 'number', label: 'Rotate', unit: '°', min: -720, max: 720, step: 1 },
+  hide: { kind: 'toggle', label: 'Hidden' },
 };
-const ALIAS = { colour: 'color', tracking: 'ls', radius: 'r', corners: 'r', case: 'upper', width: 'sw', picture: 'image' };
-const propFor = (p, L) => {
-  p = ALIAS[p] || p;
-  if (p === 'color' && (L.type === 'rect' || L.type === 'ellipse')) return 'fill';
-  if (p === 'color' && L.type === 'path') return 'stroke';
-  return p;
-};
+const ALIAS = { colour: 'color', tracking: 'ls', radius: 'r', corners: 'r', case: 'upper', picture: 'image' };
 const decimals = (step) => (step >= 1 ? 0 : step >= 0.1 ? 1 : 2);
 let interacting = 0;
 
@@ -1503,11 +1449,11 @@ function textField(b, spec) {
   const inp = document.createElement('input'); inp.type = 'text'; inp.className = 'mupe-in'; inp.spellcheck = false; inp.setAttribute('aria-label', spec.label);
   let before = '';
   inp.addEventListener('focus', () => { before = String(b.get() ?? ''); });
-  inp.addEventListener('input', () => { b.set(inp.value); apply(b.kind); });
+  inp.addEventListener('input', () => { b.set(inp.value); apply(b.kind, b.scene); });
   inp.addEventListener('change', commit);
   inp.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') { e.preventDefault(); inp.blur(); }
-    else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); b.set(before); apply(b.kind); inp.value = before; inp.blur(); }
+    else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); b.set(before); apply(b.kind, b.scene); inp.value = before; inp.blur(); }
   });
   return { el: inp, update: () => { const v = String(b.get() ?? ''); if (inp.value !== v && document.activeElement !== inp) inp.value = v; } };
 }
@@ -1521,7 +1467,7 @@ function colorField(b, spec) {
     btn.querySelector('span').textContent = colorName(v);
     btn.querySelector('small').textContent = tokenOf(v) ? hexOf(v) : '';
   };
-  btn.onclick = () => picker.open(btn, { value: b.get(), tokens: spec.tokens !== false, onInput: (v) => { b.set(v); apply(b.kind); up(); }, onDone: commit });
+  btn.onclick = () => picker.open(btn, { value: b.get(), tokens: spec.tokens !== false, onInput: (v) => { b.set(v); apply(b.kind, b.scene); up(); }, onDone: commit });
   up();
   return { el: btn, update: up };
 }
@@ -1532,7 +1478,7 @@ function numberField(b, spec, mini) {
   const inp = wrap.querySelector('input'), grip = wrap.querySelector('.mupe-grip');
   const clamp = (d) => Math.min(spec.max ?? Infinity, Math.max(spec.min ?? -Infinity, d));
   const show = () => String(+((+b.get() || 0) * scl).toFixed(dec));
-  const setD = (d) => { d = clamp(+(+d).toFixed(dec + 1)); b.set(+(d / scl).toFixed(6)); apply(b.kind); if (document.activeElement !== inp) inp.value = show(); };
+  const setD = (d) => { d = clamp(+(+d).toFixed(dec + 1)); b.set(+(d / scl).toFixed(6)); apply(b.kind, b.scene); if (document.activeElement !== inp) inp.value = show(); };
   let kt = 0;
   inp.addEventListener('change', () => { const d = parseFloat(inp.value.replace(',', '.')); if (Number.isFinite(d)) setD(d); inp.value = show(); commit(); });
   inp.addEventListener('keydown', (e) => {
@@ -1565,7 +1511,7 @@ function sliderField(b, spec) {
   wrap.append(range, num.el);
   const paint = () => { const p = (range.value - range.min) / ((range.max - range.min) || 1); range.style.setProperty('--p', (p * 100).toFixed(2) + '%'); };
   range.addEventListener('pointerdown', () => { interacting++; const up = () => { interacting--; removeEventListener('pointerup', up); }; addEventListener('pointerup', up); });
-  range.addEventListener('input', () => { b.set(+range.value / scl); apply(b.kind); num.update(); paint(); });
+  range.addEventListener('input', () => { b.set(+range.value / scl); apply(b.kind, b.scene); num.update(); paint(); });
   range.addEventListener('change', commit);
   return { el: wrap, update: () => { range.value = (+b.get() || 0) * scl; paint(); num.update(); } };
 }
@@ -1573,7 +1519,7 @@ function selectField(b, spec) {
   const sel = document.createElement('select'); sel.className = 'mupe-select'; sel.setAttribute('aria-label', spec.label);
   const opts = spec.options.map((o) => (Array.isArray(o) ? o : [o, String(o)]));
   sel.innerHTML = opts.map(([, l], j) => `<option value="${j}">${esc(l)}</option>`).join('');
-  sel.addEventListener('change', () => { b.set(opts[+sel.value][0]); apply(b.kind); commit(); });
+  sel.addEventListener('change', () => { b.set(opts[+sel.value][0]); apply(b.kind, b.scene); commit(); });
   return { el: sel, update: () => { const j = opts.findIndex(([v]) => eq(v, b.get())); sel.value = String(j < 0 ? 0 : j); } };
 }
 function segField(b, spec) {
@@ -1581,14 +1527,14 @@ function segField(b, spec) {
   const wrap = div('mupe-seg'); wrap.setAttribute('role', 'group'); wrap.setAttribute('aria-label', spec.label);
   wrap.innerHTML = opts.map(([, l], j) => `<button type="button" data-j="${j}" aria-pressed="false">${esc(l)}</button>`).join('');
   const update = () => wrap.querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(eq(opts[+x.dataset.j][0], b.get()))));
-  wrap.onclick = (e) => { const t = e.target.closest('button'); if (!t) return; b.set(opts[+t.dataset.j][0]); apply(b.kind); commit(); update(); };
+  wrap.onclick = (e) => { const t = e.target.closest('button'); if (!t) return; b.set(opts[+t.dataset.j][0]); apply(b.kind, b.scene); commit(); update(); };
   return { el: wrap, update };
 }
 function switchField(b, spec) {
   const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'mupe-switch'; btn.setAttribute('role', 'switch'); btn.setAttribute('aria-label', spec.label);
   btn.innerHTML = '<u></u>';
   const update = () => btn.setAttribute('aria-checked', String(!!b.get()));
-  btn.onclick = () => { b.set(!b.get()); apply(b.kind); commit(); update(); };
+  btn.onclick = () => { b.set(!b.get()); apply(b.kind, b.scene); commit(); update(); };
   return { el: btn, update };
 }
 function imageField(b, spec) {
@@ -1598,7 +1544,7 @@ function imageField(b, spec) {
   file.onchange = async () => {
     const f = file.files && file.files[0]; if (!f) return;
     btn.disabled = true; btn.textContent = 'Saving…';
-    try { b.set(await storePicture(f)); apply(b.kind); commit(); } catch (e) { saveNote = `Picture not saved: ${e.message}`; }
+    try { b.set(await storePicture(f)); apply(b.kind, b.scene); commit(); } catch (e) { saveNote = `Picture not saved: ${e.message}`; }
     btn.disabled = false; btn.textContent = 'Replace…'; file.value = ''; update();
   };
   const update = () => { const v = b.get(); thumb.style.backgroundImage = v ? `url("${String(v).replace(/"/g, '%22')}")` : ''; };
@@ -1614,49 +1560,39 @@ function row(b, spec) {
   r.lastChild.appendChild(f.el);
   const dot = r.querySelector('.mupe-dot');
   const update = () => { f.update(); const ch = b.changed(); dot.hidden = !ch; r.classList.toggle('is-changed', ch); };
-  dot.onclick = () => { b.reset(); apply(b.kind); commit(); update(); };
+  dot.onclick = () => { b.reset(); apply(b.kind, b.scene); commit(); update(); };
   update();
   const field = { el: r, update };
   fields.add(field);
   return field;
 }
-// a control entry (the agent's, or one of a layer's own options) → a row in scene i
-function control(i, c, anchorKey) {
+
+// a control entry (the agent's, or one of an element's own options) → rows in scene i
+function control(i, c, anchor) {
   if (c.param) {
     const d = paramDefs(i)[c.param]; if (!d) return null;
     const kind = d.type === 'toggle' ? 'toggle' : d.type === 'select' ? 'select' : d.type === 'color' ? 'color' : d.type === 'number' ? 'number' : 'slider';
     return row(paramBinding(i, c.param), { kind, label: c.label || d.label || pretty(c.param), min: d.min, max: d.max, step: d.step, unit: d.unit, options: d.options, tokens: true });
   }
-  if (ENGINE3D) {
-    const el = (((inst.defs && inst.defs(i)) || {}).elements || []).find((e) => e.id === String(c.layer || anchorKey)); if (!el) return null;
-    const prop = ALIAS[c.prop] || c.prop, base = PROPS[prop === 'fill' ? 'color' : prop]; if (!base) return null;
-    const orig = prop === 'text' ? el.text : prop === 'image' ? ((BASE.scenes[i].images || {})[el.image] || '') : prop === 'size' ? el.size : el.color;
-    return row(sceneBinding(i, prop === 'image' ? el.image : el.id, prop === 'fill' ? 'color' : prop, orig), Object.assign({}, base, { label: c.label || base.label }));
-  }
-  const keys = [].concat(c.layer || anchorKey).map(String);
-  const L = origLayers(i).get(keys[0]); if (!L) return null;
-  const prop = propFor(c.prop, L), base = PROPS[prop]; if (!base) return null;
+  const id = String(c.layer || anchor);
+  let prop = ALIAS[c.prop] || c.prop;
+  if (prop === 'move') return [control(i, { prop: 'x' }, id), control(i, { prop: 'y' }, id)].filter(Boolean);
+  const f = infoOf(i, id);
+  if (prop === 'color' && f && (f.kind === 'shape' || f.kind === 'image')) prop = 'fill';
+  const base = PROPS[prop]; if (!base) return null;
+  if (prop === 'text' && f && !f.textEditable) return null;
   const spec = Object.assign({}, base, { label: c.label || base.label });
   for (const k of ['min', 'max', 'step', 'unit']) if (c[k] != null) spec[k] = c[k];
-  if (base.kind === 'color') {
-    const cols = colorsOf(L, prop);
-    if (cols.length > 1) return cols.map((from, n) => row(swapBinding(i, keys, prop, from), Object.assign({}, spec, { label: n ? 'Then' : spec.label })));
-  }
-  return row(layerBinding(i, keys, prop), spec);
+  return row(elementBinding(i, id, prop), spec);
 }
-// every option a layer has: what a click on it offers
-const autoControls = (L) => {
-  if (L.type === 'text') return (L.num || /\{\{\{/.test(String(L.text || '')) ? [] : ['text']).concat(['color', 'size', 'weight', 'upper', 'ls']);
-  if (L.type === 'rect' || L.type === 'ellipse') {
-    const out = ['fill'];
-    if (L.stroke != null || L.sw) out.push('stroke', 'sw');
-    if (L.type === 'rect') out.push('r');
-    if (isPic(L) && L.id != null) out.push('image');
-    return out;
-  }
-  if (L.type === 'icon') return ['color', 'size'];
-  if (L.type === 'path') return ['stroke', 'sw'];
-  return [];
+// every option an element has, by what it is
+const autoControls = (f) => {
+  if (!f) return { own: [], layout: [] };
+  const own = f.kind === 'text' ? [...(f.textEditable ? ['text'] : []), 'color', 'size', 'weight', 'upper', 'ls', 'italic']
+    : f.kind === 'image' ? ['image', 'r']
+    : f.kind === 'shape' ? (f.svg ? ['fill', 'stroke'] : ['fill', 'r'])
+    : [];
+  return { own, layout: ['x', 'y', 'scale', 'rotate', 'hide'] };
 };
 
 // ── the colour popover: saturation × value, hue, opacity, hex, eyedropper, the film's colours (a token stays a token) ──
@@ -1746,12 +1682,13 @@ const picker = (() => {
     close,
   };
 })();
+
 const paletteNow = () => palette().tokens.filter((t) => t.name !== 'bg').map((t) => ({ v: t.name, name: ROLE[t.name] || t.name }))
+  .concat(palette().custom.map((n) => ({ v: EDITS.film.colors && EDITS.film.colors[n] ? EDITS.film.colors[n] : BASE.colors[n], name: n })))
   .concat(palette().literals.map((l) => { const v = recolorBinding(l.value).get(); return { v, name: hexOf(v) }; }));
 
-// ── the film's layers: which one a pointer is on, which are on screen, the agent's panels ──
-let byNode = new WeakMap(), byKey = new Map(), CARDS = [], SCENECARDS = [];
-const painted = (L) => !!(L.fill || L.stroke || L.img || L.media != null || L.shadow || (L.k && (L.k.fill || L.k.stroke)));
+// ── the agent's panels: a library scene's layers name them (ui), a page's elements do (data-ui-label) ──
+let CARDS = [], SCENECARDS = [];
 const cardsOf = (L) => {
   const list = [];
   if (L.ui) list.push(...(Array.isArray(L.ui) && L.ui.length && typeof L.ui[0] === 'object' && L.ui[0].controls ? L.ui : [L.ui]));
@@ -1763,31 +1700,14 @@ const cardsOf = (L) => {
   });
 };
 function index() {
-  byNode = new WeakMap(); byKey = new Map(); CARDS = [];
-  if (ENGINE3D) {
-    // a scene page's panels: its data-ui elements (the page names them), and its params under Effects
-    timing.forEach((tm, i) => {
-      const d = inst.defs(i); if (!d) return;
-      for (const el of d.elements || []) CARDS.push({ id: `${i}:${el.id}:0`, scene: i, anchor: el.id, label: el.label || pretty(el.id), glyph: el.image ? IC.image : IC.text, page: el,
-        controls: el.controls.map((c) => ({ prop: c })) });
-    });
-    SCENECARDS = timing.map((tm, i) => {
-      const rest = Object.keys(paramDefs(i));
-      return rest.length ? { id: `${i}:__scene`, scene: i, label: titleOf(i), glyph: IC.fx, controls: rest.map((n) => ({ param: n })), sceneLevel: true } : null;
-    });
-    return;
-  }
-  for (const r of inst.recs) { byNode.set(r.n, r); r._kids = []; }
-  for (const r of inst.recs) {
-    const p = r.n.parentElement && r.n.parentElement.closest('.uik-n');
-    r._p = p ? byNode.get(p) : null;
-    if (r._p) r._p._kids.push(r);
-    const L = r.L; if (L._scene == null) continue;
-    byKey.set(L._scene + ':' + L._key, r);
-    if (r.box && !painted(L)) r.box.classList.add('mupe-ghost');
-    if (r.box && isPic(L)) r.box.classList.add('mupe-photo');
-    for (const c of cardsOf(L)) CARDS.push(c);
-  }
+  CARDS = [];
+  timing.forEach((tm, i) => {
+    if (isPage(i)) {
+      const d = player.defs(i); if (!d) return;
+      for (const el of d.elements || []) CARDS.push({ id: `${i}:${el.id}:0`, scene: i, anchor: el.id, label: el.label || `Element ${el.id}`, glyph: IC.pick,
+        controls: (el.controls.length ? el.controls : ['text', 'color']).map((c) => ({ prop: c })) });
+    } else for (const L of origLayers(i).values()) for (const c of cardsOf(L)) CARDS.push(c);
+  });
   // each scene's effects that no panel shows
   SCENECARDS = timing.map((tm, i) => {
     const used = new Set(CARDS.filter((c) => c.scene === i).flatMap((c) => c.controls.filter((x) => x.param).map((x) => x.param)));
@@ -1795,49 +1715,41 @@ function index() {
     return rest.length ? { id: `${i}:__scene`, scene: i, label: titleOf(i), glyph: IC.fx, controls: rest.map((n) => ({ param: n })), sceneLevel: true } : null;
   });
 }
-const visible = (r) => { for (let x = r; x; x = x._p) if (x.n.style.display === 'none') return false; return true; };
-const recOf = (scene, key) => byKey.get(scene + ':' + key) || null;
-const union = (rs) => {
-  const ok = rs.filter((r) => r && r.right - r.left + r.bottom - r.top > 0); if (!ok.length) return null;
-  return { left: Math.min(...ok.map((r) => r.left)), top: Math.min(...ok.map((r) => r.top)), right: Math.max(...ok.map((r) => r.right)), bottom: Math.max(...ok.map((r) => r.bottom)) };
-};
-const rectOf = (r, depth = 0) => {
-  if (r.L.type === 'icon' && r.svg) return r.svg.getBoundingClientRect();
-  if (r.paths) return union(r.paths.map((p) => p.getBoundingClientRect()));
-  const el = r.txt || r.box || r.cv || r.cur;
-  if (el) return el.getBoundingClientRect();
-  return depth > 8 ? null : union(r._kids.filter(visible).map((k) => rectOf(k, depth + 1)));
-};
-// what really shows: cut by every clipping ancestor (masks, pills) and the frame
-const clipTo = (rect, r) => {
-  if (!rect) return null;
-  const cut = (c) => { rect = { left: Math.max(rect.left, c.left), top: Math.max(rect.top, c.top), right: Math.min(rect.right, c.right), bottom: Math.min(rect.bottom, c.bottom) }; };
-  for (let x = r._p; x; x = x._p) if (x.L.clip && x.box) cut(x.box.getBoundingClientRect());
-  cut(frameEl.getBoundingClientRect());
-  return rect.right - rect.left > 0.5 && rect.bottom - rect.top > 0.5 ? rect : null;
-};
-// the name a person knows a layer by: its words, else the agent's name for it, else its id
-const GENERIC = /^(colou?r|fill|stroke|text|size|label|line|picture|image|weight|case|tracking|corners)$/i;
-const nameOf = (L) => {
-  if (L.type === 'text' && textOf(L)) return `“${trunc(textOf(L), 30)}”`;
-  for (const c of CARDS) if (c.scene === L._scene && c.anchor === L._key && c.label) return c.label;
-  for (const c of CARDS) {
-    if (c.scene !== L._scene) continue;
-    for (const x of c.controls) {
-      const keys = x.param ? [] : [].concat(x.layer || c.anchor).map(String);
-      if (keys.length === 1 && keys[0] === L._key && x.label && !GENERIC.test(x.label)) return x.label;
-    }
-  }
-  return pretty(L._key) || typeName(L);
-};
 const sceneOn = (i, t) => t >= timing[i].from - 1e-6 && t < timing[i].to + 1e-6;
+// the name a person knows an element by: the agent's name for it, its words, else what it is
+const names = new Map();
+const nameOf = (i, id) => {
+  const key = i + ':' + id;
+  const c = CARDS.find((x) => x.scene === i && x.anchor === id && x.label);
+  let n = c ? c.label : null;
+  const f = n ? null : infoOf(i, id);
+  if (!n && f && f.label) n = f.label;
+  if (!n && f && f.kind === 'text' && f.text) n = `“${trunc(f.text, 30)}”`;   // its words as they are now
+  if (!n) { const L = isPage(i) ? null : origLayers(i).get(id); if (L) n = L.type === 'text' && textOf(L) ? `“${trunc(textOf(L), 30)}”` : pretty(L._key) || null; }
+  if (!n && f) n = f.imageKey ? pretty(f.imageKey) : `${KIND[f.kind]} ${id}`;
+  if (n) names.set(key, n);
+  return n || names.get(key) || `Element ${id}`;
+};
 
-// ── the stage: hover names an element, a click selects it (the film pauses), the selection follows it ──
-let sel = null, stageHover = null, cardHover = null;
-const selRec = () => (sel ? recOf(sel.scene, sel.key) : null);
+// ── the stage: hover names an element, a click selects it (the film pauses), drag moves it, a double-click types ──
+let sel = null, stageHover = null, cardHover = null, typing = false, dragged = false;
 const ov = div('mupe-ov', '<div class="mupe-box is-hover" hidden></div><div class="mupe-box is-sel" hidden><i></i><i></i><i></i><i></i></div><div class="mupe-tag" hidden></div>');
 view.appendChild(ov);
 const [hovBox, selBox, tag] = ov.children;
+// the scene on top at the playhead (the incoming one during a fade)
+const topScene = () => { let k = -1; timing.forEach((tm, i) => { if (sceneOn(i, cur)) k = i; }); return k; };
+const hitAt = (e) => {
+  const i = topScene(), w = i >= 0 ? edWin(i) : null; if (!w) return null;
+  const r = frameEl.getBoundingClientRect();
+  let id = null; try { id = w.__glEditor.at((e.clientX - r.left) / scaleK, (e.clientY - r.top) / scaleK); } catch (err) { id = null; }
+  return id ? { scene: i, id } : null;
+};
+const toView = (r, vr) => {
+  if (!r) return null;
+  const fr = frameEl.getBoundingClientRect();
+  const out = { left: Math.max(fr.left, fr.left + r.left * scaleK), top: Math.max(fr.top, fr.top + r.top * scaleK), right: Math.min(fr.right, fr.left + r.right * scaleK), bottom: Math.min(fr.bottom, fr.top + r.bottom * scaleK) };
+  return out.right - out.left > 0.5 && out.bottom - out.top > 0.5 ? out : null;
+};
 const placeBox = (box, r, vr) => {
   if (!r) { box.hidden = true; return null; }
   box.hidden = false;
@@ -1846,32 +1758,75 @@ const placeBox = (box, r, vr) => {
   return { x, y, w, h };
 };
 function drawOverlay() {
-  const s = selRec(), hr = cardHover || stageHover, h = hr && hr !== s && visible(hr) ? hr : null;
-  if (!s && !h) { if (!selBox.hidden || !hovBox.hidden || !tag.hidden) { selBox.hidden = hovBox.hidden = tag.hidden = true; } return; }
+  const hr = cardHover || stageHover, h = hr && !(sel && hr.scene === sel.scene && hr.id === sel.id) ? hr : null;
+  if ((!sel && !h) || typing) { if (!selBox.hidden || !hovBox.hidden || !tag.hidden) { selBox.hidden = hovBox.hidden = tag.hidden = true; } return; }
   const vr = view.getBoundingClientRect();
-  const sb = placeBox(selBox, s && visible(s) ? clipTo(rectOf(s), s) : null, vr);
-  const hb = placeBox(hovBox, h ? clipTo(rectOf(h), h) : null, vr);
-  const t = h && hb ? { r: h, b: hb } : s && sb ? { r: s, b: sb } : null;
+  const sb = placeBox(selBox, sel ? toView(rectOf(sel.scene, sel.id), vr) : null, vr);
+  const hb = placeBox(hovBox, h ? toView(rectOf(h.scene, h.id), vr) : null, vr);
+  const t = h && hb ? { e: h, b: hb } : sel && sb ? { e: sel, b: sb } : null;
   if (!t) { tag.hidden = true; return; }
   tag.hidden = false;
-  const txt = `${typeName(t.r.L)} · ${nameOf(t.r.L)}`;
+  const f = infoOf(t.e.scene, t.e.id);
+  const txt = `${f ? KIND[f.kind] : 'Element'} · ${nameOf(t.e.scene, t.e.id)}`;
   if (tag._t !== txt) { tag._t = txt; tag.textContent = txt; }
   tag.style.transform = `translate(${Math.max(0, t.b.x).toFixed(1)}px, ${(t.b.y > 24 ? t.b.y - 22 : t.b.y + t.b.h + 4).toFixed(1)}px)`;
-  tag.classList.toggle('is-sel', t.r === s);
+  tag.classList.toggle('is-sel', t.e === sel);
 }
-frameEl.addEventListener('pointermove', (e) => {
-  if (e.pointerType !== 'mouse') return;
-  const n = e.target.closest && e.target.closest('.uik-n'); const r = n ? byNode.get(n) : null;
-  stageHover = r && r.L._scene != null ? r : null;
-});
+frameEl.addEventListener('pointermove', (e) => { if (e.pointerType === 'mouse' && !typing) stageHover = hitAt(e); });
 frameEl.addEventListener('pointerleave', () => { stageHover = null; });
-frameEl.addEventListener('click', (e) => {
-  const n = e.target.closest && e.target.closest('.uik-n'); const r = n ? byNode.get(n) : null;
-  if (r && r.L._scene != null) select(r.L._scene, r.L._key); else select(null);
+// on the selected element: drag it (Shift keeps one axis); a click selects
+frameEl.addEventListener('pointerdown', (e) => {
+  if (e.button > 0 || typing) return;
+  dragged = false;
+  const h = hitAt(e);
+  if (!h || !sel || h.scene !== sel.scene || !(h.id === sel.id || h.id.startsWith(sel.id + '/'))) return;
+  const i = sel.scene, id = sel.id, bx = elementBinding(i, id, 'x'), by = elementBinding(i, id, 'y');
+  const x0 = +bx.get() || 0, y0 = +by.get() || 0, px = e.clientX, py = e.clientY;
+  frameEl.setPointerCapture(e.pointerId);
+  const move = (ev) => {
+    const dx = ev.clientX - px, dy = ev.clientY - py;
+    if (!dragged && Math.hypot(dx, dy) < 3) return;
+    if (!dragged) { dragged = true; interacting++; frameEl.classList.add('is-moving'); }
+    let ax = dx / scaleK, ay = dy / scaleK;
+    if (ev.shiftKey) { if (Math.abs(ax) > Math.abs(ay)) ay = 0; else ax = 0; }
+    bx.set(Math.round(x0 + ax)); by.set(Math.round(y0 + ay)); apply('style', i);
+  };
+  const up = () => {
+    frameEl.removeEventListener('pointermove', move); frameEl.removeEventListener('pointerup', up); frameEl.removeEventListener('pointercancel', up);
+    if (dragged) { interacting--; frameEl.classList.remove('is-moving'); commit(); }
+  };
+  frameEl.addEventListener('pointermove', move); frameEl.addEventListener('pointerup', up); frameEl.addEventListener('pointercancel', up);
 });
-function select(scene, key) {
+frameEl.addEventListener('click', (e) => {
+  if (dragged || typing) { dragged = false; return; }
+  const h = hitAt(e);
+  if (h) select(h.scene, h.id); else select(null);
+});
+frameEl.addEventListener('mousedown', (e) => { if (e.detail > 1) e.preventDefault(); });   // no text selection on a double-click
+frameEl.addEventListener('dblclick', (e) => {
+  try { window.getSelection().removeAllRanges(); } catch (err) { /* nothing selected */ }
+  const h = hitAt(e); if (!h || typing) return;
+  select(h.scene, h.id);
+  const f = infoOf(h.scene, h.id);
+  if (f && f.textEditable) typeIn(h.scene, h.id);
+});
+// typing over an element's words, on the stage: Enter keeps them, Esc puts the old ones back
+function typeIn(i, id) {
+  const w = edWin(i), fr = player.frame(i); if (!w || !fr) return;
+  const b = elementBinding(i, id, 'text'), before = b.get();
+  const ok = w.__glEditor.editText(id, {
+    onInput: (t) => { b.set(t); prune(); sc = withEdits(); if (isPage(i)) live(i); updateFields(); updateBadge(); },
+    onDone: (t, cancelled) => {
+      typing = false; fr.style.pointerEvents = 'none';
+      b.set(cancelled ? before : t); apply(b.kind, i); commit();
+      try { fr.blur(); window.focus(); } catch (e) { /* focus stays where it is */ }
+    },
+  });
+  if (ok) { typing = true; fr.style.pointerEvents = 'auto'; }
+}
+function select(scene, id) {
   if (scene == null) { if (sel) { sel = null; lastSig = null; } return; }
-  sel = { scene, key };
+  sel = { scene, id };
   if (playing) setPlaying(false);
   setStage(false); showTab('elements');
   moreOpen = null; lastSig = null;
@@ -1883,67 +1838,65 @@ epanel.innerHTML = '<div class="mupv-phead"><span id="mupe-where"></span><span i
 $('mupv-tab-elements').insertAdjacentHTML('afterbegin', IC.pick);
 const ebody = $('mupe-body'), whereEl = $('mupe-where'), whenEl = $('mupe-when'), ecount = $('mupe-ecount');
 let lastSig = null, moreOpen = null, lastCount = -1, lastWhere = '';
-// the agent's panel for a layer: its own or an ancestor's, else one in its scene that reaches it
-const cardFor = (r) => {
-  for (let x = r; x && x.L._scene != null; x = x._p) { const c = CARDS.find((k) => k.scene === x.L._scene && k.anchor === x.L._key); if (c) return c; }
-  return CARDS.find((c) => c.scene === r.L._scene && c.controls.some((x) => [].concat(x.layer || []).map(String).includes(r.L._key))) || null;
+// the agent's panel for an element: its own or one around it
+const cardFor = (i, id) => {
+  const w = edWin(i); let chain = [id];
+  try { if (w) chain = w.__glEditor.chain(id).reverse(); } catch (e) { /* the element went */ }
+  for (const x of chain) { const c = CARDS.find((k) => k.scene === i && k.anchor === x); if (c) return c; }
+  return CARDS.find((c) => c.scene === i && c.controls.some((x) => [].concat(x.layer || []).map(String).includes(id))) || null;
 };
 const cardEl = (c, opt = {}) => {
   const el = div('mupe-card' + (c.sceneLevel ? ' is-scene' : ''));
   el.dataset.card = c.id;
-  el.innerHTML = `<div class="mupe-chead"><span class="mupe-glyph">${c.glyph}</span><b>${esc(c.label)}</b>${c.sceneLevel ? '<small>Scene effects</small>' : ''}${!c.sceneLevel && !opt.noLocate && !ENGINE3D ? `<button type="button" class="mupe-ibtn mupe-loc" title="Select it in the film" aria-label="Select ${esc(c.label)} in the film">${IC.locate}</button>` : ''}</div><div class="mupe-rows"></div>`;
+  el.innerHTML = `<div class="mupe-chead"><span class="mupe-glyph">${c.glyph}</span><b>${esc(c.label)}</b>${c.sceneLevel ? '<small>Scene effects</small>' : ''}${!c.sceneLevel && !opt.noLocate ? `<button type="button" class="mupe-ibtn mupe-loc" title="Select it in the film" aria-label="Select ${esc(c.label)} in the film">${IC.locate}</button>` : ''}</div><div class="mupe-rows"></div>`;
   const rows = el.lastChild;
   for (const x of c.controls) [].concat(control(c.scene, x, c.anchor) || []).forEach((f) => rows.appendChild(f.el));
   if (!c.sceneLevel) {
-    el.addEventListener('pointerenter', () => { cardHover = recOf(c.scene, c.anchor); });
+    el.addEventListener('pointerenter', () => { cardHover = { scene: c.scene, id: c.anchor }; });
     el.addEventListener('pointerleave', () => { cardHover = null; });
     const loc = el.querySelector('.mupe-loc'); if (loc) loc.onclick = () => select(c.scene, c.anchor);
   }
   return el;
 };
-function selectedSection(r) {
-  const L = r.L, i = L._scene, on = visible(r);
+function selectedSection() {
+  const i = sel.scene, id = sel.id, f = infoOf(i, id), on = !!rectOf(i, id);
+  const kind = f ? f.kind : 'group';
   const sec = div('mupe-sec mupe-selsec');
-  const crumbs = []; for (let x = r._p; x && x.L._scene != null; x = x._p) crumbs.unshift(x);
-  sec.innerHTML = `<div class="mupe-selhead"><span class="mupe-glyph is-sel">${glyph(L)}</span><div><b>${esc(nameOf(L))}</b><small>${esc(typeName(L))} · Scene ${i + 1}</small></div><button type="button" class="mupv-icon mupe-x" title="Deselect (Esc)" aria-label="Deselect">${IC.close}</button></div>`
-    + `<nav class="mupe-crumbs" aria-label="Where it sits"><button type="button" data-scene="${i}">Scene ${i + 1}</button>${crumbs.map((x) => `${IC.chev}<button type="button" data-key="${esc(x.L._key)}">${esc(trunc(nameOf(x.L), 18))}</button>`).join('')}${IC.chev}<span>${esc(trunc(nameOf(L), 22))}</span></nav>`
-    + (on ? '' : `<div class="mupe-off"><span>Not on screen at ${fmt(cur)}.</span><button type="button" class="mupe-btn">Show it</button></div>`);
+  const w = edWin(i); let chain = [];
+  try { if (w) chain = w.__glEditor.chain(id).slice(0, -1); } catch (e) { chain = []; }
+  sec.innerHTML = `<div class="mupe-selhead"><span class="mupe-glyph is-sel">${KGLYPH[kind] || IC.group}</span><div><b>${esc(nameOf(i, id))}</b><small>${esc(KIND[kind] || 'Element')} · Scene ${i + 1}</small></div><button type="button" class="mupv-icon mupe-x" title="Deselect (Esc)" aria-label="Deselect">${IC.close}</button></div>`
+    + `<nav class="mupe-crumbs" aria-label="Where it sits"><button type="button" data-scene="${i}">Scene ${i + 1}</button>${chain.slice(-3).map((x) => `${IC.chev}<button type="button" data-id="${esc(x)}">${esc(trunc(nameOf(i, x), 18))}</button>`).join('')}${IC.chev}<span>${esc(trunc(nameOf(i, id), 22))}</span></nav>`
+    + (!f ? '<div class="mupe-off"><span>Not in this scene right now.</span></div>' : on ? '' : `<div class="mupe-off"><span>Not drawn at ${fmt(cur)}: play or scrub to where it shows.</span></div>`)
+    + (f && f.textEditable ? '<p class="mupe-sub mupe-tip">Double-click it in the film to type over its words. Drag it to move it.</p>' : f ? '<p class="mupe-sub mupe-tip">Drag it in the film to move it.</p>' : '');
   sec.querySelector('.mupe-x').onclick = () => select(null);
   sec.querySelector('.mupe-crumbs').onclick = (e) => {
     const b = e.target.closest('button'); if (!b) return;
-    if (b.dataset.key) select(i, b.dataset.key); else seek(timing[i].start + 0.72 * timing[i].duration);
+    if (b.dataset.id) select(i, b.dataset.id); else seek(timing[i].start + 0.72 * timing[i].duration);
   };
-  const off = sec.querySelector('.mupe-off button'); if (off) off.onclick = () => showLayer(r);
-  const card = cardFor(r);
-  if (card) { const ce = cardEl(card, { noLocate: card.anchor === L._key }); ce.classList.add('is-own'); sec.appendChild(ce); }
-  const shown = new Set(card ? card.controls.filter((x) => !x.param && [].concat(x.layer || card.anchor).map(String).includes(L._key)).map((x) => propFor(x.prop, L)) : []);
-  const auto = autoControls(L).filter((p) => !shown.has(propFor(p, L)));
-  if (auto.length) {
+  const card = cardFor(i, id);
+  if (card) { const ce = cardEl(card, { noLocate: card.anchor === id }); ce.classList.add('is-own'); sec.appendChild(ce); }
+  const shown = new Set(card ? card.controls.filter((x) => !x.param && String(x.layer || card.anchor) === id).map((x) => ALIAS[x.prop] || x.prop) : []);
+  const auto = autoControls(f);
+  const own = auto.own.filter((p) => !shown.has(p));
+  if (own.length) {
     const rows = div('mupe-rows');
-    for (const p of auto) [].concat(control(i, { prop: p }, L._key) || []).forEach((f) => rows.appendChild(f.el));
-    if (card) {
-      const d = document.createElement('details'); d.className = 'mupe-more';
-      d.open = !!moreOpen;
-      d.innerHTML = `<summary>${IC.chev}<span>All options</span><small>${auto.length}</small></summary>`;
-      d.addEventListener('toggle', () => { moreOpen = d.open; });
-      d.appendChild(rows); sec.appendChild(d);
-    } else sec.appendChild(rows);
-  } else if (!card) sec.insertAdjacentHTML('beforeend', `<p class="mupv-note">${L.type === 'group' ? 'A group: pick an element inside it.' : 'Nothing to change on this one.'}</p>`);
-  return { sec, card };
-}
-// the first moment the layer shows (its scene, sampled)
-function showLayer(r) {
-  const i = r.L._scene, tm = timing[i];
-  for (let t = tm.from; t <= tm.to; t += 1 / 30) {
-    inst.seek(t);
-    const x = recOf(i, r.L._key);
-    if (x && visible(x)) { seek(Math.min(tm.to, t + 0.2)); return; }
+    for (const p of own) [].concat(control(i, { prop: p }, id) || []).forEach((x) => rows.appendChild(x.el));
+    sec.appendChild(rows);
   }
-  redraw();
+  if (f) {
+    const d = document.createElement('details'); d.className = 'mupe-more';
+    d.open = moreOpen == null ? !own.length : moreOpen;
+    d.innerHTML = `<summary>${IC.chev}<span>Position and visibility</span><small>${auto.layout.length}</small></summary>`;
+    d.addEventListener('toggle', () => { moreOpen = d.open; });
+    const rows = div('mupe-rows');
+    for (const p of auto.layout) [].concat(control(i, { prop: p }, id) || []).forEach((x) => rows.appendChild(x.el));
+    d.appendChild(rows); sec.appendChild(d);
+  }
+  return { sec, card };
 }
 function renderElements() {
   const k = sceneAt(cur);
-  const vis = CARDS.filter((c) => { if (ENGINE3D) return sceneOn(c.scene, cur); const r = recOf(c.scene, c.anchor); return r && visible(r); });
+  const vis = CARDS.filter((c) => sceneOn(c.scene, cur) && rectOf(c.scene, c.anchor));
   const scs = SCENECARDS.filter((c, i) => c && sceneOn(i, cur));
   const count = vis.length + scs.length;
   if (count !== lastCount) { lastCount = count; ecount.textContent = count ? String(count) : ''; }
@@ -1951,16 +1904,15 @@ function renderElements() {
   if (where !== lastWhere) { lastWhere = where; whereEl.innerHTML = `<b>${esc(where)}</b>`; }
   if (epanel.hidden) return;
   whenEl.textContent = fmt(cur);
-  const s = selRec();
-  const sig = [sel ? `${sel.scene}:${sel.key}:${s && visible(s) ? 1 : 0}` : '', vis.map((c) => c.id).join(','), scs.map((c) => c.id).join(',')].join('|');
+  const sig = [sel ? `${sel.scene}:${sel.id}:${rectOf(sel.scene, sel.id) ? 1 : 0}` : '', vis.map((c) => c.id).join(','), scs.map((c) => c.id).join(',')].join('|');
   if (sig === lastSig) return;
-  if (interacting > 0 || (epanel.contains(document.activeElement) && document.activeElement.matches('input, select, textarea')) || picker.isOpen) return;
-  lastSig = sig;
+  if (interacting > 0 || typing || (epanel.contains(document.activeElement) && document.activeElement.matches('input, select, textarea')) || picker.isOpen) return;
+  lastSig = sig; infoCache.clear();
   fields.forEach((f) => { if (epanel.contains(f.el)) fields.delete(f); });
   ebody.innerHTML = '';
   let selCard = null;
-  if (s) { const r = selectedSection(s); selCard = r.card; ebody.appendChild(r.sec); }
-  else if (!ENGINE3D) ebody.insertAdjacentHTML('beforeend', `<p class="mupe-hint">${IC.pick}<span>Click anything in the film to change it. The film pauses; <kbd>Space</kbd> plays on.</span></p>`);
+  if (sel) { const r = selectedSection(); selCard = r.card; ebody.appendChild(r.sec); }
+  else ebody.insertAdjacentHTML('beforeend', `<p class="mupe-hint">${IC.pick}<span>Click anything in the film to change it: words, colours, size, pictures, where it sits. The film pauses; <kbd>Space</kbd> plays on.</span></p>`);
   const list = vis.filter((c) => !(selCard && c.id === selCard.id));
   if (list.length) {
     const sec = div('mupe-sec', `<h3 class="mupv-h">On screen now <span>${list.length}</span></h3><p class="mupe-sub">Controls the agent set up for this film.</p>`);
@@ -1972,10 +1924,9 @@ function renderElements() {
     scs.forEach((c) => sec.appendChild(cardEl(c)));
     ebody.appendChild(sec);
   }
-  if (!s && !list.length && !scs.length) ebody.insertAdjacentHTML('beforeend', '<p class="mupv-note mupe-empty">The agent set up no controls for what is on screen now. Click an element to change it anyway.</p>');
 }
 
-// ── the Design tab: the film's tokens, editable ──
+// ── the Design tab: the film's colours and font ──
 const design = $('mupv-p-design');
 function swatch(b, label, sub) {
   const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'mupv-sw mupe-sw';
@@ -2000,29 +1951,30 @@ function renderDesign() {
   const P = palette();
   fields.forEach((f) => { if (design.contains(f.el)) fields.delete(f); });
   design.innerHTML = `<div class="mupv-dsec"><h2 class="mupv-h">Film</h2><div class="mupe-rows" id="mupe-film"></div><div class="mupv-keycols" id="mupe-key"></div></div>
-    <div class="mupv-dsec"><h2 class="mupv-h">Colours <span>${P.tokens.length + P.literals.length} in the film</span></h2>
-      <p class="mupe-sub">Change one and every layer that uses it follows.</p>
+    <div class="mupv-dsec"><h2 class="mupv-h">Colours <span>the film’s</span></h2>
+      <p class="mupe-sub">Change one and everything that uses it follows.</p>
       <div class="mupv-keycols" id="mupe-named"></div>
-      <h3 class="mupe-h3"${P.literals.length ? '' : ' hidden'}>Item colours <span>set in the items</span></h3><div class="mupv-keycols" id="mupe-lits"></div></div>
+      <h3 class="mupe-h3"${P.literals.length ? '' : ' hidden'}>Library colours <span>set in the library scenes</span></h3><div class="mupv-keycols" id="mupe-lits"></div></div>
     <div class="mupv-dsec"><h2 class="mupv-h">Type</h2><div class="mupe-rows" id="mupe-fontrow"></div><p class="mupe-sub" id="mupe-fontnote" hidden></p><div id="mupe-spec"></div></div>`;
   $('mupe-film').appendChild(row(filmBinding('theme', 'theme'), { kind: 'seg', label: 'Theme', options: [['light', 'Light'], ['dark', 'Dark']] }).el);
   if (BASE.background) $('mupe-key').appendChild(swatch(filmBinding('background', 'bg'), 'Background', hexSub).el);
   $('mupe-key').appendChild(swatch(filmBinding('accent', 'theme'), 'Accent', hexSub).el);
   for (const t of P.tokens) if (t.name !== 'acc' && t.name !== 'bg') $('mupe-named').appendChild(swatch(tokenBinding(t.name), ROLE[t.name] || t.name, (v) => `${t.name} · ${hexOf(v)}`).el);
-  for (const l of P.literals) $('mupe-lits').appendChild(swatch(recolorBinding(l.value), hexOf(l.value), (v) => (K.style.sameColor(v, l.value) ? `${l.uses} use${l.uses > 1 ? 's' : ''}` : `now ${hexSub(v)}`)).el);
-  $('mupe-fontrow').appendChild(row(filmBinding('font', 'font'), { kind: 'select', label: 'Font', options: Object.keys(K.FONTS).map((n) => [n, n]) }).el);
+  for (const n of P.custom) $('mupe-named').appendChild(swatch(tokenBinding(n), pretty(n) || n, (v) => `${n} · ${hexOf(v)}`).el);
+  for (const l of P.literals) $('mupe-lits').appendChild(swatch(recolorBinding(l.value), hexOf(l.value), (v) => (sameColor(v, l.value) ? `${l.uses} use${l.uses > 1 ? 's' : ''}` : `now ${hexSub(v)}`)).el);
+  $('mupe-fontrow').appendChild(row(filmBinding('font', 'theme'), { kind: 'select', label: 'Font', options: Object.keys(K.FONTS).map((n) => [n, n]) }).el);
   renderSpecimen();
 }
 function renderSpecimen() {
   const P = palette(), name = sc.font || K.FONT_DEFAULT, f = K.fontOf(name);
   if (sc.font) K.useFont(sc.font);
-  const WN = { 300: 'Light', 400: 'Regular', 500: 'Medium', 600: 'Semibold', 700: 'Bold', 800: 'Heavy' };
+  const WN = { 100: 'Thin', 200: 'Extra light', 300: 'Light', 400: 'Regular', 500: 'Medium', 600: 'Semibold', 700: 'Bold', 800: 'Heavy', 900: 'Black' };
   const range = (a) => (a.length > 1 ? `${a[0]}–${a[a.length - 1]} px · ${a.length} sizes` : `${a[0]} px`);
   $('mupe-spec').innerHTML = `<div class="mupv-font"><header><q style="font-family:${esc(f.stack)}">Aa</q><div><b>${esc(name)}</b><span>${esc(capw(f.note || 'Google Fonts'))}</span></div></header>`
     + P.type.map((s) => `<div class="mupv-style" title="${esc(s.sizes.join(', '))} px"><em>${WN[s.weight] || s.weight} ${s.weight}</em><small>${range(s.sizes)}</small><q style="font-weight:${s.weight};font-family:${esc(f.stack)}">${esc(s.sample || 'Aa 0123')}</q></div>`).join('') + '</div>';
   const note = $('mupe-fontnote');
   note.hidden = (sc.font || K.FONT_DEFAULT) === (BASE.font || K.FONT_DEFAULT);
-  note.textContent = 'Some items measure their words (pills, masks). The agent checks and re-fits them for this font before it renders.';
+  note.textContent = 'Every scene gets this font through --gl-font; words that were fitted to the old one may need the agent to re-fit them before it renders.';
 }
 
 // ── the top bar: the list of changes ──
@@ -2051,26 +2003,30 @@ function updateBadge() {
   chgBtn.querySelector('span').textContent = n ? `${n} change${n > 1 ? 's' : ''}` : 'No changes';
   $('mupe-undo').disabled = hpos <= 0; $('mupe-redo').disabled = hpos >= hist.length - 1;
   if (agentLine) agentLine.textContent = n ? `Your ${n} change${n > 1 ? 's are' : ' is'} saved. Approve it in the chat, and the agent renders with ${n > 1 ? 'them' : 'it'}`
-    : 'Approve it in the chat, and the agent renders and exports it';
+    : AGENT_LINE;
 }
+
 // every edit as a row a person reads: where · what · before → now · revert
 const labelFor = (i, key, prop) => {
-  const L = origLayers(i).get(key);
   for (const c of CARDS.filter((x) => x.scene === i)) for (const x of c.controls) {
     if (x.param) continue;
-    if ([].concat(x.layer || c.anchor).map(String).includes(key) && L && propFor(x.prop, L) === prop) return x.label || c.label;
+    if (String(x.layer || c.anchor) === key && (ALIAS[x.prop] || x.prop) === prop) return x.label || c.label;
   }
   const P = PROPS[prop];
-  return `${L ? nameOf(L) : pretty(key)} · ${P ? P.label.toLowerCase() : prop}`;
+  return `${nameOf(i, key)} · ${P ? P.label.toLowerCase() : prop}`;
 };
 const valHtml = (prop, v) => {
   if (v == null || v === '') return '<span class="mupe-none">none</span>';
   if (['fill', 'stroke', 'color', 'colors', 'accent', 'background', 'recolor'].includes(prop) || (typeof v === 'string' && (/^#[0-9a-f]{3,8}$/i.test(v) || tokenOf(v)))) return `<i class="mupv-chipc" style="--c:${esc(cssOf(v))}"></i>${esc(colorName(v))}`;
   if (prop === 'image') return 'a new picture';
+  if (prop === 'hide') return v ? 'Hidden' : 'Shown';
   if (typeof v === 'boolean') return v ? 'On' : 'Off';
   if (prop === 'upper') return v ? 'UPPER' : 'As typed';
   if (prop === 'text') return `“${esc(trunc(v, 26))}”`;
   if (prop === 'ls') return `${+(v * 100).toFixed(1)}%`;
+  if (prop === 'scale') return `${Math.round(v * 100)}%`;
+  if (prop === 'x' || prop === 'y' || prop === 'size' || prop === 'r') return `${+(+v).toFixed(1)} px`;
+  if (prop === 'rotate') return `${+(+v).toFixed(1)}°`;
   if (typeof v === 'number') return String(+v.toFixed(3));
   return esc(capw(v));
 };
@@ -2081,17 +2037,14 @@ function changeRows() {
   if (has(f, 'background')) add('Film', 'Background', 'background', FILM_BASE.background(), f.background, () => { delete f.background; });
   if (has(f, 'accent')) add('Film', 'Accent', 'accent', FILM_BASE.accent(), f.accent, () => { delete f.accent; });
   for (const [n, v] of Object.entries(f.colors || {})) add('Film', ROLE[n] || n, 'colors', tokenBase(n), v, () => { delete f.colors[n]; });
-  for (const [h, v] of Object.entries(f.recolor || {})) add('Film', 'Item colour', 'recolor', recolorBase(h), v, () => { delete f.recolor[h]; });
+  for (const [h, v] of Object.entries(f.recolor || {})) add('Film', 'Library colour', 'recolor', recolorBase(h), v, () => { delete f.recolor[h]; });
   if (has(f, 'font')) add('Film', 'Font', 'font', FILM_BASE.font(), f.font, () => { delete f.font; });
   for (const [sn, s] of Object.entries(EDITS.scenes).sort((a, b) => a[0] - b[0])) {
     const i = +sn - 1, scope = `Scene ${sn}`;
     if (!BASE.scenes[i]) continue;
-    for (const [k, v] of Object.entries(s.text || {})) add(scope, labelFor(i, k, 'text'), 'text', layerBinding(i, [k], 'text').orig(), v, () => { delete s.text[k]; });
+    for (const [k, v] of Object.entries(s.text || {})) add(scope, labelFor(i, k, 'text'), 'text', elementBinding(i, k, 'text').orig(), v, () => { delete s.text[k]; });
     for (const [k, v] of Object.entries(s.images || {})) add(scope, labelFor(i, k, 'image'), 'image', null, v, () => { delete s.images[k]; });
-    for (const [k, st] of Object.entries(s.style || {})) for (const [p, v] of Object.entries(st)) {
-      if (v && typeof v === 'object') for (const [from, to] of Object.entries(v)) add(scope, labelFor(i, k, p), p, from, to, () => { delete v[from]; });
-      else add(scope, labelFor(i, k, p), p, layerBinding(i, [k], p).orig(), v, () => { delete st[p]; });
-    }
+    for (const [k, st] of Object.entries(s.style || {})) for (const [p, v] of Object.entries(st)) add(scope, labelFor(i, k, p), p, elementBinding(i, k, p).orig(), v, () => { delete st[p]; });
     for (const [n, v] of Object.entries(s.params || {})) add(scope, (paramDefs(i)[n] || {}).label || pretty(n), 'param', paramsBase(i)[n], v, () => { delete s.params[n]; });
   }
   return rows;
@@ -2148,7 +2101,7 @@ addEventListener('keydown', (e) => {
 
 // ── start: the page's edits; a board card reads the ones saved on it (the page itself never changes) ──
 index(); renderDesign(); updateBadge();
-if (ENGINE3D) inst.ready.then(() => { index(); lastSig = null; });
+player.ready.then(() => { index(); lastSig = null; redraw(); });
 if (SAVE_WHERE === 'the film on the board') {
   api('GET', `/api/moodboards/${encodeURIComponent(MODE.boardId)}/elements/${encodeURIComponent(MODE.cardId)}`).then((el) => {
     const saved = el && el.data && el.data.muEdits && el.data.muEdits.edits;
@@ -2175,18 +2128,18 @@ if (q.has('t')) cur = Math.max(0, Math.min(T, +q.get('t') || 0));
 drawRuler();
 draw();
 requestAnimationFrame(tick);
-// thumbnails: one scene per idle slice, after the first frame is up
-const idle = window.requestIdleCallback ? (f) => requestIdleCallback(f, { timeout: 120 }) : (f) => setTimeout(f, 16);
+// thumbnails: one scene per idle slice, after the film's pages are up
+const idle = window.requestIdleCallback ? (f) => requestIdleCallback(f, { timeout: 200 }) : (f) => setTimeout(f, 16);
 let nextThumb = 0;
 const buildNext = () => { if (nextThumb >= timing.length) return; buildThumb(nextThumb++); idle(buildNext); };
-requestAnimationFrame(() => idle(buildNext));
+player.ready.then(() => idle(buildNext));
 let remembered = false;
 try { remembered = sessionStorage.getItem(STAGE_KEY) === '1'; } catch (e) { /* no storage */ }
 if (remembered) { app.classList.add('is-instant'); setStage(true, false); requestAnimationFrame(() => requestAnimationFrame(() => app.classList.remove('is-instant'))); }
-window.__mu = { seek, T, get t() { return cur; }, get film() { return film; }, get inst() { return inst; }, get playing() { return playing; }, setPlaying,
+window.__mu = { seek, T, get t() { return cur; }, player, get playing() { return playing; }, setPlaying,
   get sc() { return sc; }, get edits() { return editsOut(); }, flushSave };
-window.__muEdit = { select, get sel() { return sel; }, cards: () => CARDS, visibleCards: () => CARDS.filter((c) => { const r = recOf(c.scene, c.anchor); return r && visible(r); }),
-  recOf, travel, forAgent, changeRows, set: (e) => { setEdits(e); applyAll(); commit(); } };
+window.__muEdit = { select, get sel() { return sel; }, cards: () => CARDS, visibleCards: () => CARDS.filter((c) => sceneOn(c.scene, cur) && rectOf(c.scene, c.anchor)),
+  rectOf, infoOf, hitAt, typeIn, travel, forAgent, changeRows, set: (e) => { setEdits(e); applyAll(); commit(); } };
 window.__muReady = true;
 })();
 </script>

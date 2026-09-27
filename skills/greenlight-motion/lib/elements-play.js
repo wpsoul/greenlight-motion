@@ -14,7 +14,7 @@ const rnd = (i) => { const x = Math.sin(i * 12.9898 + 78.233) * 43758.5453; retu
 const r1 = (v) => Math.round(v * 10) / 10;
 // an in-place reaction: a quick scale-up that settles (no opacity change)
 const bump = (t, to = 1.12) => ({ scale: [[t, t + 0.1, to, 'Power2 Out'], [t + 0.1, t + 0.45, 1, 'Power3 Out']] });
-// time fraction u (0…1) at which a VE easing reaches progress p
+// time fraction u (0…1) at which an easing reaches progress p
 const invEase = (name, p) => {
   const f = UIK.ease(name); let a = 0, b = 1;
   for (let i = 0; i < 40; i++) { const m = (a + b) / 2; if (f(m) < p) a = m; else b = m; }
@@ -71,7 +71,7 @@ const G = {
 
 // 1 ─ Seat picker: a cinema seat map; the cursor picks two free seats, the total rolls, Book wakes up
 UIK.define({
-  id: 'seat-picker', formats: ['html'], name: 'Seat picker', cat: 'play', T: 3.7, cam: 1.1,
+  id: 'seat-picker', name: 'Seat picker', cat: 'play', T: 3.7, cam: 1.1,
   desc: 'A cinema seat map ripples in under a screen line that draws out from its centre; taken seats are solid grey. The cursor picks two free seats: each pops to the accent with a check, the seat list and the total roll on every pick, and Book 2 seats wakes from grey to ink.',
   build: () => {
     const SX = (i) => (i - 3.5) * 76 + (i >= 4 ? 18 : -18), SY = (r) => -104 + r * 68;
@@ -461,7 +461,7 @@ UIK.define({
 
 // 9 ─ Word match: the cursor drags a curved line from each word to its translation; matched pairs turn ink
 UIK.define({
-  id: 'word-match', formats: ['html'], name: 'Word match', cat: 'play', T: 4.6, cam: 1.2,
+  id: 'word-match', name: 'Word match', cat: 'play', T: 4.6, cam: 1.2,
   desc: 'Two columns of words, English and Spanish. The cursor drags from each word to its translation: a curved line draws behind the pointer (Trim Paths, keyed along the curve with the cursor), dots pop at both ends and on release both rows fill ink. The counter rolls 1 → 4 of 4 and an accent All matched chip pops.',
   build: () => {
     const LW = ['cat', 'house', 'water', 'bread'], RW = ['agua', 'gato', 'pan', 'casa'], PAIRS = [[0, 1], [1, 3], [2, 0], [3, 2]];

@@ -12,16 +12,19 @@ Under a board, the film is a GreenLight Dash **pipeline** (the app's model:
 and every card tool fills its own step:
 
 - **The flow row:** Brief (the starter: the brief's text and its pictures) → Capture the site → Scenario →
-  Script → Storyboard → Preview → Render & export → Final film, wired in order. Every step has Instructions,
+  Storyboard → Preview → Render & export → Final film, wired in order. Every step has Instructions,
   Assets and Results panes, plus a status light: waiting, in progress, finished or error.
-- **The gates:** Scenario, Script, Storyboard and Preview wait for the user. When a card tool shows its card,
+- **The gates:** Scenario, Storyboard and Preview wait for the user. In quick mode (`workflow.mode: "quick"` in
+  brief.json) only Preview does: the flow has no Storyboard step, and the scenario card opens no gate. When a card tool shows its card,
   the step turns finished and **Requires Approval**, and the pipeline container's note says which step waits.
   When a later step's tool runs, every earlier gate still open becomes **Approved**, and a step that never ran
   (a skipped storyboard, say) is finished as "Skipped". `storyboard.mjs --pick`, `--approve <key>` and
-  `--require <key>` set a gate by hand.
+  `--require <key>` set a gate by hand. A step that is no longer in the flow is removed with its lane and card
+  the next time a tool runs.
 - **The review lane:** under the flow, one frame per card step, wired from its step. Each card sits at its
-  full size: the screenshots, the scenario card (the story), the script card, the storyboard (with the items
-  list), and the preview. A lane grows or shrinks to its card, and the pipeline reflows.
+  full size: the screenshots, the scenario card (the story), the storyboard (every shot with its copy and
+  voice-over, and the library scenes list), and the preview. A lane grows or shrinks to its card, and the pipeline reflows.
+  Until its card arrives, an empty lane holds a note saying what will appear there; the card replaces it.
 - **Render & export:** `render.mjs` and `export.mjs` mark it running, then finished, and list what they made in
   its Results pane. The film lands in **Final film**, and the pipeline finishes.
 - **Capture and Storyboard** are there when the brief names a website and does not skip the storyboard.
@@ -30,15 +33,13 @@ and every card tool fills its own step:
 | --- | --- |
 | `pipeline.mjs` | Creates the pipeline in free space right of everything, or brings it up to date. `--step <key> --status in_progress` before you work on a step, `--approve <key>`, `--require <key>`, `--done`. |
 | `capture.mjs` | The app's browser takes the screenshots (`POST /api/site-capture`: nothing to install). They show at full size in the Capture lane; Capture is finished. |
-| `story.mjs` | The "<name> — scenario" card (600 wide): the story in words. Scenario: finished, Requires Approval. |
-| `script.mjs` | The "<name> — script" card (600 wide, as tall as its scenes). Scenario approved; Script finished, Requires Approval. A scenario note from an older version is removed. |
-| `storyboard.mjs` | The storyboard card (1400 wide), with the GL Motion items list. Script approved; Storyboard finished, Requires Approval; `--pick` approves it. |
-| `preview.mjs` | The preview card (1600×1000). Storyboard (or Script) approved; Preview finished, Requires Approval. Under a board the card has **no Render or Export**: its top bar says the agent renders and exports once the user approves. |
+| `story.mjs` | The "<name> — scenario" card (1200 wide, as tall as its beats): the story in words, big enough to read from the pipeline, with a note to read it before anything is built. Scenario: finished, Requires Approval. |
+| `storyboard.mjs` | The storyboard card (1400 wide, as tall as its shots and their words): a still of every shot, and the library scenes the directions use. Scenario approved; Storyboard finished, Requires Approval; `--pick` approves it. |
+| `preview.mjs` | The preview card (1600×1000): the film, and the user edits any element on it (their edits are saved on the card). Storyboard (or, with no storyboard, Scenario) approved; Preview finished, Requires Approval. Under a board the card has **no Render or Export**: its top bar says the agent renders and exports once the user approves. |
 | `render.mjs` | Preview approved; Render & export running. The app renders the film (`POST /api/html/render`), `render.mjs` mixes the voice-over and the sound effects in with ffmpeg, and the film is placed in Final film. |
-| `export.mjs --format glea-layers` | A Video Editor project named after the film: every shape, text and keyframe its own layer, the pictures as image layers, the voice-over on a Voice channel, the film's background and colour tokens set. It becomes the board's active project. Listed in Render & export. |
-| `glea-html` | A project "<name> (HTML)": one HTML clip per scene (the scene pages live in the film's folder). The only export of a 3D-engine film. |
-| `ae` | `<id>_after_effects.zip` in the film's folder (the .jsx + its pictures). |
-| `gallery.mjs` (optional) | The "<name> — gallery" card in free space: every scene playing, plus the item list. Not part of the pipeline. |
+| `export.mjs --format glea` | A Video Editor project named after the film: one HTML clip per scene (the scene pages live in the film's folder), the voice-over on a Voice channel, the sound effects on their own channels, the film's background and colour tokens set. Listed in Render & export. |
+| `ae` | The After Effects package (`<id>-after-effects.zip`) in the film's folder: PROMPT.md, the scene pages, reference stills, the assets and the script runner ([export.md](export.md)). An agent builds the project with After Effects open. |
+| `gallery.mjs` (optional) | The "<name> — gallery" card in free space: every scene playing, plus the library scenes and their alternatives. Not part of the pipeline. |
 | `stills.mjs` | The app records the frames (`POST /api/html/stills`, saved nowhere); the sheet is assembled locally with ffmpeg. |
 
 The app's agent terminal has the app's own ffmpeg and ffprobe on its PATH. Nothing under a board needs a

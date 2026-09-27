@@ -5,7 +5,7 @@ const { rect, circle, text, path, icon, group, k, enter, exit, pop, press, curso
 // ── local helpers ──
 // the main shape's pop-in (same as the exemplars)
 const cardIn = (t = 0.08, s = 0.7) => ({ scale: [s, [t, t + 0.52, 1, 'Back Out']], opacity: [0, [t, t + 0.12, 1, 'Linear']] });
-// time u (0…1) at which a VE easing reaches progress p — used to key piecewise-linear tracks that follow one easing
+// time u (0…1) at which an easing reaches progress p — used to key piecewise-linear tracks that follow one easing
 const invEase = (name, p) => {
   const f = UIK.ease(name); let a = 0, b = 1;
   for (let i = 0; i < 40; i++) { const m = (a + b) / 2; if (f(m) < p) a = m; else b = m; }
@@ -259,7 +259,7 @@ UIK.define({
 
 // 9 ─ Activity grid: a diagonal wave fills 7×12 cells with four levels; the cursor hovers the peak day
 UIK.define({
-  id: 'heat-grid', formats: ['html'], name: 'Activity grid', cat: 'data', T: 3.5, cam: 1.12,
+  id: 'heat-grid', name: 'Activity grid', cat: 'data', T: 3.5, cam: 1.12,
   desc: 'A skeleton grid of 84 cells fills in a diagonal wave — each cell dips and pops as it takes one of four intensity levels, two peak days in accent — then the cursor hovers a peak cell: a ring pops round it and a tooltip lands.',
   build: () => {
     const PITCH = 68, CS = 56, COLS = 12, ROWS = 7, X0 = -334, Y0 = -184;

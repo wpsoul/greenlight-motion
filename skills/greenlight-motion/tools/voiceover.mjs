@@ -3,7 +3,7 @@
 // recorded into <project>/audio/ and placed on the film. The result goes into
 // scenario.json → voiceover.clips, which the preview plays, the renders mix in and the Video Editor
 // exports put on a Voice channel.
-//   node tools/voiceover.mjs <project> --script                     the lines, with their scene timing
+//   node tools/voiceover.mjs <project> --lines                      the lines, with their scene timing
 //   node tools/voiceover.mjs <project> --models                     (board) the text-to-speech models + options
 //   node tools/voiceover.mjs <project> --model <id> [--param k=v]…  (board) record the lines with that model
 //        [--scenes 1,3] [--force] [--timeout 120] [--retries 2]
@@ -145,7 +145,7 @@ function place(clips, source, quiet = false) {
 }
 const kept = () => ((raw.voiceover && raw.voiceover.clips) || []).filter((c) => c && c.file && fs.existsSync(path.join(project.dir, c.file)));
 
-if (argv.includes('--script')) {
+if (argv.includes('--lines')) {
   const timing = project.MU.timing(project.scenario);
   const secs = (t) => Math.round((t.split(/\s+/).filter(Boolean).length / 2.6) * 10) / 10;
   say(lines().map((l) => (l.parts

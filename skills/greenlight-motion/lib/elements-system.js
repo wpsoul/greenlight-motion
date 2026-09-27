@@ -11,7 +11,7 @@ const fadeIn = (t) => enter(t, { blur: 0, s: 1 });
 const ring = (R) => `M0 -${R} A${R} ${R} 0 1 1 0 ${R} A${R} ${R} 0 1 1 0 -${R}`;
 // deterministic 0…1 noise — frames stay a pure function of t
 const rnd = (i) => { const x = Math.sin(i * 12.9898 + 78.233) * 43758.5453; return x - Math.floor(x); };
-// time u (0…1) at which a VE easing reaches progress p
+// time u (0…1) at which an easing reaches progress p
 const invEase = (name, p) => {
   const f = UIK.ease(name); let a = 0, b = 1;
   for (let i = 0; i < 40; i++) { const m = (a + b) / 2; if (f(m) < p) a = m; else b = m; }
@@ -147,7 +147,7 @@ UIK.define({
 
 // 3 ─ Status page: uptime strips sweep in, one service is degraded, then it recovers
 UIK.define({
-  id: 'status-page', formats: ['html'], name: 'Status page', cat: 'system', T: 3.9, cam: 1.2,
+  id: 'status-page', name: 'Status page', cat: 'system', T: 3.9, cam: 1.2,
   desc: 'Three service rows sweep their 30-day uptime strips in left to right (one trimmed path of bars per row). Webhooks ends on red bars and reads Degraded; then it recovers — the red bars fade to ink, the label swaps to Operational and the header chip widens into All operational.',
   build: () => {
     const F = 2.75, BP = 36, BX0 = -522, BAD = 27;
@@ -240,7 +240,7 @@ UIK.define({
 
 // 5 ─ Log stream: lines scroll up inside a clip window until an error lands, gets flagged and pauses it
 UIK.define({
-  id: 'log-stream', formats: ['html'], name: 'Log stream', cat: 'system', T: 3.9, cam: 1.25,
+  id: 'log-stream', name: 'Log stream', cat: 'system', T: 3.9, cam: 1.25,
   desc: 'Log lines with level chips stream upward inside a clipped window (one group stepping up per new line). An error line arrives, its row tints red with a marker bar, and the header swaps Live for Paused as the stream stops.',
   build: () => {
     const ROW = 62, A = [0.98, 1.36, 1.7, 2.0, 2.42], E = A[A.length - 1] + 0.32;

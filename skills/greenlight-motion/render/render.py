@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""GL Motion render engine — HTML page → video, frame-exact.
+"""GreenLight Motion render engine — HTML page → video, frame-exact.
 
 This is GreenLight Dash's own HTML-card render engine (backend `/api/html/render`), extracted into one
 standalone script: the same deterministic page clock, the same capture loop (a direct parallel path for
@@ -13,8 +13,8 @@ sampling and the same ffmpeg encode (BT.709-tagged H.264 / VP9 with alpha / ProR
 
 Needs: Python 3.9+, `pip install playwright` + `python -m playwright install chromium` (or a Chrome /
 Edge installed — it is found on its own), and ffmpeg on PATH (or --ffmpeg /path/to/ffmpeg).
-A GL Motion page (tools/preview.mjs, UIK.toHTML) defines `__glSeek` and reports its own duration
-(`__uikDuration`), so --duration can be left out for those.
+A GreenLight Motion page (a film page, a scene page) defines `__glSeek` and reports its own duration
+(`__glDuration`), so --duration can be left out for those.
 """
 from __future__ import annotations
 
@@ -317,14 +317,14 @@ async def stills(html_path: Path, width: int, height: int, times, out_dir: Path,
 
 
 async def page_duration(html_path: Path, width: int, height: int):
-    """A GL Motion page reports its own length (window.__uikDuration)."""
+    """A GreenLight Motion page reports its own length (window.__glDuration)."""
     from playwright.async_api import async_playwright
     async with async_playwright() as pw:
         browser = await launch(pw)
         try:
             page = await browser.new_page(viewport={"width": width, "height": height})
             await page.goto(html_path.resolve().as_uri(), wait_until="domcontentloaded", timeout=30000)
-            return await page.evaluate("window.__uikDuration || null")
+            return await page.evaluate("window.__glDuration || null")
         finally:
             await browser.close()
 
@@ -336,7 +336,7 @@ def main() -> int:
     ap.add_argument("--width", type=int, default=1920)
     ap.add_argument("--height", type=int, default=1080)
     ap.add_argument("--fps", type=int, default=30)
-    ap.add_argument("--duration", type=float, default=None, help="seconds (default: the page's __uikDuration, else 5)")
+    ap.add_argument("--duration", type=float, default=None, help="seconds (default: the page's __glDuration, else 5)")
     ap.add_argument("--format", default=None, choices=["mp4", "webm", "webm-alpha", "mov"], help="default: from the --out extension")
     ap.add_argument("--start", type=float, default=0.0)
     ap.add_argument("--motion-blur", type=int, default=1, help="samples per frame, 1–16 (4 = on, 8 = high)")

@@ -1,13 +1,12 @@
-// The gallery: every scene playing with the user's copy + every GL Motion item the film uses, the
-// alternatives offered per scene, and the items built new for it. Optional: the workflow's visual check is
-// the storyboard (it lists the same items); use the gallery when the user wants to browse or swap items, or
-// when there is no storyboard and no board.
+// The gallery: every scene of the film playing, and the library scenes it uses with the alternatives offered per scene.
+// Optional: the workflow's visual check is the storyboard; use the gallery when the user wants to browse or swap
+// library scenes, or when there is no storyboard and no board.
 //   node tools/gallery.mjs <project> [--artifact] [--standalone] [--board <id>] [--api <url>]
-// Standalone → <project>/gallery.html (open it in a browser); --artifact also writes
-// <project>/gallery.artifact.html for the Artifact tool. Under a GreenLight Dash board → an HTML card
-// "<name> — gallery" in free space, updated in place on the next run.
-// Scenario fields it reads: gallery.brief (one line under the title), gallery.alternatives
-// ({ "<scene number>": ["item-id", …] }) and the project's own items (items/*.js → "Built new").
+// Standalone → <project>/gallery.html (open it in a browser); --artifact also writes <project>/gallery.artifact.html
+// for the Artifact tool. Under a GreenLight Dash board → an HTML card "<name> — gallery" in free space, updated in
+// place on the next run.
+// Scenario fields it reads: gallery.brief (one line under the title) and gallery.alternatives
+// ({ "<scene number>": ["item-id", …] }).
 import fs from 'node:fs';
 import path from 'node:path';
 import { loadProject, pageScripts, board, boardState, freeSpot, upsertHtmlCard } from './project.mjs';
@@ -18,20 +17,15 @@ const argv = process.argv.slice(2);
 const dir = argv.find((a, i) => !a.startsWith('--') && !(i > 0 && ['--board', '--api'].includes(argv[i - 1]))) || '.';
 const project = loadProject(dir);
 const { K, scenario } = project;
-if (scenario.engine === '3d') {
-  console.log(JSON.stringify({ ok: false, error: 'a 3D-engine film has no gallery (it uses no GL Motion items): the storyboard and the preview show its scenes' }));
-  process.exit(1);
-}
 for (const p of project.problems) console.warn('! ' + p);
 
-// the items to show: used (with their scene numbers), alternatives, built new
+// the library scenes to show: used (with their scene numbers) and the alternatives
 const items = libraryItems(project, null, (m) => console.warn(m.replace('! ', '! gallery: ')));
-
 const files = [...new Set(items.map((it) => K.elements.find((e) => e.id === it.id).file))];
-const scripts = pageScripts(project, { files }).filter(([name]) => !['converter.js', 'html-export.js', 'ae-export.js'].includes(name));
+const scripts = pageScripts(project, { files });
 const page = (target, sc) => build('gallery.html', {
   title: scenario.name, target, appClass: 'mugl-app', scripts,
-  data: { scenario: sc, items, brief: (scenario.gallery && scenario.gallery.brief) || '' },
+  data: { scenario: sc, scenes: project.sceneDocs, items, brief: (scenario.gallery && scenario.gallery.brief) || '' },
 });
 
 const B = await board(argv);

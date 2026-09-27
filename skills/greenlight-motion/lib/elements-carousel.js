@@ -78,7 +78,7 @@ const homeBar = (t0 = 0.3) => rect({ id: 'homeBar', y: 482, w: 150, h: 6, r: 3, 
 
 // 1 ─ Snap carousel: the cursor drags the strip, lets go, and it snaps a card to the centre
 UIK.define({
-  id: 'carousel-snap', formats: ['html'], name: 'Snap carousel', cat: 'carousel', T: 4.2, cam: 1.1,
+  id: 'carousel-snap', name: 'Snap carousel', cat: 'carousel', T: 4.2, cam: 1.1,
   desc: 'The cursor grabs the card strip and drags it part-way; on release it snaps on to the next card (Power4 Out). The second drag overshoots past a card and the strip snaps back to it. The grabbed card dips while held and the ink page pill stretches from dot to dot on each snap.',
   build: () => {
     // the strip starts on card 1; drag 1 stops 0.62 of a card short and snaps on, drag 2 overshoots 0.35 and snaps back
@@ -352,7 +352,7 @@ UIK.define({
 
 // 8 ─ Hero slider: full-width slides, the headline rises out of line masks, the photo lags in parallax
 UIK.define({
-  id: 'hero-slider', formats: ['html'], name: 'Hero slider', cat: 'carousel', T: 4.2, cam: 1.0,
+  id: 'hero-slider', name: 'Hero slider', cat: 'carousel', T: 4.2, cam: 1.0,
   desc: 'A full-width hero: on each click of the next button the slide frame glides left while its photo moves at half the speed inside it (parallax), the old headline lifts out of its line masks and the new one rises into them line by line, and the slide counter rolls.',
   build: () => {
     const W = 1440, H = 800, C = [1.3, 2.6], DUR = 0.9, E = 'Power4 Out', TX = -620, LY = [-66, 44], PX = W / 2, NY = 292;
@@ -401,7 +401,7 @@ UIK.define({
 
 // 9 ─ Momentum scroller: a flick sends the strip gliding; it decelerates and edge cards fade out
 UIK.define({
-  id: 'momentum-scroller', formats: ['html'], name: 'Momentum scroller', cat: 'carousel', T: 4.8, cam: 1.15,
+  id: 'momentum-scroller', name: 'Momentum scroller', cat: 'carousel', T: 4.8, cam: 1.15,
   desc: 'The cursor flicks the product strip: it follows the pointer, is let go at speed and glides on, decelerating on an Expo Out curve; a smaller flick back glides it the other way. Cards fade out as they near the clipped edges and fade back in as they come inside, and the scrollbar thumb tracks the scroll.',
   build: () => {
     const P = 280, VW = 1220, HALF = VW / 2, CW = 250, FZ = 140, F0 = 1.0, F1 = 1.24, G0 = 2.95, G1 = 3.15;
@@ -479,7 +479,7 @@ UIK.define({
 
 // 11 ─ Phone carousel: a finger swipes an app's card carousel; the page pill stretches, a caption flips
 UIK.define({
-  id: 'phone-carousel', formats: ['html'], name: 'Phone carousel', cat: 'carousel', T: 4.3, cam: PHONE_CAM,
+  id: 'phone-carousel', name: 'Phone carousel', cat: 'carousel', T: 4.3, cam: PHONE_CAM,
   desc: 'A travel app on a phone: a fingertip swipes the card carousel twice (a drag, then a snap to the next card), the ink page pill stretches along the dots. The finger then taps the Kyoto card, whose caption flips over on its horizontal axis to an accent Added to trip confirmation.',
   build: () => {
     const P = 420, CW = 400, CH = 560, CY = -6, S1 = 0.95, R1 = S1 + 0.3, S2 = 1.95, R2 = S2 + 0.3, DR = 150, TP = 3.0, FL = TP + 0.05, DY = 330;

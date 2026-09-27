@@ -1,5 +1,4 @@
-// Frames of a page at given moments, as small JPEG data URIs — for cards that show a 3D-engine film's shots (its
-// scenes are HTML pages, so a card can't draw them live the way it draws layers). Under a board the app records
+// Frames of a page at given moments, as small JPEG data URIs — the storyboard's shots. Under a board the app records
 // them (/api/html/stills: nothing is saved on the board); standalone the render engine does (Python + Playwright).
 //   import { pageStills } from './frames.mjs';
 //   await pageStills({ B, html, width, height, times, dir, python, w: 640 }) → ['data:image/jpeg;base64,…', …]

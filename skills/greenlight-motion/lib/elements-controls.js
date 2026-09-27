@@ -331,7 +331,7 @@ UIK.define({
 
 // 10 ─ Tabs: a liquid underline (leading edge first) and panels that swap with a blur
 UIK.define({
-  id: 'tabs-underline', formats: ['html'], name: 'Tabs', cat: 'controls', T: 3.7, cam: 1.3,
+  id: 'tabs-underline', name: 'Tabs', cat: 'controls', T: 3.7, cam: 1.3,
   desc: 'Two tab clicks: the underline stretches toward the new tab with its leading edge first and the trailing edge catching up, labels recolour, and each panel blurs out as a different skeleton layout staggers in.',
   build: () => {
     const TY = -218, UY = -174, C1 = 1.15, C2 = 2.4;

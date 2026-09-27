@@ -1,5 +1,6 @@
-// GL Motion registry: one JSON with every library item — what it is, how long it runs, and the texts a
-// scenario can re-word and the photo slots it can fill — so an agent can search the library without loading any JS.
+// The GreenLight Motion library's registry: one JSON with every ready-made scene — what it is, how long it runs, the
+// texts a scenario can re-word, the photo slots it can fill and its parameters — so an agent can search the library
+// without loading any JS.
 //   node tools/registry.mjs                 → rewrites registry.json
 //   node tools/registry.mjs --search "coupon countdown" [--cat promo] [--limit 20]   (prints matches)
 import fs from 'node:fs';
@@ -37,19 +38,14 @@ function build() {
       let layers = [];
       try { layers = K.build(e); } catch { /* reported by the lab */ }
       layers.forEach(walk);
-      const d = K.describe(e);
-      // what it costs as Video Editor layers (formats: ['html'] = it only leaves as an HTML page / clip)
-      let ve = null; try { const r = K.toVE(e).report; ve = { layers: r.items, keys: r.keys }; } catch { ve = null; }
       return {
         id: e.id, name: e.name, category: e.cat, categoryLabel: K.CATS[e.cat] || e.cat,
         duration: e.T, description: e.desc || '', file: e.file,
-        formats: K.formatsOf(e), editorCost: ve,
-        layers: d.rows ? d.rows.length : 0, keys: d.keys || 0,
         texts, numbers, images, ...(imageList ? { imageList: true } : {}),
         ...(e.params && Object.keys(e.params).length ? { params: e.params } : {}),
       };
     });
-  return { name: 'GL Motion library', version: 1, count: items.length, categories: K.CATS, items };
+  return { name: 'GreenLight Motion library', version: 1, count: items.length, categories: K.CATS, items };
 }
 
 const reg = build();
@@ -67,7 +63,7 @@ if (q != null) {
     .filter((h) => h.score > 0 || !terms.length)
     .sort((a, b) => b.score - a.score)
     .slice(0, Number(arg(argv, 'limit', 25)));
-  for (const { it } of hits) console.log(`${it.id.padEnd(26)} ${String(it.duration).padStart(4)}s  ${it.categoryLabel.padEnd(20)} ${it.formats.includes('layers') ? '     ' : 'HTML '}${it.description.slice(0, 104)}`);
+  for (const { it } of hits) console.log(`${it.id.padEnd(26)} ${String(it.duration).padStart(4)}s  ${it.categoryLabel.padEnd(20)} ${it.description.slice(0, 108)}`);
   console.log(`\n${hits.length} of ${reg.count}`);
 } else {
   fs.writeFileSync(path.join(SKILL_DIR, 'registry.json'), JSON.stringify(reg, null, 1));

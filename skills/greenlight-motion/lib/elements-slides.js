@@ -9,7 +9,7 @@ const popIn = (t = 0.1, from = 0.7) => ({ scale: [from, [t, t + 0.52, 1, 'Back O
 const fadeIn = (t, dur = 0.3) => ({ opacity: [0, [t, t + dur, 1, 'Power2 Out']] });
 const pad2 = (n) => String(n).padStart(2, '0');
 const r1 = (v) => Math.round(v * 10) / 10;
-// time fraction u (0…1) at which a VE easing reaches progress p — keys events on an eased drag
+// time fraction u (0…1) at which an easing reaches progress p — keys events on an eased drag
 const invEase = (name, p) => {
   const f = UIK.ease(name); let a = 0, b = 1;
   for (let i = 0; i < 40; i++) { const m = (a + b) / 2; if (f(m) < p) a = m; else b = m; }
@@ -221,7 +221,7 @@ UIK.define({
 
 // 5 ─ Mosaic: a 4×3 grid of tiles of the next photo pops in as a diagonal wave
 UIK.define({
-  id: 'mosaic-transition', formats: ['html'], name: 'Mosaic transition', cat: 'carousel', T: 4.1, cam: 1.15,
+  id: 'mosaic-transition', name: 'Mosaic transition', cat: 'carousel', T: 4.1, cam: 1.15,
   desc: 'Next assembles the following photo from a 4×3 mosaic: each tile is a clipped window onto it that scales up from its own centre, in a diagonal wave from the top-left corner; the second advance runs the wave back from the bottom-right while the caption and dots follow.',
   build: () => {
     const C = [1.05, 2.4], COLS = 4, ROWS = 3, TW = VW / COLS, TH = VH / ROWS, STEP = 0.07, TD = 0.5, NBX = BR - 75;

@@ -1,7 +1,6 @@
-/* VE keyframe easing catalogue — dumped from GET /api/video-editor/capabilities → easings.keyframe
-   (2026-09-25). b = cubic-bezier [x1,y1,x2,y2]; s = the curve sampled at u = 0, 0.01 … 1.
-   Power4 Out, Power1 Smooth and Sine Smooth are re-sampled from the editor's own keyframe evaluator
-   (gsapTransitions.js resolveKeyEase): the capabilities dump lists a bezier that differs up to 1.9 %. */
+/* The easing catalogue by name — the same curves as GreenLight Dash's Video Editor keyframe easings (its
+   capabilities dump, easings.keyframe, 2026-09-25). b = cubic-bezier [x1,y1,x2,y2]; s = the curve sampled at
+   u = 0, 0.01 … 1. Power4 Out, Power1 Smooth and Sine Smooth are sampled from the editor's own evaluator. */
 window.UIK_EASINGS = {
   "Linear": {"b":[0.3333,0.3333,0.6667,0.6667]},
   "Ease In": {"s":[0,0,0,0,0.0001,0.0001,0.0002,0.0003,0.0005,0.0007,0.001,0.0013,0.0017,0.0022,0.0027,0.0034,0.0041,0.0049,0.0058,0.0069,0.008,0.0093,0.0106,0.0122,0.0138,0.0156,0.0176,0.0197,0.022,0.0244,0.027,0.0298,0.0328,0.0359,0.0393,0.0429,0.0467,0.0507,0.0549,0.0593,0.064,0.0689,0.0741,0.0795,0.0852,0.0911,0.0973,0.1038,0.1106,0.1176,0.125,0.1327,0.1406,0.1489,0.1575,0.1664,0.1756,0.1852,0.1951,0.2054,0.216,0.227,0.2383,0.25,0.2621,0.2746,0.2875,0.3008,0.3144,0.3285,0.343,0.3579,0.3732,0.389,0.4052,0.4219,0.439,0.4565,0.4746,0.493,0.512,0.5314,0.5514,0.5718,0.5927,0.6141,0.6361,0.6585,0.6815,0.705,0.729,0.7536,0.7787,0.8044,0.8306,0.8574,0.8847,0.9127,0.9412,0.9703,1]},
@@ -49,9 +48,8 @@ window.UIK_EASINGS = {
 
 /* GL Motion's own curves — the spring feel of the GreenLight Dash collaboration launch film
    (html/collab-new-ui): its closed-form spring step responses, normalised to where they settle (within
-   0.5 %) and fitted to ONE cubic bezier each (max error ≤ 2 %). The lab, the editor (a Custom key
-   carrying this bezier) and After Effects (temporal ease from the same handles) draw the same curve.
-   custom: true = not an editor easing name — the converter writes easing 'Custom' + bezier.
+   0.5 %) and fitted to ONE cubic bezier each (max error ≤ 2 %): CSS cubic-bezier(…) and After Effects (a temporal
+   ease from the same handles) draw the same curve. custom: true = a curve of GreenLight Motion's own.
    A segment's length = its settle time: ≈ 1.75 × the spring's response for Spring Smooth, ≈ 1.2 × for
    Spring Out / Pop (collab: morph 0.66 s → 1.15 s segments, camera 0.88 s → 1.5 s, enter 0.5 s → 0.6 s). */
 Object.assign(window.UIK_EASINGS, {

@@ -38,15 +38,40 @@ export const ROLES = {
 };
 
 // ── the film's events (what --auto listens to) ──
+// A library scene's events are read from its layers (typing, counters, clicks, pops, big moves, camera moves); a free
+// scene is a page of its own, so only its cuts and fades can be read — cue what happens inside it by hand (at: seconds).
 export function filmEvents(project) {
   const { K, MU, scenario } = project;
+  const timing = MU.timing(scenario);
+  const s = MU.normalize(scenario);
+  const one = Object.assign({}, s, { scenes: s.scenes.map((x, j) => Object.assign({}, x, { duration: timing[j].duration })) });
+  const ev = [];
+  timing.forEach((tm, i) => {
+    if (s.scenes[i].html) return;
+    for (const e of itemEvents(project, K.compose(one, { scene: i }))) ev.push({ ...e, t: r3(e.t + tm.from) });
+  });
+  // the joins: a whoosh into a cross-fade, a transition hit on a cut into or out of a page
+  timing.forEach((tm, i) => {
+    if (!i) return;
+    if (s.scenes[i].transition === 'fade') ev.push({ t: r3(tm.start - 0.1), role: 'whoosh', gain: -5, dur: 0.5, label: `fade into scene ${i + 1}` });
+    else if (s.scenes[i].html || s.scenes[i - 1].html) ev.push({ t: r3(tm.start), role: 'transition', gain: -3, dur: 0.35, label: `cut into scene ${i + 1}` });
+  });
+  ev.sort((a, b) => a.t - b.t);
+  // pops in a cluster are ticks; a layer move next to a camera whoosh is the same gesture
+  for (const e of ev) if (e.role === 'pop' && ev.filter((o) => o.role === 'pop' && Math.abs(o.t - e.t) <= 0.25).length >= 4) e.role = 'tick';
+  return ev.filter((e, i) => {
+    if (e.move === 'layer' && ev.some((o) => o !== e && o.role === 'whoosh' && o.move === 'camera' && Math.abs(o.t - e.t) < 0.4)) return false;
+    if (e.role === 'whoosh' && e.move === 'layer' && ev.slice(0, i).some((o) => o.role === 'whoosh' && Math.abs(o.t - e.t) < 0.3)) return false;
+    if (['click', 'pop', 'tick'].includes(e.role) && ev.slice(0, i).some((o) => o.role === e.role && Math.abs(o.t - e.t) < (e.role === 'tick' ? 0.035 : 0.09))) return false;
+    if (e.role === 'data' && ev.slice(0, i).some((o) => o.role === 'data' && Math.abs(o.t - e.t) < 0.4)) return false;
+    return true;
+  });
+}
+
+/** One library scene's events, on its own clock (t = 0 is the start of its visible window). */
+function itemEvents(project, spec) {
+  const { K } = project;
   const { normTrack, evalTrack } = K._int;
-  // a 3D-engine film: its scenes are pages, so only the cuts can be read — a whoosh into a fade, a hit on a cut;
-  // cue what happens inside the scenes by hand (at: seconds)
-  if (scenario.engine === '3d') {
-    return MU.timing(scenario).slice(1).map((tm, k) => ({ t: r3(tm.start), role: scenario.scenes[k + 1].transition === 'fade' ? 'whoosh' : 'transition', gain: -3, dur: 0.35, label: `into scene ${k + 2}` }));
-  }
-  const spec = MU.film(scenario);
   const T = spec.T;
   const camTr = {}; for (const p of ['zoom', 'x', 'y']) if (spec.cam.k && spec.cam.k[p]) camTr[p] = normTrack(spec.cam.k[p], 'x');
   const cam = (t) => ({ zoom: camTr.zoom ? evalTrack(camTr.zoom, spec.cam.zoom, t, false) : spec.cam.zoom, x: camTr.x ? evalTrack(camTr.x, spec.cam.x, t, false) : spec.cam.x, y: camTr.y ? evalTrack(camTr.y, spec.cam.y, t, false) : spec.cam.y });
@@ -146,18 +171,7 @@ export function filmEvents(project) {
       const v = Math.abs(Math.log(q.zoom / p.zoom)) * 1000 + Math.hypot(q.x - p.x, q.y - p.y) * q.zoom; if (v > best) { best = v; at = t; } }
     push({ t: at, role: 'whoosh', dur: r3(m.t1 - m.t0), move: 'camera', strength: zoom + pan / 1000, label: `camera ${zoom >= 0.22 ? (b.zoom > a.zoom ? 'pushes in' : 'pulls back') : 'pans'}` });
   }
-  // scene cross-fades
-  MU.timing(scenario).forEach((tm, i) => { if (i && scenario.scenes[i].transition === 'fade') push({ t: tm.start - 0.1, role: 'whoosh', gain: -5, dur: 0.5, label: `fade into scene ${i + 1}` }); });
-  ev.sort((a, b) => a.t - b.t);
-  // pops in a cluster are ticks; a layer move next to a camera whoosh is the same gesture
-  for (const e of ev) if (e.role === 'pop' && ev.filter((o) => o.role === 'pop' && Math.abs(o.t - e.t) <= 0.25).length >= 4) e.role = 'tick';
-  return ev.filter((e, i) => {
-    if (e.move === 'layer' && ev.some((o) => o !== e && o.role === 'whoosh' && o.move === 'camera' && Math.abs(o.t - e.t) < 0.4)) return false;
-    if (e.role === 'whoosh' && e.move === 'layer' && ev.slice(0, i).some((o) => o.role === 'whoosh' && Math.abs(o.t - e.t) < 0.3)) return false;
-    if (['click', 'pop', 'tick'].includes(e.role) && ev.slice(0, i).some((o) => o.role === e.role && Math.abs(o.t - e.t) < (e.role === 'tick' ? 0.035 : 0.09))) return false;
-    if (e.role === 'data' && ev.slice(0, i).some((o) => o.role === 'data' && Math.abs(o.t - e.t) < 0.4)) return false;
-    return true;
-  });
+  return ev;
 }
 
 // ── the library, by role ──

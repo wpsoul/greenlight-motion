@@ -469,9 +469,7 @@ UIK.define({
 /* Isometric screens — an exploded "how it's built" stack of app screens.
  * Reference: reelfolio isometric / Iso Cascade — cards seen through a parallel (no-perspective)
  * isometric camera, stacked along their normal at an even step, each a slightly different depth tone.
- * Isometric = a rotated plane inside a vertically squashed group (a shear). The Video Editor's parenting
- * composes a parent's scale with a child's rotation as rotation + scale only (no shear), so the plates
- * would convert as plain rotated rectangles: this item is HTML-only. */
+ * Isometric = a rotated plane inside a vertically squashed group (a shear). */
 (function () {
 const { rect, text, path, group, photo } = UIK.h;
 const E = { enter: 'Spring Out', move: 'Spring Out', travel: 'Spring Smooth', exit: 'Power2 In', pop: 'Spring Pop', fade: 'Spring Out', drift: 'Linear' };   // the spring feel (references/easing.md)
@@ -482,7 +480,7 @@ const D2R = Math.PI / 180;
 const iso = (x, y) => { const c = Math.cos(ROT * D2R), s = Math.sin(ROT * D2R); return [x * c - y * s, (x * s + y * c) * SQ]; };
 
 UIK.define({
-  id: 'iso-screens', formats: ['html'], name: 'Isometric screens', cat: 'showcase', T: 4.8,
+  id: 'iso-screens', name: 'Isometric screens', cat: 'showcase', T: 4.8,
   cam: { zoom: 1.2, x: 0, y: 0, k: { zoom: [[1.4, 2.3, 1.0, E.move], [2.3, 4.3, 1.03, E.drift]], x: [[1.4, 2.3, 160, E.move]] } },
   desc: 'An app screen lands in an isometric view and three layers slide out from beneath it; the stack then opens into evenly spaced layers as the view pulls back, each layer gets a label, and the view drifts in on the hold.',
   build: () => {

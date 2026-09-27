@@ -189,7 +189,7 @@ UIK.define({
 
 // 4 ─ Date picker: two clicks pick a range, the fill grows row by row between them
 UIK.define({
-  id: 'calendar-pick', formats: ['html'], name: 'Date picker', cat: 'content', T: 3.9, cam: 1.12,
+  id: 'calendar-pick', name: 'Date picker', cat: 'content', T: 3.9, cam: 1.12,
   desc: 'A month grid builds in row by row. The cursor clicks a start and an end date: each pops an ink circle, then the range fill grows across the first row and continues on the next while the header reads the range.',
   build: () => {
     const C1 = 1.45, C2 = 2.35;

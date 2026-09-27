@@ -1,15 +1,15 @@
-// Review sheets: frames of an item, a scene or the whole film side by side in one PNG — look at them.
+// Review sheets: frames of a library scene, a film's scene or the whole film side by side in one PNG — look at them.
 //   node tools/stills.mjs <project> --item <id>  [--t 0.4,1.2,2 | --n 6] [--theme dark] [--w 480] [--out sheet.png]
 //   node tools/stills.mjs <project> --scene <n>  […]
 //   node tools/stills.mjs <project> --film       […]
-// Items are drawn on their theme's canvas colour; --w is each frame's width in the sheet (text needs
+// Library scenes are drawn on their theme's canvas colour; --w is each frame's width in the sheet (text needs
 // 480 or more to judge). Default out: <project>/stills/<what>.png. Under a GreenLight Dash board the app
 // records the frames (POST /api/html/stills: nothing to install); standalone, the render engine (Python +
 // Playwright) does. The sheet is put together with ffmpeg (the app's own, in its agent terminal).
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { SKILL_DIR } from './kit.mjs';
+import { SKILL_DIR, libSource } from './kit.mjs';
 import { loadProject, sources, arg, board, mapImages, isUrl, dataUri } from './project.mjs';
 import { filmPage } from './build.mjs';
 import { findPython } from './render.mjs';
@@ -27,14 +27,14 @@ let T; let name; let pageFor;
 const src = sources(project);
 if (arg(argv, 'item')) {
   const spec = K.elements.find((e) => e.id === arg(argv, 'item'));
-  if (!spec) throw new Error(`unknown item "${arg(argv, 'item')}"`);
+  if (!spec) throw new Error(`unknown library scene "${arg(argv, 'item')}"`);
   pageFor = () => K.toHTML(spec, { theme, accent: scenario.accent, background: K.THEMES[theme].bg,
-    sources: { easings: src.easings, engine: src.engine, file: src.files[spec.file] } });
+    sources: { easings: src.easings, engine: src.engine, files: [libSource(spec.file)] } });
   T = spec.T; name = spec.id;
 } else if (arg(argv, 'scene')) {
   const i = Number(arg(argv, 'scene')) - 1;
   const sc = Object.assign({}, scenario, { theme });
-  pageFor = (map) => MU.pageHtml(mapImages(sc, map), src, { scene: i }).replace('</style>', `html, body { background: ${sc.background || K.THEMES[theme].bg}; }</style>`);
+  pageFor = (map) => MU.pageHtml(mapImages(sc, map), sources(project, undefined, { map }), { scene: i }).replace('</style>', `html, body { background: ${sc.background || K.THEMES[theme].bg}; }</style>`);
   T = MU.timing(sc)[i].to - MU.timing(sc)[i].from; name = `scene-${i + 1}`;
 } else {
   pageFor = (map) => filmPage(project, { map }); T = MU.timing(scenario).at(-1).end; name = scenario.id;

@@ -84,7 +84,7 @@
 .musb-ctl { display: flex; align-items: center; gap: 10px; }
 .musb-ctl input { flex: 1; min-width: 0; accent-color: var(--mu-acc); }
 .musb-ctl output { font-variant-numeric: tabular-nums; color: var(--mu-sub); font-size: 12px; min-width: 88px; text-align: right; }
-/* the GL Motion items: the directions' items, the alternatives per shot, the ones built new */
+/* the library scenes: the ones the directions use, the alternatives per shot */
 .musb-lib h2 { margin: 0 0 4px; font-size: 16px; font-weight: 600; letter-spacing: -0.01em; }
 .musb-lib > p { margin: 0 0 14px; color: var(--mu-sub); font-size: 13px; }
 .musb-bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 14px; }
@@ -99,7 +99,7 @@
 .musb-tmeta span { margin-left: auto; color: var(--mu-sub); font-size: 12px; white-space: nowrap; }
 .musb-tag { font-size: 11px; border-radius: 6px; padding: 1px 6px; background: var(--mu-soft); color: var(--mu-sub); white-space: nowrap; }
 .musb-tag.is-used { background: var(--mu-acc); color: var(--mu-on-acc); }
-.musb-tag.is-new { border: 1px solid var(--mu-acc); background: transparent; color: var(--mu-txt); }
+.musb-noframe { position: absolute; inset: 0; display: grid; place-items: center; color: var(--mu-sub); font-size: 12px; }
 .musb-tdesc { font-size: 12px; color: var(--mu-sub); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 </style>
 <!--/MU:HEAD-->
@@ -117,8 +117,8 @@
   </header>
   <div id="musb-vars" style="display:flex;flex-direction:column;gap:18px"></div>
   <section class="musb-lib" id="musb-lib" aria-labelledby="musb-h-lib" hidden>
-    <h2 id="musb-h-lib">GL Motion items</h2>
-    <p>The items these directions use, the alternatives for each shot, and anything built new for this film. Ask the agent to swap one in.</p>
+    <h2 id="musb-h-lib">Library scenes</h2>
+    <p>The ready-made scenes these directions use, and the alternatives for each shot. Ask the agent to swap one in.</p>
     <div class="musb-bar" id="musb-filter" role="group" aria-label="Show"></div>
     <div class="musb-grid" id="musb-grid"></div>
   </section>
@@ -136,26 +136,24 @@
 (function () {
 'use strict';
 const DATA = @@DATA@@;
-const K = window.UIK, MU = window.MU, $ = (id) => document.getElementById(id);
+const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const PRESET = { spring: 'Spring — calm', snappy: 'Snappy', gentle: 'Gentle', playful: 'Playful', elastic: 'Elastic', authored: 'As designed' };
-const vars = DATA.variants.map((v) => Object.assign({}, v, { sc: MU.normalize(v.scenario) }));
-const first = vars[0].sc;
-const W = first.size.w, H = first.size.h, HOLD = 0.7;
-K.setTheme(first.theme, first.accent);
-$('musb').style.setProperty('--mu-stage', first.background || K.theme().bg);
+const vars = DATA.variants;
+const W = DATA.size.w, H = DATA.size.h, HOLD = 0.7;
+const K = window.UIK || null;
+if (K) K.setTheme(DATA.theme, DATA.accent);
+$('musb').style.setProperty('--mu-stage', DATA.background || (DATA.theme === 'dark' ? '#121211' : '#E9E7E2'));
 const fmt = (t) => `${t.toFixed(1)} s`;
 $('musb-name').textContent = DATA.name;
-// a 3D-engine film's shots are stills (its scenes are pages): nothing to hover or play here
-const stillsOnly = vars.every((v) => v.stills);
 $('musb-lead').textContent = vars.length > 1
-  ? `${vars.length} directions for the same film. Each row is one variant; each frame is a shot at its settled moment. ${stillsOnly ? 'Choose one; the preview plays it.' : 'Hover a frame to play the shot, play a whole variant, then choose one.'}`
-  : `Each frame is a shot at its settled moment. ${stillsOnly ? 'The preview plays the film.' : 'Hover a frame to play the shot, or play the whole film.'}`;
+  ? `${vars.length} directions for the same film. Each row is one variant: every shot at its settled moment, with its copy and voice-over under it. Choose one; the preview plays it.`
+  : 'Every shot at its settled moment, with its copy and voice-over under it. The preview plays the film.';
 document.title = `${DATA.name} — storyboard`;
-$('musb-facts').innerHTML = [[`${W}×${H}`, W >= H ? (W === H ? 'square' : 'landscape') : 'vertical'], [`${first.fps}`, 'fps'], [first.theme === 'dark' ? 'Dark' : 'Light', 'theme'], [vars.length, vars.length > 1 ? 'variants' : 'variant']]
+$('musb-facts').innerHTML = [[`${W}×${H}`, W >= H ? (W === H ? 'square' : 'landscape') : 'vertical'], [`${DATA.fps}`, 'fps'], [DATA.theme === 'dark' ? 'Dark' : 'Light', 'theme'], [vars.length, vars.length > 1 ? 'variants' : 'variant']]
   .map(([a, b]) => `<div class="musb-fact"><b>${esc(a)}</b><span>${esc(b)}</span></div>`).join('');
 
-// ── players: a host box at the film's ratio, the stage scaled into it ──
+// ── players for the library scenes list: a host box at the film's ratio, the stage scaled into it ──
 const players = [];
 const mount = (host, spec, rest) => {
   host.style.aspectRatio = `${W} / ${H}`;
@@ -177,58 +175,37 @@ const choose = (v) => {
   try { navigator.clipboard.writeText(say).then(done, () => toast(`Tell the agent: ${say}`)); } catch (e) { toast(`Tell the agent: ${say}`); }
 };
 
+// ── the variants: a row of shots, each its frame and its words ──
 const list = $('musb-vars');
 vars.forEach((v) => {
-  const sc = v.sc; const timing = MU.timing(sc); const T = timing.length ? timing[timing.length - 1].end : 0;
   const picked = DATA.picked === v.id;
   const sec = document.createElement('section');
   sec.className = 'musb-var' + (picked ? ' is-picked' : '');
   sec.setAttribute('aria-labelledby', `musb-v-${v.id}`);
   sec.innerHTML = `<div class="musb-vhead"><div class="musb-letter" aria-hidden="true">${esc(v.id.toUpperCase())}</div>
     <div class="musb-vname"><h2 id="musb-v-${esc(v.id)}">${esc(v.name)}</h2>${v.note ? `<p>${esc(v.note)}</p>` : ''}</div>
-    <div class="musb-chips">${picked ? '<span class="musb-chip is-picked">Chosen</span>' : ''}<span class="musb-chip">${esc(PRESET[sc.motion] || sc.motion)}</span><span class="musb-chip">${fmt(T)}</span><span class="musb-chip">${timing.length} shots</span></div>
-    <div class="musb-acts"><button type="button" class="musb-btn" data-play>Play variant</button>${vars.length > 1 ? `<button type="button" class="musb-btn is-cta" data-choose>Choose ${esc(v.id.toUpperCase())}</button>` : ''}</div></div>
+    <div class="musb-chips">${picked ? '<span class="musb-chip is-picked">Chosen</span>' : ''}<span class="musb-chip">${esc(PRESET[v.motion] || v.motion || 'Spring — calm')}</span><span class="musb-chip">${fmt(v.T)}</span><span class="musb-chip">${v.shots.length} shots</span></div>
+    <div class="musb-acts">${vars.length > 1 ? `<button type="button" class="musb-btn is-cta" data-choose>Choose ${esc(v.id.toUpperCase())}</button>` : ''}</div></div>
     <div class="musb-shots"></div>`;
   list.appendChild(sec);
   const shots = sec.querySelector('.musb-shots');
-  const VO = MU.sceneVoices(Object.assign({}, sc, { voiceover: null }));   // a take's parts go to their own shots
-  timing.forEach((tm, i) => {
-    const s = sc.scenes[i]; const item = K.elements.find((e) => e.id === tm.item);
-    if (v.stills) {
-      // a 3D-engine film: the shot is an HTML page — its rendered still at the settled moment
-      const el = document.createElement('article'); el.className = 'musb-shot';
-      el.innerHTML = `<div class="musb-frame" style="aspect-ratio:${W} / ${H};cursor:default"><img alt="" src="${esc(v.stills[i] || '')}" style="position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover"><span class="musb-num">${i + 1}</span>${i ? `<span class="musb-tr">${s.transition === 'fade' ? 'fade' : 'cut'}</span>` : ''}</div>
-        <div class="musb-smeta"><b>${esc(s.title || `Shot ${i + 1}`)}</b><span>${tm.duration.toFixed(1)} s</span></div>
-        <div class="musb-item">${esc(s.html || 'HTML scene')}</div>${VO[i] ? `<div class="musb-vo">${esc(VO[i])}</div>` : ''}`;
-      shots.appendChild(el);
-      return;
-    }
-    const spec = K.compose(sc, { scene: i });
-    // the shot's settled moment: its own keyframe, else 72 % into it (after a fade-in's overlap)
-    const into = Number.isFinite(+s.keyframe) ? +s.keyframe : tm.duration * 0.72;
-    const rest = Math.max(0, Math.min(spec.T - 0.02, (tm.start - tm.from) + into));
-    const copy = Object.values(s.text || {}).slice(0, 2).map((t) => `<q>${esc(t)}</q>`).join('');
+  v.shots.forEach((s, i) => {
+    // every line of the shot's words, and its part of the voice-over: the words are read and approved here
+    const copy = (s.words || []).map((t) => `<q>${esc(t)}</q>`).join('');
+    const vo = (v.voice || [])[i];
+    const still = v.stills && v.stills[i];
     const el = document.createElement('article'); el.className = 'musb-shot';
-    el.innerHTML = `<div class="musb-frame" tabindex="0" role="button" aria-label="Play shot ${i + 1}"><span class="musb-num">${i + 1}</span>${i ? `<span class="musb-tr">${s.transition === 'fade' ? 'fade' : 'cut'}</span>` : ''}</div>
-      <div class="musb-smeta"><b>${esc(s.title || item?.name || tm.item)}</b><span>${tm.duration.toFixed(1)} s</span></div>
-      <div class="musb-item">${esc(item?.name || tm.item)}</div>
-      ${copy ? `<div class="musb-copy">${copy}</div>` : ''}${VO[i] ? `<div class="musb-vo">${esc(VO[i])}</div>` : ''}`;
+    el.innerHTML = `<div class="musb-frame" style="aspect-ratio:${W} / ${H};cursor:default">${still ? `<img alt="" src="${esc(still)}" style="position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover">` : '<span class="musb-noframe">No frame yet</span>'}<span class="musb-num">${i + 1}</span>${i ? `<span class="musb-tr">${s.transition}</span>` : ''}</div>
+      <div class="musb-smeta"><b>${esc(s.title)}</b><span>${s.duration.toFixed(1)} s</span></div>
+      <div class="musb-item">${esc(s.label)}</div>${copy ? `<div class="musb-copy">${copy}</div>` : ''}${vo ? `<div class="musb-vo">${esc(vo)}</div>` : ''}`;
     shots.appendChild(el);
-    const host = el.querySelector('.musb-frame');
-    const P = mount(host, spec, rest); io.observe(host); ro.observe(host);
-    host.onmouseenter = () => { P.hover = true; P.t = 0; };
-    host.onmouseleave = () => { P.hover = false; P.inst.seek(P.rest); };
-    const open = () => openDlg(spec, `${v.id.toUpperCase()} · shot ${i + 1} · ${s.title || item?.name || tm.item}`, `${item?.name || tm.item} · ${tm.duration.toFixed(1)} s`);
-    host.onclick = open; host.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } };
   });
-  if (v.stills) sec.querySelector('[data-play]').hidden = true;
-  else sec.querySelector('[data-play]').onclick = () => openDlg(MU.film(sc), `${v.id.toUpperCase()} · ${v.name}`, `${timing.length} shots · ${fmt(T)} · ${PRESET[sc.motion] || sc.motion}`);
   const ch = sec.querySelector('[data-choose]'); if (ch) ch.onclick = () => choose(v);
 });
 
-// ── the GL Motion items (hover plays one, a click opens it) ──
-const ROLE = { used: vars.length > 1 ? 'In the directions' : 'In the film', alt: 'Alternatives', new: 'Built new' };
-const items = (DATA.items || []).map((it) => Object.assign({}, it, { spec: K.elements.find((e) => e.id === it.id) })).filter((it) => it.spec);
+// ── the library scenes the directions use (hover plays one, a click opens it) ──
+const ROLE = { used: vars.length > 1 ? 'In the directions' : 'In the film', alt: 'Alternatives' };
+const items = K ? (DATA.items || []).map((it) => Object.assign({}, it, { spec: K.elements.find((e) => e.id === it.id) })).filter((it) => it.spec) : [];
 if (items.length) {
   $('musb-lib').hidden = false;
   const counts = { all: items.length }; items.forEach((it) => { counts[it.role] = (counts[it.role] || 0) + 1; });
@@ -237,7 +214,7 @@ if (items.length) {
   const where = (it) => it.where.map((w) => (w.v ? `${w.v.toUpperCase()} · ${w.scene}` : `shot ${w.scene}`)).join(', ');
   const tiles = items.map((it) => {
     const el = document.createElement('article'); el.className = 'musb-tile';
-    const tag = it.role === 'new' ? '<span class="musb-tag is-new">new</span>' : it.role === 'used' ? `<span class="musb-tag is-used">${esc(where(it))}</span>` : `<span class="musb-tag">${esc(it.for ? 'for shot ' + it.for : 'alternative')}</span>`;
+    const tag = it.role === 'used' ? `<span class="musb-tag is-used">${esc(where(it))}</span>` : `<span class="musb-tag">${esc(it.for ? 'for shot ' + it.for : 'alternative')}</span>`;
     el.innerHTML = `<div class="musb-frame" tabindex="0" role="button" aria-label="Open ${esc(it.spec.name)}"></div><div class="musb-tmeta"><b>${esc(it.spec.name)}</b>${tag}<span>${it.spec.T}s</span></div><div class="musb-tdesc">${esc(it.spec.desc || '')}</div>`;
     grid.appendChild(el);
     const host = el.querySelector('.musb-frame');

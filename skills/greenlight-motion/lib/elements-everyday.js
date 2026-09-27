@@ -12,7 +12,7 @@ const RING = (R) => `M0 -${R} A${R} ${R} 0 1 1 0 ${R} A${R} ${R} 0 1 1 0 -${R}`;
 // deterministic 0…1 noise — frames stay a pure function of t
 const rnd = (i) => { const x = Math.sin(i * 12.9898 + 78.233) * 43758.5453; return x - Math.floor(x); };
 const r1 = (v) => Math.round(v * 10) / 10;
-// time fraction u (0…1) at which a VE easing reaches progress p — keys tracks that must meet an eased move
+// time fraction u (0…1) at which an easing reaches progress p — keys tracks that must meet an eased move
 const invEase = (name, p) => {
   const f = UIK.ease(name); let a = 0, b = 1;
   for (let i = 0; i < 40; i++) { const m = (a + b) / 2; if (f(m) < p) a = m; else b = m; }
@@ -454,7 +454,7 @@ UIK.define({
 
 // 11 ─ QR scan: a scan line sweeps the code down and up, the brackets snap onto it, a check pops
 UIK.define({
-  id: 'qr-scan', formats: ['html'], name: 'QR scan', cat: 'everyday', T: 3.7, cam: 0.86,
+  id: 'qr-scan', name: 'QR scan', cat: 'everyday', T: 3.7, cam: 0.86,
   desc: 'A camera viewfinder frames a code plate. An accent scan line sweeps down and back up across it, then the four corner brackets contract onto the plate, the code dims and an accent check pops over it while the status swaps to Linked.',
   build: () => {
     const B0 = 246, B1 = 196, S0 = 0.9, S1 = 1.6, S2 = 2.3, LOCK = 2.3, M = 18, N = 17, O = -(N - 1) * M / 2;

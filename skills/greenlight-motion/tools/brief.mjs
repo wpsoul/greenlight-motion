@@ -15,8 +15,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
-import { loadKit, SKILL_DIR, arg } from './kit.mjs';
-import { pageScripts, readJSON, writeJSON, MIME } from './project.mjs';
+import { loadKit, libSource, SKILL_DIR, CORE, arg } from './kit.mjs';
+import { readJSON, writeJSON, MIME } from './project.mjs';
 import { tokens, inlineScripts, jsonForScript } from './page.mjs';
 
 export const BRIEF_KIND = 'greenlight-motion-brief';
@@ -27,18 +27,18 @@ export const BRIEF_VALUES = {
   format: ['16:9', '9:16', '1:1'],
   source: ['library', 'new', 'mix', 'agent'],
   theme: ['light', 'dark', 'agent'],
-  // default: GL Motion items as layers (editable in the Video Editor and After Effects, 3D space); 3d: HTML scenes
-  // with real 3D (three.js) — the Video Editor gets HTML clips, After Effects nothing
-  engine: ['default', '3d', 'agent'],
   // brief.md's six, plus the kit's 'authored' (every item's own easing — easing.md)
   preset: ['spring', 'snappy', 'gentle', 'playful', 'elastic', 'agent', 'authored'],
+  // quick: straight to the preview (the agent decides, the preview is the one approval); guided: approve the story
+  // and a storyboard direction first
+  mode: ['quick', 'guided', 'agent'],
   storyboard: [0, 2, 3],
   voiceover: ['yes', 'no', 'agent'],
   output: ['render', 'video-editor', 'after-effects'],
   assetType: ['image', 'video'],
 };
 const SECTIONS = { product: ['name', 'url', 'about', 'assets'], film: ['goal', 'cta', 'duration', 'format', 'language'],
-  look: ['engine', 'source', 'picks', 'theme', 'accent'], motion: ['preset'], workflow: ['storyboard', 'voiceover'] };
+  look: ['source', 'picks', 'theme', 'accent'], motion: ['preset'], workflow: ['mode', 'storyboard', 'voiceover'] };
 const TOP = ['kind', 'version', 'source', 'createdAt', ...Object.keys(SECTIONS), 'output'];
 const IMAGE_EXT = ['.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg', '.avif'];
 const VIDEO_EXT = ['.mp4', '.webm', '.mov', '.m4v'];
@@ -99,15 +99,13 @@ export function validateBrief(b, { ids } = {}) {
   if (isOpen(F.language)) open.push('film.language');
   else if (typeof F.language !== 'string' || !/^[a-z]{2,3}(-[a-z0-9]{2,8})*$/i.test(F.language)) bad('film.language', `${show(F.language)} is not a language code (en, de, pt-BR …)`);
   // look
-  oneOf('look.engine', L.engine, BRIEF_VALUES.engine);
-  // the 3D engine builds every scene new: no library question
-  if (L.engine !== '3d') oneOf('look.source', L.source, BRIEF_VALUES.source);
-  if (L.engine !== '3d' && L.source !== 'new') {
+  oneOf('look.source', L.source, BRIEF_VALUES.source);
+  if (L.source !== 'new') {
     if (isOpen(L.picks)) open.push('look.picks');
     else if (!Array.isArray(L.picks)) bad('look.picks', 'must be a list of item ids');
     else for (const id of L.picks) {
-      if (typeof id !== 'string') bad('look.picks', `${show(id)} is not an item id`);
-      else if (!known.has(id)) bad('look.picks', `unknown item "${id}" (node tools/registry.mjs --search …)`);
+      if (typeof id !== 'string') bad('look.picks', `${show(id)} is not a library scene id`);
+      else if (!known.has(id)) bad('look.picks', `unknown library scene "${id}" (node tools/registry.mjs --search …)`);
     }
   } else if (L.picks != null && !Array.isArray(L.picks)) bad('look.picks', 'must be a list of item ids');
   oneOf('look.theme', L.theme, BRIEF_VALUES.theme);
@@ -115,12 +113,14 @@ export function validateBrief(b, { ids } = {}) {
   else if (typeof L.accent !== 'string' || !/^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(L.accent)) bad('look.accent', `${show(L.accent)} is not a hex colour (#3E63DD) or "agent"`);
   // motion, workflow, output
   oneOf('motion.preset', M.preset, BRIEF_VALUES.preset);
-  oneOf('workflow.storyboard', Wf.storyboard, BRIEF_VALUES.storyboard);
+  oneOf('workflow.mode', Wf.mode, BRIEF_VALUES.mode);
+  // quick mode has no storyboard: the question isn't open
+  if (Wf.mode === 'quick') { if (Wf.storyboard != null && Wf.storyboard !== 0 && Wf.storyboard !== 'agent') bad('workflow.storyboard', 'quick mode goes straight to the preview: no storyboard (0)'); }
+  else oneOf('workflow.storyboard', Wf.storyboard, BRIEF_VALUES.storyboard);
   oneOf('workflow.voiceover', Wf.voiceover, BRIEF_VALUES.voiceover);
   if (isOpen(b.output)) open.push('output');
   else if (!Array.isArray(b.output)) bad('output', `must be a list of ${BRIEF_VALUES.output.map(show).join(', ')}`);
   else for (const o of b.output) if (!BRIEF_VALUES.output.includes(o)) bad('output', `${show(o)} is not one of ${BRIEF_VALUES.output.map(show).join(', ')}`);
-  if (L.engine === '3d' && Array.isArray(b.output) && b.output.includes('after-effects')) bad('output', 'the 3D engine has no After Effects export (its scenes are HTML pages): pick render and/or video-editor');
   return { ok: problems.length === 0, problems, open };
 }
 
@@ -130,8 +130,8 @@ export function validateBrief(b, { ids } = {}) {
  *  page and waits for the brief (no hand-off prompt). */
 export function briefPage(dir, { target = 'local', agent = false } = {}) {
   const K = loadKit();
-  // the whole library (every item plays in the Look step), without the exporters
-  const scripts = pageScripts({ extra: [] }, { files: K.FILES }).filter(([n]) => !['converter.js', 'html-export.js', 'ae-export.js', 'motion.js'].includes(n));
+  // the whole library: every library scene plays in the Look step, and the motion presets on a sample (film.js)
+  const scripts = [...CORE, ...K.FILES, 'film.js'].map((f) => [f, libSource(f)]);
   const file = path.join(dir, 'brief.json');
   const brief = fs.existsSync(file) ? readJSON(file, null) : null;
   const data = {

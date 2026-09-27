@@ -29,7 +29,7 @@ node SKILL/tools/sfx.mjs <project> --clear
 Run it after the voice-over is recorded (the voice decides where the sounds must stay quiet), before
 the render.
 
-1. `--auto` reads the composed film and cues its events:
+1. `--auto` reads the film and cues its events. In a library scene it sees what happens inside:
 
    | Event in the film | Role |
    | --- | --- |
@@ -42,7 +42,10 @@ the render.
    | a `{{{COUNTER}}}` / `{{{TIMER}}}` running | `data` texture for its length, `tick` where it lands |
    | a `fade` between scenes | `whoosh` (quiet) |
 
-   Only events that are visible and in frame count.
+   Only events that are visible and in frame count. A page you wrote is its own code, so `--auto` cues only
+   its cuts and fades (a `transition` hit on a cut into or out of it): cue what happens inside it yourself
+   (`t`: the film second it hits; the scene's start is in the preview's scene bar), from what you animated:
+   typing, pops, the big move, the landing. Mark them `"keep": true`.
 2. **Review it like a sound designer.** Read `scenario.sfx.cues` against the preview:
    - Remove clutter. A sound per event is too much when ten things happen in a second: keep the one
      that carries the beat. Silence before a big moment makes it land.
@@ -103,4 +106,5 @@ Vector Motion Sound (UI sounds) is preferred when it is installed; the Motion De
 - **GLEA exports**: the effects go on **Sound effects** audio channels (overlapping sounds on separate
   lanes), each clip at its cue's gain as volume (≤ 100 %). The editor does not duck: the effects play at
   their own levels.
-- **After Effects**: no audio (voice-over or effects); render the film for its sound.
+- **After Effects**: the package carries the voice-over and the effects with their start times; the agent
+  places them on audio layers in the main comp (the mix and the ducking are the render's).

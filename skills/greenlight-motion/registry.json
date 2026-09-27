@@ -1,5 +1,5 @@
 {
- "name": "GL Motion library",
+ "name": "GreenLight Motion library",
  "version": 1,
  "count": 275,
  "categories": {
@@ -31,16 +31,6 @@
    "duration": 3,
    "description": "Click flips the switch: the knob stretches while it travels, the track and icon tile recolour, the subtitle swaps with a blur.",
    "file": "elements-core.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 18,
-    "keys": 156
-   },
-   "layers": 10,
-   "keys": 60,
    "texts": [
     {
      "id": "title",
@@ -66,16 +56,6 @@
    "duration": 3.3,
    "description": "A black indicator jumps between segments and stretches in flight. Labels use the difference blend mode, so they invert over the indicator.",
    "file": "elements-core.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 17,
-    "keys": 107
-   },
-   "layers": 9,
-   "keys": 44,
    "texts": [
     {
      "id": "caption",
@@ -109,16 +89,6 @@
    "duration": 3.8,
    "description": "The cursor ticks three tasks in turn: each box fills ink with a pop, the check writes on, the label dims and strikes through, and the header count rolls while the progress bar advances.",
    "file": "elements-controls.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 62,
-    "keys": 631
-   },
-   "layers": 40,
-   "keys": 130,
    "texts": [
     {
      "id": "title",
@@ -164,16 +134,6 @@
    "duration": 3.6,
    "description": "Two clicks change the delivery option: the accent dot shrinks out of the old ring and pops into the new one while the ink row outline slides down and stretches in flight.",
    "file": "elements-controls.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 44,
-    "keys": 598
-   },
-   "layers": 27,
-   "keys": 106,
    "texts": [
     {
      "id": "title",
@@ -231,16 +191,6 @@
    "duration": 3.5,
    "description": "The cursor grabs the knob and drags it past the target, then eases back: the fill, the value bubble and the header value follow on the same keys, and the knob grows while held and settles on release.",
    "file": "elements-controls.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 21,
-    "keys": 246
-   },
-   "layers": 13,
-   "keys": 86,
    "texts": [
     {
      "id": "label",
@@ -267,16 +217,6 @@
    "duration": 4.1,
    "description": "The cursor drags the minimum knob right, then the maximum knob left: the accent span tracks both edges, histogram bars dim as they fall outside, and both fields count.",
    "file": "elements-controls.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 48,
-    "keys": 610
-   },
-   "layers": 37,
-   "keys": 160,
    "texts": [
     {
      "id": "title",
@@ -315,16 +255,6 @@
    "duration": 3.3,
    "description": "The cursor taps plus twice: the quantity rolls up one slot per tap, the total rolls digit by digit a beat later, the minus wakes up, and a free-shipping badge pops once the total passes the threshold.",
    "file": "elements-controls.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 60,
-    "keys": 499
-   },
-   "layers": 34,
-   "keys": 86,
    "texts": [
     {
      "id": "name",
@@ -362,16 +292,6 @@
    "duration": 3,
    "description": "On a post card the cursor taps Like: the outline heart shrinks away as a filled accent heart pops in with a clean scale overshoot, the pill tints and the count rolls from 128 to 129.",
    "file": "elements-controls.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 37,
-    "keys": 372
-   },
-   "layers": 22,
-   "keys": 90,
    "texts": [
     {
      "id": "name",
@@ -401,16 +321,6 @@
    "duration": 3.4,
    "description": "The cursor sweeps across five outline stars: each one it reaches pops filled in accent, up to four. A click on the fourth commits the rating and the hint swaps to \"Great\".",
    "file": "elements-controls.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 26,
-    "keys": 301
-   },
-   "layers": 20,
-   "keys": 104,
    "texts": [
     {
      "id": "title",
@@ -436,16 +346,6 @@
    "duration": 4,
    "description": "A click opens the menu: it grows down from the field while the camera eases out, a highlight row glides after the cursor, and the chosen plan lands in the field as the menu folds away and the chevron turns back.",
    "file": "elements-controls.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 43,
-    "keys": 600
-   },
-   "layers": 25,
-   "keys": 152,
    "texts": [
     {
      "id": "fieldLbl",
@@ -507,15 +407,6 @@
    "duration": 3.7,
    "description": "Two tab clicks: the underline stretches toward the new tab with its leading edge first and the trailing edge catching up, labels recolour, and each panel blurs out as a different skeleton layout staggers in.",
    "file": "elements-controls.js",
-   "formats": [
-    "html"
-   ],
-   "editorCost": {
-    "layers": 91,
-    "keys": 2216
-   },
-   "layers": 74,
-   "keys": 244,
    "texts": [
     {
      "id": "tab0",
@@ -541,16 +432,6 @@
    "duration": 3.6,
    "description": "A click focuses the field: a soft ring grows around it, the placeholder floats up into a small label, the address types in behind a caret, then a check pops at the right end and Continue wakes up.",
    "file": "elements-controls.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 26,
-    "keys": 270
-   },
-   "layers": 15,
-   "keys": 76,
    "texts": [
     {
      "id": "title",
@@ -584,16 +465,6 @@
    "duration": 3.9,
    "description": "A click focuses the first box; six digits land one by one while the ink focus ring hops right, stretching in flight. On the last digit every box flashes to an accent outline in a quick wave and \"Verified\" replaces the resend line.",
    "file": "elements-controls.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 48,
-    "keys": 757
-   },
-   "layers": 35,
-   "keys": 220,
    "texts": [
     {
      "id": "title",
@@ -647,16 +518,6 @@
    "duration": 3.6,
    "description": "Three clicks toggle chips on: each fills ink and widens while an accent check slides in from its left edge, the chips after it in the row shift over in sync, and the selected count rolls up.",
    "file": "elements-controls.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 56,
-    "keys": 559
-   },
-   "layers": 27,
-   "keys": 152,
    "texts": [
     {
      "id": "title",
@@ -702,16 +563,6 @@
    "duration": 2.8,
    "description": "The cursor clicks the second question: its body opens with a clip reveal and skeleton lines stagger in, the chevron turns 180°, and the row below and the card edge slide down on the same curve.",
    "file": "elements-controls.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 42,
-    "keys": 504
-   },
-   "layers": 28,
-   "keys": 96,
    "texts": [
     {
      "id": "rowTitle0",
@@ -737,16 +588,6 @@
    "duration": 2.9,
    "description": "A ring draws itself (Trim Paths), the disc fills with a pop, the check writes on, then the group lifts to make room for the label.",
    "file": "elements-core.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 11,
-    "keys": 45
-   },
-   "layers": 7,
-   "keys": 30,
    "texts": [
     {
      "id": "label",
@@ -768,16 +609,6 @@
    "duration": 4.4,
    "description": "A click on Save drops a toast in from the top edge with a blur; a thin timer bar drains along its bottom, then the toast slides back up and out.",
    "file": "elements-feedback.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 23,
-    "keys": 326
-   },
-   "layers": 12,
-   "keys": 66,
    "texts": [
     {
      "id": "saveLbl",
@@ -803,16 +634,6 @@
    "duration": 4.3,
    "description": "An upload card: the accent fill advances in uneven bursts while the percentage tracks it, then the status swaps to Uploaded and a check pops.",
    "file": "elements-feedback.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 20,
-    "keys": 215
-   },
-   "layers": 12,
-   "keys": 62,
    "texts": [
     {
      "id": "name",
@@ -843,16 +664,6 @@
    "duration": 4.4,
    "description": "A trimmed accent arc runs round the track in steps while the centre counter follows it; at 100 the counter blurs into a check and the camera widens for the label.",
    "file": "elements-feedback.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 15,
-    "keys": 108
-   },
-   "layers": 9,
-   "keys": 66,
    "texts": [
     {
      "id": "syncing",
@@ -883,16 +694,6 @@
    "duration": 4.3,
    "description": "Skeleton blocks breathe twice, then each one crossfades and unblurs into its real content on a stagger; the chart bars rise last.",
    "file": "elements-feedback.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 37,
-    "keys": 711
-   },
-   "layers": 27,
-   "keys": 86,
    "texts": [
     {
      "id": "name",
@@ -930,16 +731,6 @@
    "duration": 4.8,
    "description": "A file chip is carried into the drop zone and drops into place (y + scale), widens into a row, a progress line runs while the size counts up, then the tile swaps to a check and the card settles round the row.",
    "file": "elements-feedback.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 39,
-    "keys": 421
-   },
-   "layers": 21,
-   "keys": 128,
    "texts": [
     {
      "id": "title",
@@ -978,16 +769,6 @@
    "duration": 4.5,
    "description": "A click drops the arrow through the pill, which contracts into a circle with a trimmed progress ring; at 100 it pops into an accent disc, draws a check and relaxes into a Saved pill.",
    "file": "elements-feedback.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 20,
-    "keys": 234
-   },
-   "layers": 10,
-   "keys": 94,
    "texts": [
     {
      "id": "dlLabel",
@@ -1009,16 +790,6 @@
    "duration": 2.9,
    "description": "Sign in is clicked with a wrong password: the field shakes with decaying swings, its border turns red, and an alert line slides in beneath as the form makes room.",
    "file": "elements-feedback.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 33,
-    "keys": 302
-   },
-   "layers": 20,
-   "keys": 82,
    "texts": [
     {
      "id": "title",
@@ -1052,16 +823,6 @@
    "duration": 3.8,
    "description": "The bell rings on its top pivot with decaying swings; an accent badge pops in with 3, rings again and rolls to 4; a click opens a dropdown preview with the new item as the camera pulls back.",
    "file": "elements-feedback.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 38,
-    "keys": 462
-   },
-   "layers": 22,
-   "keys": 94,
    "texts": [
     {
      "id": "ddTitle",
@@ -1095,16 +856,6 @@
    "duration": 3.9,
    "description": "Each Continue click fills the rail to the next step: the finished circle turns ink with a check, the next one takes the accent ring, and the labels hand the ink colour along.",
    "file": "elements-feedback.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 45,
-    "keys": 587
-   },
-   "layers": 25,
-   "keys": 224,
    "texts": [
     {
      "id": "title",
@@ -1167,16 +918,6 @@
    "duration": 3.8,
    "description": "The field focuses and a password types in as dots; the four-segment meter fills a segment at a time, its colour stepping from red to the accent as the label swaps Weak, Fair, Strong.",
    "file": "elements-feedback.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 42,
-    "keys": 430
-   },
-   "layers": 24,
-   "keys": 108,
    "texts": [
     {
      "id": "title",
@@ -1214,16 +955,6 @@
    "duration": 3.4,
    "description": "Three notifications drop in from the top one after another; each arrival pushes the older cards down, smaller and fainter, until they settle into a neat pile.",
    "file": "elements-feedback.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 37,
-    "keys": 721
-   },
-   "layers": 22,
-   "keys": 62,
    "texts": [],
    "numbers": [],
    "images": []
@@ -1236,16 +967,6 @@
    "duration": 3.7,
    "description": "Bars rise on a stagger from a shared baseline while the total counts up. The cursor hovers the peak: it turns accent, the others dim, a tooltip pops.",
    "file": "elements-core.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 41,
-    "keys": 398
-   },
-   "layers": 24,
-   "keys": 118,
    "texts": [
     {
      "id": "title",
@@ -1304,16 +1025,6 @@
    "duration": 3.7,
    "description": "Grid and axis labels settle in, then the line draws itself (Trim Paths) while a dot rides the tip and the area fills in behind it. At the last point the dot turns accent, a guide drops to the axis and a value chip pops.",
    "file": "elements-data.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 51,
-    "keys": 540
-   },
-   "layers": 28,
-   "keys": 216,
    "texts": [
     {
      "id": "title",
@@ -1375,16 +1086,6 @@
    "duration": 2.9,
    "description": "A faint ring settles, then three arcs draw one after another around it (Trim Paths, butt caps, 1 % gaps) while the centre total counts up and each legend row slides in as its arc starts.",
    "file": "elements-data.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 39,
-    "keys": 355
-   },
-   "layers": 24,
-   "keys": 68,
    "texts": [
     {
      "id": "title",
@@ -1415,16 +1116,6 @@
    "duration": 3.2,
    "description": "The headline number counts up with Power3 Out, a +12 % delta chip slides in beside it once it lands, and a sparkline draws on underneath, ending on an accent dot.",
    "file": "elements-data.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 22,
-    "keys": 217
-   },
-   "layers": 13,
-   "keys": 50,
    "texts": [
     {
      "id": "label",
@@ -1455,16 +1146,6 @@
    "duration": 4,
    "description": "Four lanes fill at their own uneven pace (two Linear legs each). Each status swaps from Queued to a live percentage to a Done check, the finishing lane name flashes accent and the live counter ticks up.",
    "file": "elements-data.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 63,
-    "keys": 980
-   },
-   "layers": 38,
-   "keys": 212,
    "texts": [
     {
      "id": "title",
@@ -1559,16 +1240,6 @@
    "duration": 3.4,
    "description": "Before and After cards pop in, their scores count up while the bars fill, a vs badge pops between them, then the winner lifts slightly, its bar turns accent and a Winner chip lands while the other side greys out.",
    "file": "elements-data.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 31,
-    "keys": 261
-   },
-   "layers": 17,
-   "keys": 72,
    "texts": [
     {
      "id": "beforeLbl",
@@ -1607,16 +1278,6 @@
    "duration": 3.2,
    "description": "Inside one rounded clip, four segments grow from the left in sequence (Power4 Out), each % label rises in above it, and the matching legend item lights up — dot pulses to its colour, name darkens — as its segment lands.",
    "file": "elements-data.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 42,
-    "keys": 457
-   },
-   "layers": 27,
-   "keys": 126,
    "texts": [
     {
      "id": "title",
@@ -1678,16 +1339,6 @@
    "duration": 4.5,
    "description": "A timer disc pops in and its accent ring draws on, then the seconds roll down one per second (10 → 9 → 8 → 7 — one TIMER placeholder, Roll style, keyed) while the ring depletes linearly; the label swaps to “Starting soon”.",
    "file": "elements-data.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 15,
-    "keys": 135
-   },
-   "layers": 8,
-   "keys": 44,
    "texts": [
     {
      "id": "lblA",
@@ -1718,16 +1369,6 @@
    "duration": 3.2,
    "description": "The number is ONE text layer with a COUNTER placeholder in Odometer style: every digit column of 2,480 rolls up from 0, the left digit lands first, the right one spins three full turns and lands last; the comma stays put and a caption fades in.",
    "file": "elements-data.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 11,
-    "keys": 94
-   },
-   "layers": 7,
-   "keys": 24,
    "texts": [
     {
      "id": "label",
@@ -1750,15 +1391,6 @@
    "duration": 3.5,
    "description": "A skeleton grid of 84 cells fills in a diagonal wave — each cell dips and pops as it takes one of four intensity levels, two peak days in accent — then the cursor hovers a peak cell: a ring pops round it and a tooltip lands.",
    "file": "elements-data.js",
-   "formats": [
-    "html"
-   ],
-   "editorCost": {
-    "layers": 125,
-    "keys": 2223
-   },
-   "layers": 108,
-   "keys": 586,
    "texts": [
     {
      "id": "title",
@@ -1805,16 +1437,6 @@
    "duration": 3,
    "description": "A semicircle track and ticks settle in, then the needle swings from Low to the value — a few degrees past it and back — while the accent arc fills in lockstep (Trim Paths) and the score counts up.",
    "file": "elements-data.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 31,
-    "keys": 369
-   },
-   "layers": 22,
-   "keys": 92,
    "texts": [
     {
      "id": "low",
@@ -1845,16 +1467,6 @@
    "duration": 3.6,
    "description": "Five ranked rows slide in. Row four counts its score up, lifts onto a floating card and glides past two rows while they shift down in sync, then lands on rank 2: an accent rank badge pops and a +2 chip appears.",
    "file": "elements-data.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 76,
-    "keys": 753
-   },
-   "layers": 44,
-   "keys": 122,
    "texts": [
     {
      "id": "title",
@@ -1937,16 +1549,6 @@
    "duration": 3.4,
    "description": "The cursor clicks Yearly: the indicator stretches across and settles (labels invert over it via the difference blend), the price digits roll down from $24 to $19 one after the other, the billing line swaps and a Save 20 % chip pops.",
    "file": "elements-data.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 45,
-    "keys": 439
-   },
-   "layers": 27,
-   "keys": 108,
    "texts": [
     {
      "id": "monthly",
@@ -1997,16 +1599,6 @@
    "duration": 3.3,
    "description": "Four centred bars grow out from the middle on a stagger, each narrower than the last; faint trapezoids join them into a funnel, step-conversion chips pop between the stages and the overall rate counts up.",
    "file": "elements-data.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 63,
-    "keys": 508
-   },
-   "layers": 30,
-   "keys": 112,
    "texts": [
     {
      "id": "title",
@@ -2069,16 +1661,6 @@
    "duration": 5.6,
    "description": "A light terminal window: the prompt types in with a caret, a spinner counts elapsed time, three result rows land, then the status flips to done.",
    "file": "elements-core.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 43,
-    "keys": 484
-   },
-   "layers": 29,
-   "keys": 82,
    "texts": [
     {
      "id": "winTitle",
@@ -2121,16 +1703,6 @@
    "duration": 5.5,
    "description": "Bubbles pop from their tail corners on alternating sides while earlier ones scroll up. The cursor sends a typed reply, a typing indicator turns into the answer, then an attached file goes out and is read.",
    "file": "elements-content.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 69,
-    "keys": 809
-   },
-   "layers": 38,
-   "keys": 162,
    "texts": [
     {
      "id": "name",
@@ -2164,16 +1736,6 @@
    "duration": 4,
    "description": "The cursor grabs a stack of files and carries it into a dashed drop zone. The zone lights up on hover; on release the stack snaps in and the zone collapses into an uploaded folder row with a check.",
    "file": "elements-content.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 49,
-    "keys": 658
-   },
-   "layers": 28,
-   "keys": 150,
    "texts": [
     {
      "id": "title",
@@ -2219,16 +1781,6 @@
    "duration": 3.7,
    "description": "The cursor lifts a card (it tilts and gains a deeper shadow) and carries it across. The source column closes the gap, a dashed slot opens in Done, the card lands in it and its status turns into a check.",
    "file": "elements-content.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 73,
-    "keys": 779
-   },
-   "layers": 44,
-   "keys": 128,
    "texts": [
     {
      "id": "title",
@@ -2250,15 +1802,6 @@
    "duration": 3.9,
    "description": "A month grid builds in row by row. The cursor clicks a start and an end date: each pops an ink circle, then the range fill grows across the first row and continues on the next while the header reads the range.",
    "file": "elements-content.js",
-   "formats": [
-    "html"
-   ],
-   "editorCost": {
-    "layers": 107,
-    "keys": 1034
-   },
-   "layers": 61,
-   "keys": 126,
    "texts": [
     {
      "id": "readout0",
@@ -2412,16 +1955,6 @@
    "duration": 3.7,
    "description": "The avatar ring draws on and the stats count up. A click on Follow morphs the ink pill into a soft Following pill with a drawn check, and the follower count rolls its last digit up by one.",
    "file": "elements-content.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 54,
-    "keys": 399
-   },
-   "layers": 29,
-   "keys": 84,
    "texts": [
     {
      "id": "name",
@@ -2460,16 +1993,6 @@
    "duration": 4.2,
    "description": "The ⌘ and K keycaps press and flash, a palette drops in. Typing swaps the suggestions for matching commands, the panel tightens, the highlight glides down one row and Enter selects it.",
    "file": "elements-content.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 92,
-    "keys": 1091
-   },
-   "layers": 59,
-   "keys": 202,
    "texts": [
     {
      "id": "placeholder",
@@ -2499,16 +2022,6 @@
    "duration": 3.9,
    "description": "A click focuses the address bar of a new tab and the URL types in. On Enter the shortcuts clear, a thin accent bar loads across the top in steps while reload turns into stop, and the page skeleton builds in: nav, hero, image, then three cards.",
    "file": "elements-content.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 83,
-    "keys": 1377
-   },
-   "layers": 63,
-   "keys": 298,
    "texts": [
     {
      "id": "urlPh",
@@ -2534,16 +2047,6 @@
    "duration": 4.4,
    "description": "A click on play swaps the icon for pause and the status for Now playing. The record starts spinning, the scrubber fill and knob run while the time counts, and five accent equalizer bars move on smooth keys.",
    "file": "elements-content.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 54,
-    "keys": 765
-   },
-   "layers": 31,
-   "keys": 252,
    "texts": [
     {
      "id": "paused",
@@ -2582,16 +2085,6 @@
    "duration": 3.5,
    "description": "Four overlapping avatars slide in from the left on a stagger and a +3 chip pops. Clicking Invite squeezes a new accent avatar in at the front: the others shift right, the last one folds into the chip, which rolls to +4.",
    "file": "elements-content.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 44,
-    "keys": 443
-   },
-   "layers": 22,
-   "keys": 110,
    "texts": [
     {
      "id": "label",
@@ -2617,16 +2110,6 @@
    "duration": 3.3,
    "description": "Three big keycaps pop in, then press down one after another as a chord: each cap sinks onto its darker lip, the last one flashes accent, the action label rises in, and the keys release together.",
    "file": "elements-content.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 31,
-    "keys": 122
-   },
-   "layers": 19,
-   "keys": 70,
    "texts": [
     {
      "id": "plus0",
@@ -2656,16 +2139,6 @@
    "duration": 4.8,
    "description": "A wireframe and the finished page share one frame, split by a clip whose width tracks the handle. The cursor drags the handle across to reveal the finished page, back to compare, then leaves it on the after side.",
    "file": "elements-content.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 90,
-    "keys": 1257
-   },
-   "layers": 56,
-   "keys": 80,
    "texts": [],
    "numbers": [],
    "images": []
@@ -2678,16 +2151,6 @@
    "duration": 3.8,
    "description": "Streets draw on across a stylised map. A click drops an accent pin that lands with a small squash while its shadow tightens, two rings ripple out under it, a route draws from you to it and a place card slides up.",
    "file": "elements-content.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 50,
-    "keys": 376
-   },
-   "layers": 30,
-   "keys": 120,
    "texts": [],
    "numbers": [],
    "images": []
@@ -2700,16 +2163,6 @@
    "duration": 4.4,
    "description": "A soft hover highlight glides between items after the cursor and stretches in flight. A click moves the ink selection to Analytics and the page title swaps; then Collapse shrinks the sidebar to icons while labels exit and the page widens.",
    "file": "elements-content.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 84,
-    "keys": 1283
-   },
-   "layers": 50,
-   "keys": 286,
    "texts": [
     {
      "id": "wsName",
@@ -2767,16 +2220,6 @@
    "duration": 4.8,
    "description": "One shape never cuts: it morphs size, corners and colour between states while the content swaps with a blur. Ends on a clicked call to action.",
    "file": "elements-core.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 31,
-    "keys": 529
-   },
-   "layers": 18,
-   "keys": 100,
    "texts": [
     {
      "id": "pillLabel",
@@ -2806,16 +2249,6 @@
    "duration": 4.2,
    "description": "A click squeezes the submit pill into a circle with a spinning trimmed ring; the ring closes, the circle turns accent and a check writes on, then the shape widens back into an \"Order placed\" pill.",
    "file": "elements-controls.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 18,
-    "keys": 202
-   },
-   "layers": 10,
-   "keys": 76,
    "texts": [
     {
      "id": "submitLbl",
@@ -2837,16 +2270,6 @@
    "duration": 3.4,
    "description": "Three dots ripple through two waves inside an ink pill (lifting and brightening in turn), then the pill widens and the dots swap for a check and Ready.",
    "file": "elements-feedback.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 12,
-    "keys": 283
-   },
-   "layers": 8,
-   "keys": 92,
    "texts": [
     {
      "id": "ready",
@@ -2864,16 +2287,6 @@
    "duration": 5.3,
    "description": "Record is tapped: the black pill at the top stretches into a wide island with a pulsing dot and a running timer, grows taller to show a live waveform, then collapses on stop.",
    "file": "elements-feedback.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 49,
-    "keys": 1322
-   },
-   "layers": 40,
-   "keys": 586,
    "texts": [
     {
      "id": "clock",
@@ -2912,16 +2325,6 @@
    "duration": 3.5,
    "description": "A reply bubble bounces three dots through two beats, then grows out of its tail corner into the full message while the two lines of text blur in.",
    "file": "elements-feedback.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 23,
-    "keys": 168
-   },
-   "layers": 13,
-   "keys": 122,
    "texts": [
     {
      "id": "read",
@@ -2951,16 +2354,6 @@
    "duration": 4.1,
    "description": "An ink \"Up next\" pill nudges its arrow, then opens into a wide chapter card. The accent chapter number rolls up like an odometer, the title block slides in and an autoplay countdown starts filling its segment.",
    "file": "elements-content.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 35,
-    "keys": 320
-   },
-   "layers": 23,
-   "keys": 72,
    "texts": [
     {
      "id": "eyebrow",
@@ -2991,16 +2384,6 @@
    "duration": 4.6,
    "description": "A prompt types into the composer and the send button wakes up; the click squeezes it, the arrow flies out and a stop square pops in, while a response area opens below and skeleton lines stream in one after another.",
    "file": "elements-ai.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 33,
-    "keys": 370
-   },
-   "layers": 20,
-   "keys": 92,
    "texts": [
     {
      "id": "placeholder",
@@ -3026,16 +2409,6 @@
    "duration": 4.3,
    "description": "An answer streams in line by line (a Linear reveal per line) with an accent caret riding the newest line; when it finishes the card grows and two source chips pop in beneath.",
    "file": "elements-ai.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 31,
-    "keys": 209
-   },
-   "layers": 17,
-   "keys": 46,
    "texts": [
     {
      "id": "name",
@@ -3077,16 +2450,6 @@
    "duration": 4.5,
    "description": "A Thinking row with an accent spinner grows downward one step at a time; each step spins, then swaps to a check and dims. When all three are done the card folds up and narrows into a compact \"Thought for 4s\" chip with a chevron.",
    "file": "elements-ai.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 55,
-    "keys": 1143
-   },
-   "layers": 36,
-   "keys": 180,
    "texts": [
     {
      "id": "thinking",
@@ -3133,16 +2496,6 @@
    "duration": 4,
    "description": "A click on the model pill opens a tier menu upward out of the composer; a highlight glides after the cursor from Fast to Deep, the check hops to the pick, the menu folds away and the pill widens to Deep with an accent dot.",
    "file": "elements-ai.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 45,
-    "keys": 667
-   },
-   "layers": 27,
-   "keys": 140,
    "texts": [
     {
      "id": "placeholder",
@@ -3168,16 +2521,6 @@
    "duration": 4.3,
    "description": "A \"Searching the web\" card types its query while an accent spinner turns; five source tiles pop in on a stagger as the card grows, the header swaps to \"Found 5 sources\", then each tile shrinks into a favicon that flies into a stack on the header row as the card folds to one line.",
    "file": "elements-ai.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 67,
-    "keys": 816
-   },
-   "layers": 48,
-   "keys": 174,
    "texts": [
     {
      "id": "searching",
@@ -3203,16 +2546,6 @@
    "duration": 4.4,
    "description": "An agent works through a four-step plan: a soft highlight glides to each running step, its dim dot becomes a spinning accent ring and then an ink check, the label darkens, a duration lands, and the header fraction rolls 0/4 → 4/4.",
    "file": "elements-ai.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 74,
-    "keys": 1095
-   },
-   "layers": 47,
-   "keys": 216,
    "texts": [
     {
      "id": "title",
@@ -3274,16 +2607,6 @@
    "duration": 4.6,
    "description": "Under a prompt chip, four skeleton tiles pulse, then each one blur-resolves into a simple abstract composition on a stagger. The cursor picks one: it grows to fill the frame (size + camera) while the others and the chip fall away.",
    "file": "elements-ai.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 49,
-    "keys": 1154
-   },
-   "layers": 36,
-   "keys": 132,
    "texts": [
     {
      "id": "caption",
@@ -3301,16 +2624,6 @@
    "duration": 4.5,
    "description": "Voice mode: a big ink orb breathes with the speech while five bars under it rise and fall and the transcript types beneath. The cursor taps the mic: it turns ink with a slash drawn across, the bars settle to dots and the orb shrinks and dims.",
    "file": "elements-ai.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 28,
-    "keys": 262
-   },
-   "layers": 19,
-   "keys": 284,
    "texts": [
     {
      "id": "speaking",
@@ -3336,16 +2649,6 @@
    "duration": 3.7,
    "description": "Three suggestion chips slide up over an empty composer on a stagger. The cursor clicks one: it flies down into the field (x, y and scale on different easings, so it arcs), its pill and icon dissolve on the way, the label lands as the input text and the send button wakes up.",
    "file": "elements-ai.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 29,
-    "keys": 293
-   },
-   "layers": 20,
-   "keys": 90,
    "texts": [
     {
      "id": "placeholder",
@@ -3379,16 +2682,6 @@
    "duration": 3.9,
    "description": "A suggested edit: one removed line on a red tint and two added lines on an accent tint. The cursor clicks Accept: the removed line collapses to nothing inside its clip while everything below slides up, the tints and plus signs fade to plain code and an Applied chip pops in place of the buttons.",
    "file": "elements-ai.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 66,
-    "keys": 826
-   },
-   "layers": 37,
-   "keys": 132,
    "texts": [
     {
      "id": "fileName",
@@ -3418,16 +2711,6 @@
    "duration": 4.1,
    "description": "A long document with a Summarize button: on the click its skeleton lines squeeze together and vanish while the page itself morphs (width, height, corners) into a compact summary card and the camera moves in; three bullet points then enter one by one.",
    "file": "elements-ai.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 42,
-    "keys": 841
-   },
-   "layers": 29,
-   "keys": 208,
    "texts": [
     {
      "id": "docTitle",
@@ -3457,16 +2740,6 @@
    "duration": 3.4,
    "description": "A sentence card with a language pill: the click rolls EN to ES inside the pill, then each word of the sentence blurs out and its translation blurs in at its own place, one word after another from left to right.",
    "file": "elements-ai.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 41,
-    "keys": 459
-   },
-   "layers": 22,
-   "keys": 138,
    "texts": [
     {
      "id": "detected",
@@ -3528,16 +2801,6 @@
    "duration": 4.7,
    "description": "A context bar fills with three segments (System, Files, Chat) while the percentage counts; the Chat segment keeps growing until the bar end turns accent at 82 % and a Compact button pops. The click shrinks Chat back and every number follows it down.",
    "file": "elements-ai.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 49,
-    "keys": 577
-   },
-   "layers": 30,
-   "keys": 142,
    "texts": [
     {
      "id": "title",
@@ -3580,16 +2843,6 @@
    "duration": 3.8,
    "description": "Under an answer bubble, the cursor clicks Copy: the icon swaps to a check and a Copied tooltip pops below and leaves again. A hover square glides to the thumbs up; the click swaps the outline for a filled accent thumb that pops with a small tilt.",
    "file": "elements-ai.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 39,
-    "keys": 331
-   },
-   "layers": 22,
-   "keys": 112,
    "texts": [
     {
      "id": "line0",
@@ -3615,16 +2868,6 @@
    "duration": 3.8,
    "description": "A reply is typed with an accent caret; muted ghost text fades in after it with a Tab hint. The Tab keycap presses down, the ink sweeps across the ghost text and the caret jumps to the end of the sentence.",
    "file": "elements-ai.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 26,
-    "keys": 304
-   },
-   "layers": 16,
-   "keys": 64,
    "texts": [
     {
      "id": "subject",
@@ -3658,16 +2901,6 @@
    "duration": 3.2,
    "description": "A click on Add to bag: the button contracts into a circle and writes a check, a copy of the product tile lifts off, shrinks and arcs up into the bag icon in the corner, which bumps as its badge pops in with 1.",
    "file": "elements-commerce.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 47,
-    "keys": 338
-   },
-   "layers": 30,
-   "keys": 88,
    "texts": [
     {
      "id": "name",
@@ -3693,16 +2926,6 @@
    "duration": 4.1,
    "description": "A bag with two items: the promo field focuses and SAVE25 types in, Apply turns into a check, the card grows as a discount line slides in, and the total (a COUNTER placeholder) rolls its digits down from $164 to $123.",
    "file": "elements-commerce.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 75,
-    "keys": 783
-   },
-   "layers": 47,
-   "keys": 130,
    "texts": [
     {
      "id": "title",
@@ -3793,16 +3016,6 @@
    "duration": 3.9,
    "description": "Continue is clicked twice: the accent underline stretches from Shipping to Payment to Review (leading edge first), the finished step gets a check, and the form body slides out left and blurs while the next one slides in from the right.",
    "file": "elements-commerce.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 80,
-    "keys": 1098
-   },
-   "layers": 45,
-   "keys": 164,
    "texts": [
     {
      "id": "step0",
@@ -3836,16 +3049,6 @@
    "duration": 4.3,
    "description": "The four number groups type into the card face one after another, replacing their dots. Next is clicked: the card lifts, squeezes to an edge (scale X 1 → 0), swaps to its back face and opens again, then the CVV types into its accent-ringed box.",
    "file": "elements-commerce.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 57,
-    "keys": 424
-   },
-   "layers": 31,
-   "keys": 152,
    "texts": [
     {
      "id": "brand",
@@ -3939,16 +3142,6 @@
    "duration": 4.2,
    "description": "The cursor picks Wallet: its radio fills with a pop and the row outline darkens, the Pay button wakes from dim to ink. Pay is pressed: a spinner runs with Processing, then an accent fill spreads out from the centre and Paid lands with a check.",
    "file": "elements-commerce.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 68,
-    "keys": 797
-   },
-   "layers": 34,
-   "keys": 116,
    "texts": [
     {
      "id": "title",
@@ -4006,16 +3199,6 @@
    "duration": 4.7,
    "description": "Inside a phone, Buy now raises a bottom sheet while the page behind shrinks back and dims. Confirm is pressed: the order details blur away, four corner brackets frame a face while a scan line sweeps, then they contract, retract and an accent check writes on.",
    "file": "elements-commerce.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 89,
-    "keys": 1370
-   },
-   "layers": 57,
-   "keys": 168,
    "texts": [
     {
      "id": "pageTitle",
@@ -4081,16 +3264,6 @@
    "duration": 4.1,
    "description": "A vertical tracker: the ink line fills downward one leg at a time while an accent delivery dot rides its tip; each node it reaches fills ink and its label darkens. At Delivered the dot merges into an accent disc with a check and the ETA swaps.",
    "file": "elements-commerce.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 48,
-    "keys": 609
-   },
-   "layers": 31,
-   "keys": 168,
    "texts": [
     {
      "id": "title",
@@ -4164,16 +3337,6 @@
    "duration": 3.1,
    "description": "A ticket with a dotted perforation and two notches: the promo code types into its dashed box, the cursor clicks Copy, the code gets a soft accent selection and the button swaps to a check and Copied.",
    "file": "elements-commerce.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 36,
-    "keys": 323
-   },
-   "layers": 20,
-   "keys": 78,
    "texts": [
     {
      "id": "offer",
@@ -4207,16 +3370,6 @@
    "duration": 2.9,
    "description": "A line draws through the old $129 (Trim Paths), then the struck price slides down, shrinks and greys while the new $89 drops in above it in the accent and a −30% badge pops on the product photo.",
    "file": "elements-commerce.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 32,
-    "keys": 306
-   },
-   "layers": 20,
-   "keys": 54,
    "texts": [
     {
      "id": "name",
@@ -4246,16 +3399,6 @@
    "duration": 3.2,
    "description": "A faint hover ring sits on S under the cursor, then slides to M stretching between the chips (leading edge first). The click commits it to a solid ink ring, the status line swaps and Add to bag wakes from dim to ink. XL is sold out: struck and greyed.",
    "file": "elements-commerce.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 37,
-    "keys": 416
-   },
-   "layers": 19,
-   "keys": 120,
    "texts": [
     {
      "id": "title",
@@ -4305,16 +3448,6 @@
    "duration": 3.3,
    "description": "Three plan cards pop in on a stagger; the Popular one lifts and grows onto a floating shadow. The cursor picks it: an ink ring and an accent check badge pop at its corner, its button reads Selected, and the side cards recede.",
    "file": "elements-commerce.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 91,
-    "keys": 1271
-   },
-   "layers": 58,
-   "keys": 292,
    "texts": [
     {
      "id": "pName0",
@@ -4424,16 +3557,6 @@
    "duration": 3,
    "description": "An invoice lands row by row. The payment clears: the Due pill tightens from its right edge and darkens into an ink Paid pill with a check, a quiet accent highlight bar grows behind the total line, and the footer note swaps.",
    "file": "elements-commerce.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 48,
-    "keys": 482
-   },
-   "layers": 29,
-   "keys": 114,
    "texts": [
     {
      "id": "title",
@@ -4479,16 +3602,6 @@
    "duration": 4.3,
    "description": "Three transactions arrive one at a time: each slides in on top of the list and pushes the older rows down, then the big balance on the ink card rolls to its new value — up for the income, down for each payment.",
    "file": "elements-commerce.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 47,
-    "keys": 479
-   },
-   "layers": 27,
-   "keys": 84,
    "texts": [
     {
      "id": "balLbl",
@@ -4527,16 +3640,6 @@
    "duration": 4,
    "description": "Clicking thumbnails slides the main photo strip sideways inside its clip (a longer jump carries a touch of motion blur); the ink ring hops between thumbs stretching in flight, the active dot stretches into a pill and the page counter rolls.",
    "file": "elements-commerce.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 83,
-    "keys": 1085
-   },
-   "layers": 55,
-   "keys": 130,
    "texts": [],
    "numbers": [],
    "images": []
@@ -4549,16 +3652,6 @@
    "duration": 2.9,
    "description": "The big score counts up to 4.8 while a clip sweeps across five stars, filling them in the accent and stopping 80 % through the last one; the five breakdown bars fill on a stagger as their counts tick up.",
    "file": "elements-commerce.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 75,
-    "keys": 726
-   },
-   "layers": 48,
-   "keys": 116,
    "texts": [
     {
      "id": "title",
@@ -4609,16 +3702,6 @@
    "duration": 4.3,
    "description": "A flash-sale banner pops in and its hours / minutes / seconds boxes drop in on a cascade. The seconds (a TIMER placeholder, Roll style, keyed) tick 59 → 56 with one Power4 Out roll per second, while the claimed bar fills to 72 % (a keyed COUNTER follows its width) and creeps up a percent on every tick.",
    "file": "elements-promo-countdowns.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 41,
-    "keys": 439
-   },
-   "layers": 28,
-   "keys": 104,
    "texts": [
     {
      "id": "title",
@@ -4673,16 +3756,6 @@
    "duration": 3.9,
    "description": "A product-drop card behind a veil. The big clock (one TIMER placeholder, Odometer style) spins every column down from 02:45 to 00:00 — the left digits land first, the seconds take an extra turn. On landing the panel squeezes, the digits blur out and it morphs into an accent “Shop the drop” button while the chip turns to “Live now”, the veil lifts and the lock pops away.",
    "file": "elements-promo-countdowns.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 38,
-    "keys": 467
-   },
-   "layers": 21,
-   "keys": 112,
    "texts": [
     {
      "id": "chipSoon",
@@ -4734,16 +3807,6 @@
    "duration": 3.9,
    "description": "A webinar card whose “Starts in” clock is a real-time TIMER placeholder (Count style — the seconds just tick). The cursor clicks Add to calendar: the button squeezes and shrinks from its right edge into “Added” with a check, an accent “You” avatar pops onto the attendee stack, the going count (a keyed COUNTER, Roll) rolls 1,284 → 1,285 and a reminder note slides in.",
    "file": "elements-promo-countdowns.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 55,
-    "keys": 530
-   },
-   "layers": 32,
-   "keys": 106,
    "texts": [
     {
      "id": "av0Ini",
@@ -4790,16 +3853,6 @@
    "duration": 4.1,
    "description": "A bag whose items are reserved: the clock (a keyed TIMER placeholder) runs down from 00:08 while a ring drains in step with it. At 00:05 the timer, ring and banner turn red, the banner nudges and a +5 min chip pops; the cursor clicks it at 00:03 — only the minutes wheel rolls up to 05:03 (a second TIMER, Odometer), the ring refills and the banner calms back to ink.",
    "file": "elements-promo-countdowns.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 65,
-    "keys": 659
-   },
-   "layers": 35,
-   "keys": 144,
    "texts": [
     {
      "id": "heading",
@@ -4863,16 +3916,6 @@
    "duration": 4.7,
    "description": "A camera preview. The cursor clicks Go live: the preview dims and a disc counts 3 · 2 · 1 — ONE COUNTER placeholder stepped by a keyed track while each numeral punches in from 140 % and a white ring drains once per beat. On zero the disc blows out, the scrim lifts, an accent Live pill pops with a stopwatch (a TIMER counting up in real time) and the viewer count rolls up (Odometer).",
    "file": "elements-promo-countdowns.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 41,
-    "keys": 295
-   },
-   "layers": 21,
-   "keys": 134,
    "texts": [
     {
      "id": "goingIn",
@@ -4912,16 +3955,6 @@
    "duration": 3.9,
    "description": "A reward card with a grey foil panel. The cursor presses down and scratches it in four back-and-forth strokes — each foil band wipes away right behind the pointer and ragged bits stay at the edges — uncovering 25% off, which gives a small bump as Use now wakes from dim to ink.",
    "file": "elements-promo-coupons.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 37,
-    "keys": 433
-   },
-   "layers": 23,
-   "keys": 82,
    "texts": [
     {
      "id": "title",
@@ -4959,16 +3992,6 @@
    "duration": 4.1,
    "description": "A market flyer with a dashed coupon at the bottom. Scissors cut all the way round the dashed line at a steady pace, turning at every corner and snipping as they go while a solid cut line follows them; then the flyer drops away and the cut-out coupon lifts, tilts and settles as the camera closes in and a Saved to wallet chip pops.",
    "file": "elements-promo-coupons.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 45,
-    "keys": 581
-   },
-   "layers": 27,
-   "keys": 220,
    "texts": [
     {
      "id": "title",
@@ -5027,16 +4050,6 @@
    "duration": 3.9,
    "description": "A tidy stack of three coupons fans out round a pivot below it. The cursor clicks the top one: the other two fold back and sink away while it lifts and the camera closes in, then it flips over (scale X 1 → 0 → 1) to its dark back with the terms and its code.",
    "file": "elements-promo-coupons.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 58,
-    "keys": 509
-   },
-   "layers": 33,
-   "keys": 98,
    "texts": [
     {
      "id": "leftFaceVal",
@@ -5098,16 +4111,6 @@
    "duration": 3.8,
    "description": "A coupon wallet beside an order summary. The cursor lifts the 20% off coupon (it tilts and gains a deeper shadow) and drags it into the dashed slot, which darkens as it arrives; the coupon docks, its plus turns into a check, the rest of the wallet closes the gap and the total (a COUNTER placeholder) rolls down from $80 to $64.",
    "file": "elements-promo-coupons.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 77,
-    "keys": 857
-   },
-   "layers": 45,
-   "keys": 160,
    "texts": [
     {
      "id": "wTitle",
@@ -5186,16 +4189,6 @@
    "duration": 4.5,
    "description": "A prize wheel of eight discounts. The cursor clicks Spin: the wheel winds back a little, then spins three turns and slows (Power4 Out) while the pointer ticks against the last few slices. It lands on 20% off, the slice lights up in the accent, the wheel shrinks up out of the way and the won coupon rises in below it.",
    "file": "elements-promo-coupons.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 74,
-    "keys": 177
-   },
-   "layers": 44,
-   "keys": 46,
    "texts": [
     {
      "id": "lbl0",
@@ -5257,16 +4250,6 @@
    "duration": 3.4,
    "description": "A birthday coupon expires: a line strikes through its date, the ticket greys out and an Expired tag pops. The cursor clicks Renew, and an accent RENEWED stamp drops onto the ticket at an angle, squashing as it lands with a small thud; the ticket wakes up, the struck date slides away and the new one drops in.",
    "file": "elements-promo-coupons.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 44,
-    "keys": 612
-   },
-   "layers": 26,
-   "keys": 118,
    "texts": [
     {
      "id": "stubCap",
@@ -5308,16 +4291,6 @@
    "duration": 4.6,
    "description": "SPRING15 types into the promo field and Apply is clicked: the field shakes with decaying swings, its border turns red and \"SPRING15 has expired\" slides in as the card makes room. The cursor picks the suggested SUMMER20 chip, the code jumps from the chip into the field, Apply turns into a check and the total (a COUNTER placeholder) rolls down from $145 to $116.",
    "file": "elements-promo-codes.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 56,
-    "keys": 644
-   },
-   "layers": 36,
-   "keys": 198,
    "texts": [
     {
      "id": "title",
@@ -5368,16 +4341,6 @@
    "duration": 3.6,
    "description": "A deal card holds a blurred code. Show code is clicked: the pill collapses into a circle from its left edge and rises into the code box as a Copy button while the code sharpens and settles, and the card closes up behind it. A click on Copy pops an accent check and a Copied tooltip.",
    "file": "elements-promo-codes.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 42,
-    "keys": 499
-   },
-   "layers": 25,
-   "keys": 122,
    "texts": [
     {
      "id": "brand",
@@ -5411,16 +4374,6 @@
    "duration": 3.8,
    "description": "A click focuses the first of seven boxes and HELLO25 stamps in letter by letter behind a stepping caret. On the last letter the boxes slide together and fade while one ink chip forms over them: the letters close up into a word, shrink and turn white, an accent check pops at the chip’s end and the caption confirms 25% off.",
    "file": "elements-promo-codes.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 42,
-    "keys": 646
-   },
-   "layers": 26,
-   "keys": 240,
    "texts": [
     {
      "id": "title",
@@ -5482,16 +4435,6 @@
    "duration": 4.6,
    "description": "A sign-up card: the email types into the field and Subscribe squeezes into a spinner. The form blurs away as the card grows into the reward: an accent check pops, \"You’re in! Here’s 15% off\" rises and the WELCOME15 code pops into its dashed box. A tap on the code outlines it and a Code copied toast rises from below.",
    "file": "elements-promo-codes.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 43,
-    "keys": 587
-   },
-   "layers": 25,
-   "keys": 140,
    "texts": [
     {
      "id": "title",
@@ -5541,15 +4484,6 @@
    "duration": 3.2,
    "description": "A dark sale banner drops in from above with a blur. Its code chip decodes SUMMER30: each letter is a reel of random characters (a clip window) that rolls up and lands on its letter, left to right. On the last one an accent outline fades in around the chip as it gives a small settle.",
    "file": "elements-promo-codes.js",
-   "formats": [
-    "html"
-   ],
-   "editorCost": {
-    "layers": 101,
-    "keys": 795
-   },
-   "layers": 57,
-   "keys": 50,
    "texts": [
     {
      "id": "offer",
@@ -5571,16 +4505,6 @@
    "duration": 4.1,
    "description": "An order card with one offer. The cursor taps the SOUND20 chip: it lifts onto a shadow and flies on an arc up into the Total line, where it settles. A line strikes through $210.00, which shrinks and greys aside as $168.00 slides in, and an accent \"You saved $42.00\" chip pops with its amount counting up (a COUNTER placeholder).",
    "file": "elements-promo-codes.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 58,
-    "keys": 521
-   },
-   "layers": 34,
-   "keys": 110,
    "texts": [
     {
      "id": "title",
@@ -5632,16 +4556,6 @@
    "duration": 3.8,
    "description": "A post settles in block by block, then the like, comment and share counters tick up in turn; each icon gives a small pop as its number climbs, and the heart fills with the accent.",
    "file": "elements-social.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 41,
-    "keys": 452
-   },
-   "layers": 26,
-   "keys": 118,
    "texts": [
     {
      "id": "avatarIni",
@@ -5688,16 +4602,6 @@
    "duration": 4.7,
    "description": "A tap starts the stories: the active avatar grows, its accent ring un-draws (Trim Paths) as it is watched and is left dim, while the matching segment of the bar above fills; then the next one takes over.",
    "file": "elements-social.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 87,
-    "keys": 823
-   },
-   "layers": 46,
-   "keys": 192,
    "texts": [
     {
      "id": "title",
@@ -5764,16 +4668,6 @@
    "duration": 4.4,
    "description": "The cursor clicks Reply: a thread line grows down from the avatar and an indented field stretches open. A reply types in; on Send the pill morphs into a comment bubble, the name drops in above the text and the reply count rolls to 3.",
    "file": "elements-social.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 56,
-    "keys": 258
-   },
-   "layers": 31,
-   "keys": 150,
    "texts": [
     {
      "id": "pAvatarIni",
@@ -5831,16 +4725,6 @@
    "duration": 3.8,
    "description": "A press-and-hold on Like pops a pill of five reactions on a stagger. The cursor slides across them (each one scales up and lifts under it, with its name above), releases on Celebrate, and the reaction flies down onto the button, which widens for the new label.",
    "file": "elements-social.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 69,
-    "keys": 852
-   },
-   "layers": 47,
-   "keys": 186,
    "texts": [
     {
      "id": "avatarIni",
@@ -5882,16 +4766,6 @@
    "duration": 4.5,
    "description": "Typing \"@\" opens a people popup; \"ma\" filters it from three to two (the middle row leaves and the panel tightens), the highlight glides down to Marco, and Enter turns the query into an accent-tinted mention chip.",
    "file": "elements-social.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 60,
-    "keys": 908
-   },
-   "layers": 35,
-   "keys": 118,
    "texts": [
     {
      "id": "meAvatarIni",
@@ -5945,16 +4819,6 @@
    "duration": 3.6,
    "description": "A new message slides in at the top of the inbox and pushes the other rows down (the last one out of view), its unread dot pops and the count rolls up. Then a click opens a row: it tints, its dot shrinks away, the sender name swaps to regular weight and the count rolls back.",
    "file": "elements-social.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 90,
-    "keys": 935
-   },
-   "layers": 53,
-   "keys": 108,
    "texts": [
     {
      "id": "title",
@@ -6056,16 +4920,6 @@
    "duration": 3.4,
    "description": "The cursor grabs a row and drags it left: an ink Archive action is revealed behind it (a clip that grows with the drag) and its icon pops once past the threshold. On release the row flies out, the ink fills the row and collapses, the rows below close the gap and the count rolls down.",
    "file": "elements-social.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 80,
-    "keys": 494
-   },
-   "layers": 47,
-   "keys": 100,
    "texts": [
     {
      "id": "title",
@@ -6087,16 +4941,6 @@
    "duration": 4.1,
    "description": "A 2×2 call grid: the accent active-speaker ring jumps from tile to tile and stretches in flight. The cursor mutes the mic (both badges swap to a slashed mic), a Raised hand chip pops and waves on another tile, and the ring moves to that person.",
    "file": "elements-social.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 84,
-    "keys": 945
-   },
-   "layers": 51,
-   "keys": 140,
    "texts": [
     {
      "id": "tileAv0Ini",
@@ -6142,16 +4986,6 @@
    "duration": 4,
    "description": "Share is clicked: the post dims and a sheet slides up with five round targets popping on a stagger and a Copy link row. A click on Copy link swaps its icon for an accent check and its label for Link copied, then the sheet slides away and the button confirms.",
    "file": "elements-social.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 82,
-    "keys": 930
-   },
-   "layers": 52,
-   "keys": 172,
    "texts": [
     {
      "id": "title",
@@ -6189,16 +5023,6 @@
    "duration": 3.2,
    "description": "A poll with three outlined options. The cursor hovers and votes: result bars grow in every row on a stagger while the percentages count up; the chosen one fills with the accent, its label turns white and a check pops.",
    "file": "elements-social.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 37,
-    "keys": 354
-   },
-   "layers": 19,
-   "keys": 106,
    "texts": [
     {
      "id": "q",
@@ -6249,16 +5073,6 @@
    "duration": 3.2,
    "description": "An outgoing bubble pops from its tail. Its status steps through small swaps: a spinning clock, one check drawing on (sent), a second check (delivered), then both pop in the accent as the label changes to Read and the reader’s avatar appears.",
    "file": "elements-social.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 34,
-    "keys": 133
-   },
-   "layers": 19,
-   "keys": 82,
    "texts": [
     {
      "id": "msg",
@@ -6300,16 +5114,6 @@
    "duration": 4.2,
    "description": "Play is clicked: the icon swaps to pause and the 28-bar waveform turns ink bar by bar from the left as the note plays, while the time counts. A click on 1× rolls it to 2× and the fill speeds up; at the end the icon swaps back to play.",
    "file": "elements-social.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 57,
-    "keys": 506
-   },
-   "layers": 44,
-   "keys": 212,
    "texts": [
     {
      "id": "avatarIni",
@@ -6340,16 +5144,6 @@
    "duration": 2.5,
    "description": "A contact card builds in order: the avatar pops, name and role slide in, a hairline draws across, three detail rows (phone, mail, location) slide in on a stagger with their icon tiles popping, and two round action buttons pop last.",
    "file": "elements-social.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 49,
-    "keys": 441
-   },
-   "layers": 31,
-   "keys": 70,
    "texts": [
     {
      "id": "avatarIni",
@@ -6375,16 +5169,6 @@
    "duration": 3.9,
    "description": "An away contact comes online: the dim status dot is covered by an accent dot that pops in, the status line swaps from Away to Active now, and then to typing with three dots rippling in a wave.",
    "file": "elements-social.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 27,
-    "keys": 424
-   },
-   "layers": 18,
-   "keys": 134,
    "texts": [
     {
      "id": "avatarIni",
@@ -6418,16 +5202,6 @@
    "duration": 3.4,
    "description": "A big follower count climbs to 10,000 while a thin ink ring closes round the avatar in step (Trim Paths). At the goal the number gives a small pulse, the ring is covered by an accent ring and a Milestone chip pops onto it.",
    "file": "elements-social.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 26,
-    "keys": 160
-   },
-   "layers": 15,
-   "keys": 46,
    "texts": [
     {
      "id": "avatarIni",
@@ -6458,16 +5232,6 @@
    "duration": 4,
    "description": "The main lane draws up commit by commit (Trim Paths) while a feature branch curves off beside it; each dot pops as its line arrives and the commit message slides in next to it, then the branch bends back and lands on an accent merge dot.",
    "file": "elements-system.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 56,
-    "keys": 507
-   },
-   "layers": 35,
-   "keys": 104,
    "texts": [
     {
      "id": "title",
@@ -6489,16 +5253,6 @@
    "duration": 4.6,
    "description": "Build, Test, Review and Deploy run in turn: each node spins while its outgoing connector fills, lands on a check as the next one starts, the status lines swap Queued → Running → result, and the last node turns accent with Live while the elapsed timer stops.",
    "file": "elements-system.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 86,
-    "keys": 1083
-   },
-   "layers": 58,
-   "keys": 296,
    "texts": [
     {
      "id": "title",
@@ -6589,15 +5343,6 @@
    "duration": 3.9,
    "description": "Three service rows sweep their 30-day uptime strips in left to right (one trimmed path of bars per row). Webhooks ends on red bars and reads Degraded; then it recovers — the red bars fade to ink, the label swaps to Operational and the header chip widens into All operational.",
    "file": "elements-system.js",
-   "formats": [
-    "html"
-   ],
-   "editorCost": {
-    "layers": 230,
-    "keys": 2523
-   },
-   "layers": 31,
-   "keys": 126,
    "texts": [
     {
      "id": "title",
@@ -6655,16 +5400,6 @@
    "duration": 3.7,
    "description": "The cursor hits Send: the placeholder blurs out, a spinner turns while the latency counter runs up to 128 ms, a 200 OK chip pops and the response body lands key by key on a stagger.",
    "file": "elements-system.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 64,
-    "keys": 576
-   },
-   "layers": 36,
-   "keys": 130,
    "texts": [
     {
      "id": "url",
@@ -6695,15 +5430,6 @@
    "duration": 3.9,
    "description": "Log lines with level chips stream upward inside a clipped window (one group stepping up per new line). An error line arrives, its row tints red with a marker bar, and the header swaps Live for Paused as the stream stops.",
    "file": "elements-system.js",
-   "formats": [
-    "html"
-   ],
-   "editorCost": {
-    "layers": 109,
-    "keys": 1161
-   },
-   "layers": 58,
-   "keys": 266,
    "texts": [
     {
      "id": "title",
@@ -6813,16 +5539,6 @@
    "duration": 4.4,
    "description": "A long line path scrolls left inside a clip (one Linear x track) while the % counter and the edge dot read the value at the live edge. A spike comes in: the dashed 80 % threshold fades in, an accent alert dot pops on the peak and rides away with it, and a High load chip lands.",
    "file": "elements-system.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 31,
-    "keys": 325
-   },
-   "layers": 20,
-   "keys": 148,
    "texts": [
     {
      "id": "title",
@@ -6853,16 +5569,6 @@
    "duration": 4.1,
    "description": "The cursor opens a folder: its chevron turns, three children slide in and every row below is pushed down as the panel grows. Then + adds a file: a highlighted row opens up, its name types in with a caret, and the highlight fades.",
    "file": "elements-system.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 58,
-    "keys": 791
-   },
-   "layers": 44,
-   "keys": 170,
    "texts": [
     {
      "id": "title",
@@ -6920,16 +5626,6 @@
    "duration": 4.1,
    "description": "The cursor hovers a line of code: it tints and a + pops in the gutter. A click springs a comment bubble out of the gutter; Resolve then shrinks the bubble itself into a small Resolved chip at the end of the line while the tint fades.",
    "file": "elements-system.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 81,
-    "keys": 1169
-   },
-   "layers": 48,
-   "keys": 182,
    "texts": [
     {
      "id": "title",
@@ -6963,16 +5659,6 @@
    "duration": 4.5,
    "description": "A preferences card: the cursor flips one toggle on and another off (knobs stretch as they travel), drags the Text size slider a notch while its value counts, and a Saved pill pops into the header, then tucks away.",
    "file": "elements-system.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 47,
-    "keys": 559
-   },
-   "layers": 29,
-   "keys": 136,
    "texts": [
     {
      "id": "title",
@@ -6999,16 +5685,6 @@
    "duration": 3.9,
    "description": "The trash icon on a row is clicked: a full-frame backdrop dims and softens the list while a Delete project? modal scales in. Delete leaves the modal with a quick exit, the backdrop clears, and the row collapses as the rows below slide up and the card tightens.",
    "file": "elements-system.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 67,
-    "keys": 1430
-   },
-   "layers": 41,
-   "keys": 150,
    "texts": [
     {
      "id": "title",
@@ -7042,16 +5718,6 @@
    "duration": 4.9,
    "description": "Download is clicked and the button itself squashes into a thin progress bar that fills in bursts while the size counts up; at 86 MB it swells back into a Restart button. A second click spins, then the card tightens round an accent check: Up to date.",
    "file": "elements-system.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 38,
-    "keys": 600
-   },
-   "layers": 21,
-   "keys": 182,
    "texts": [
     {
      "id": "title",
@@ -7098,16 +5764,6 @@
    "duration": 3.6,
    "description": "Five customer rows fetch in on a stagger under a header band. The cursor clicks the MRR column: its sort arrow turns accent and rotates to descending, and the rows glide into their new order.",
    "file": "elements-system.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 93,
-    "keys": 1024
-   },
-   "layers": 57,
-   "keys": 132,
    "texts": [
     {
      "id": "title",
@@ -7133,16 +5789,6 @@
    "duration": 3.9,
    "description": "Run is clicked: the Trigger card flashes an accent ring, then an accent dot rides the curved connector (x/y keyed along the curve) while the dotted line turns solid behind it; Filter flashes, the dot rides on to Action, and every node gets a check.",
    "file": "elements-system.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 65,
-    "keys": 583
-   },
-   "layers": 40,
-   "keys": 376,
    "texts": [
     {
      "id": "title",
@@ -7164,16 +5810,6 @@
    "duration": 3.8,
    "description": "A single reveal sweeps the stacked storage bar in (one clip window growing over four segments) while the used total counts up. Clean up is clicked: the accent Other segment shrinks back, the used figure drops and a +4.2 GB freed chip counts up.",
    "file": "elements-system.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 59,
-    "keys": 687
-   },
-   "layers": 37,
-   "keys": 106,
    "texts": [
     {
      "id": "title",
@@ -7208,16 +5844,6 @@
    "duration": 3.7,
    "description": "An Allow camera access? card drops in from above with a blur. Allow is clicked and the card itself shrinks into a small ink status pill — the prompt blurs out, a camera icon and Camera on blur in, and an accent live dot keeps pulsing.",
    "file": "elements-system.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 29,
-    "keys": 583
-   },
-   "layers": 16,
-   "keys": 80,
    "texts": [
     {
      "id": "q",
@@ -7243,16 +5869,6 @@
    "duration": 4.3,
    "description": "A lock screen settles in; a notification drops in under the clock, a second one lands on top and pushes it down, then the cursor grabs the newest, flicks it up and away, and the first slides back into place.",
    "file": "elements-mobile.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 51,
-    "keys": 420
-   },
-   "layers": 31,
-   "keys": 94,
    "texts": [
     {
      "id": "date",
@@ -7302,16 +5918,6 @@
    "duration": 3.8,
    "description": "Two taps on a floating tab bar: the ink pill stretches to the new tab (leading edge first), the other icons make room, the active icon swaps to its filled white form and its label unfolds, while the page title and content slide in from the tapped side.",
    "file": "elements-mobile.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 81,
-    "keys": 1266
-   },
-   "layers": 62,
-   "keys": 226,
    "texts": [
     {
      "id": "sbTime",
@@ -7357,16 +5963,6 @@
    "duration": 3.9,
    "description": "Over a map with a drawn route, a place sheet slides up to half height. The cursor grabs the grabber and drags the sheet up; on release it snaps to full height, the map dims and drifts up, and more rows slide in.",
    "file": "elements-mobile.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 86,
-    "keys": 905
-   },
-   "layers": 59,
-   "keys": 172,
    "texts": [
     {
      "id": "place",
@@ -7392,16 +5988,6 @@
    "duration": 4.1,
    "description": "The cursor drags an inbox down: a spinner fades in the gap and its arc grows and turns with the pull. On release the list springs back to hold it while it spins, then a new message slides into the top and the list settles.",
    "file": "elements-mobile.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 86,
-    "keys": 863
-   },
-   "layers": 58,
-   "keys": 154,
    "texts": [
     {
      "id": "row0Name",
@@ -7491,16 +6077,6 @@
    "duration": 4.1,
    "description": "Two swipes carry three onboarding pages across (drag, then a decisive snap). The page dots hand the ink pill along, each new illustration pops as it lands, and on the last page Next unfolds into a full-width Get started button that is tapped.",
    "file": "elements-mobile.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 72,
-    "keys": 676
-   },
-   "layers": 44,
-   "keys": 170,
    "texts": [
     {
      "id": "title0",
@@ -7550,16 +6126,6 @@
    "duration": 4,
    "description": "A tap folds the hamburger into an X (the lines meet, then rotate) while a drawer slides in from the left, the page dims and shifts aside, and the menu rows stagger in. Tapping Projects glides the highlight down, the drawer closes, the X unfolds and the page title swaps.",
    "file": "elements-mobile.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 95,
-    "keys": 1267
-   },
-   "layers": 61,
-   "keys": 258,
    "texts": [
     {
      "id": "ttlHome",
@@ -7613,15 +6179,6 @@
    "duration": 4.2,
    "description": "Clicking folders appends crumbs that slide in while the list swaps with a directional slide; the third crumb overflows, so the path scrolls left. Clicking Home collapses every crumb back in reverse order and the root list slides in from the other side.",
    "file": "elements-mobile.js",
-   "formats": [
-    "html"
-   ],
-   "editorCost": {
-    "layers": 89,
-    "keys": 1993
-   },
-   "layers": 56,
-   "keys": 466,
    "texts": [
     {
      "id": "homeLbl",
@@ -7747,15 +6304,6 @@
    "duration": 3.6,
    "description": "Clicking 2, then 3: the ink page pill stretches along the pager (leading edge first, numbers invert through it), the six-card grid slides out to the left and the next page slides in from the right column by column, and the range label swaps.",
    "file": "elements-mobile.js",
-   "formats": [
-    "html"
-   ],
-   "editorCost": {
-    "layers": 103,
-    "keys": 1886
-   },
-   "layers": 56,
-   "keys": 298,
    "texts": [
     {
      "id": "title",
@@ -7801,16 +6349,6 @@
    "duration": 3.8,
    "description": "The accent floating button is tapped: its plus rotates 45° into a close mark, a frosted scrim covers the notes, and three mini actions rise out of it on a stagger with their labels sliding in. Voice note is tapped and everything folds back into the button.",
    "file": "elements-mobile.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 63,
-    "keys": 677
-   },
-   "layers": 37,
-   "keys": 152,
    "texts": [
     {
      "id": "title",
@@ -7832,16 +6370,6 @@
    "duration": 4,
    "description": "A click on the round search button grows it leftward into a full field (pinned right) as the icon rides the leading edge; the placeholder gives way to the typed query, recent searches drop in beneath with the match in bold, and one is picked.",
    "file": "elements-mobile.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 50,
-    "keys": 554
-   },
-   "layers": 30,
-   "keys": 122,
    "texts": [
     {
      "id": "title",
@@ -7875,16 +6403,6 @@
    "duration": 4.4,
    "description": "Three flicks scroll an article under a fixed header (drag, then momentum). A thin accent bar along the header fills in step with the scroll and the minutes-left label counts down, ending on Finished.",
    "file": "elements-mobile.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 72,
-    "keys": 930
-   },
-   "layers": 47,
-   "keys": 160,
    "texts": [
     {
      "id": "kicker",
@@ -7951,16 +6469,6 @@
    "duration": 3.9,
    "description": "A right-click on a file tile selects it and pops a menu that grows from the cursor corner. The highlight follows the cursor down to Share, a submenu slides out to the side, Copy link is chosen, the menus fold away and a Link copied toast pops.",
    "file": "elements-mobile.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 81,
-    "keys": 1094
-   },
-   "layers": 55,
-   "keys": 180,
    "texts": [
     {
      "id": "title",
@@ -7998,16 +6506,6 @@
    "duration": 3.9,
    "description": "The cursor runs along a floating toolbar: one tooltip pops on the first button, then glides to each next one and resizes its width to the new label while the labels swap. A click on Share turns it into a wider Link copied confirmation.",
    "file": "elements-mobile.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 29,
-    "keys": 452
-   },
-   "layers": 20,
-   "keys": 158,
    "texts": [
     {
      "id": "tip0",
@@ -8041,15 +6539,6 @@
    "duration": 3.4,
    "description": "Home-screen tiles pop in on a diagonal stagger. A tap on the ink player tile grows that one shape into the full-screen app (position, size and corners) while the grid behind shrinks, fades and blurs away; then the player content settles in and playback runs.",
    "file": "elements-mobile.js",
-   "formats": [
-    "html"
-   ],
-   "editorCost": {
-    "layers": 93,
-    "keys": 1596
-   },
-   "layers": 61,
-   "keys": 198,
    "texts": [
     {
      "id": "weekday",
@@ -8087,16 +6576,6 @@
    "duration": 3.2,
    "description": "Clicking the sun/moon switch slides and inverts its knob, then a dark disc spreads from the switch across the card; every text, chip and hairline turns its colour while the wave front crosses it, so the theme change travels outward from the switch.",
    "file": "elements-mobile.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 64,
-    "keys": 744
-   },
-   "layers": 36,
-   "keys": 190,
    "texts": [
     {
      "id": "title",
@@ -8146,16 +6625,6 @@
    "duration": 3,
    "description": "A two-line headline: each word rises from behind its own mask on a stagger with a slight swing, then an accent copy of the key word wipes across it left to right while the camera eases in.",
    "file": "elements-text.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 34,
-    "keys": 63
-   },
-   "layers": 17,
-   "keys": 40,
    "texts": [
     {
      "id": "eyebrow",
@@ -8205,16 +6674,6 @@
    "duration": 3.4,
    "description": "A three-line statement settles in muted. An accent-tinted marker sweeps in behind one phrase while it swaps to bold ink, then an accent underline writes on under a second phrase as it darkens.",
    "file": "elements-text.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 17,
-    "keys": 81
-   },
-   "layers": 9,
-   "keys": 50,
    "texts": [
     {
      "id": "line1",
@@ -8252,16 +6711,6 @@
    "duration": 3.3,
    "description": "A card pops in, big accent quotation marks pop and settle, the quote unblurs in line by line, a hairline draws and the attribution (avatar, name, role) slides in before a quiet hold.",
    "file": "elements-text.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 20,
-    "keys": 171
-   },
-   "layers": 11,
-   "keys": 52,
    "texts": [
     {
      "id": "quoteMark",
@@ -8299,16 +6748,6 @@
    "duration": 4,
    "description": "Over a video frame, an accent bar grows, a white plate wipes open from it and the name and role slide out from behind its edge. It holds, then everything retracts in reverse and the frame is left clean.",
    "file": "elements-text.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 15,
-    "keys": 62
-   },
-   "layers": 8,
-   "keys": 18,
    "texts": [
     {
      "id": "name",
@@ -8330,16 +6769,6 @@
    "duration": 2.8,
    "description": "A huge 3× scales in while the digit rolls up from 0 in its window (with a touch of speed blur) and the accent × slides in; a thin rule draws out from the centre, the label rises in and a small source caption fades up.",
    "file": "elements-text.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 11,
-    "keys": 56
-   },
-   "layers": 7,
-   "keys": 26,
    "texts": [
     {
      "id": "times",
@@ -8370,16 +6799,6 @@
    "duration": 3.6,
    "description": "Build [faster]: the word inside an ink pill rolls up to better, then together, while the pill resizes to fit each word and the line re-centres in the same beat; the last word arrives on an accent row, so the fill changes on the roll edge.",
    "file": "elements-text.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 18,
-    "keys": 102
-   },
-   "layers": 10,
-   "keys": 42,
    "texts": [
     {
      "id": "build",
@@ -8413,16 +6832,6 @@
    "duration": 3.6,
    "description": "A title settles, then each item arrives in turn: its accent number rolls up from 00 in a digit window, a hairline draws across under it and the text slides in from the left. The previous item dims and a small check pops at its end.",
    "file": "elements-text.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 26,
-    "keys": 204
-   },
-   "layers": 19,
-   "keys": 62,
    "texts": [
     {
      "id": "title",
@@ -8465,16 +6874,6 @@
    "duration": 3.1,
    "description": "A dictionary card: the word types in large with a caret, an accent underline writes on beneath it, the phonetic line fades in and a noun chip pops, then the definition rises in line by line while a small easing curve draws itself in a tile.",
    "file": "elements-text.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 27,
-    "keys": 218
-   },
-   "layers": 15,
-   "keys": 58,
    "texts": [
     {
      "id": "word",
@@ -8508,16 +6907,6 @@
    "duration": 3.6,
    "description": "A sentence rises in. A line strikes through \"slow\" and it dims; \"fast\" rises in above it in accent like an editor’s correction, then \"slow\" drops away while \"fast\" settles into its place and the rest of the line closes up.",
    "file": "elements-text.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 12,
-    "keys": 114
-   },
-   "layers": 7,
-   "keys": 46,
    "texts": [
     {
      "id": "head",
@@ -8547,16 +6936,6 @@
    "duration": 3.6,
    "description": "Twelve keywords pop in from the centre outward at mixed sizes and weights while the camera slowly drifts in; then an accent pill grows behind the key word, it turns white and the rest of the cloud recedes.",
    "file": "elements-text.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 26,
-    "keys": 158
-   },
-   "layers": 14,
-   "keys": 106,
    "texts": [
     {
      "id": "tag_Motion",
@@ -8618,16 +6997,6 @@
    "duration": 3.3,
    "description": "A big title rises in behind a mask. An accent blade swipes across its middle, then the top and bottom halves (two clips holding the same text, letters kept aligned) part vertically; the subtitle tracks in inside the gap and the halves ease back onto its edges, locking up as one title.",
    "file": "elements-text.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 15,
-    "keys": 31
-   },
-   "layers": 9,
-   "keys": 22,
    "texts": [
     {
      "id": "topText",
@@ -8653,16 +7022,6 @@
    "duration": 3.6,
    "description": "A mock editor window settles. Beside it a label types in, a curved accent arrow draws from the label to the Export button (its head writes on last), then a hand-drawn loop circles the button and the button gives a small nudge.",
    "file": "elements-text.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 38,
-    "keys": 303
-   },
-   "layers": 26,
-   "keys": 36,
    "texts": [
     {
      "id": "wtitle",
@@ -8684,16 +7043,6 @@
    "duration": 3.6,
    "description": "A two-line caption plate sits low in frame. As each word is spoken an accent pill glides to it (stretching in flight), the word turns white on the pill and ink once passed while the words to come stay muted; at the line break the pill shrinks away and a second one pops on the next line.",
    "file": "elements-text.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 28,
-    "keys": 401
-   },
-   "layers": 16,
-   "keys": 132,
    "texts": [
     {
      "id": "w0_Good",
@@ -8743,16 +7092,6 @@
    "duration": 2.9,
    "description": "A start dot pops and a horizontal line draws across (Sine Smooth); each year dot pops the moment the tip reaches it, a stub grows and a milestone card slides away from the line, alternating above and below. The last dot is accent and a thin accent ring pops round it.",
    "file": "elements-text.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 41,
-    "keys": 175
-   },
-   "layers": 28,
-   "keys": 66,
    "texts": [
     {
      "id": "year0",
@@ -8798,16 +7137,6 @@
    "duration": 3.4,
    "description": "An intro title: the accent 3 rolls up from 0 in its digit window with a touch of speed blur, \"things to know\" types in beside it, then the whole title lifts and three numbered chips pop into a row below it.",
    "file": "elements-text.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 31,
-    "keys": 171
-   },
-   "layers": 17,
-   "keys": 44,
    "texts": [
     {
      "id": "things",
@@ -8842,16 +7171,6 @@
    "duration": 3.6,
    "description": "Twelve ticks draw in round the dial one after another, the hour and minute hands swing from twelve into place (rotating on their base) while the accent second hand settles and keeps sweeping; the digital time slides in beside it and ticks in sync.",
    "file": "elements-everyday.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 51,
-    "keys": 312
-   },
-   "layers": 28,
-   "keys": 114,
    "texts": [
     {
      "id": "num12",
@@ -8894,16 +7213,6 @@
    "duration": 3.5,
    "description": "The card pops in, a big accent sun turns slowly for the whole shot while the temperature counts up to 24°; six hourly columns rise in on a stagger, then a thin temperature curve draws through them (Trim Paths) and each hour’s point pops as the line reaches it.",
    "file": "elements-everyday.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 57,
-    "keys": 593
-   },
-   "layers": 39,
-   "keys": 114,
    "texts": [
     {
      "id": "city",
@@ -8982,16 +7291,6 @@
    "duration": 4.5,
    "description": "Start is clicked: the button turns accent and reads Stop while the time runs in hundredths. Lap is clicked twice — each lap row slides in at the top of the list and pushes the older one down — then Stop swaps the button back to Start and Lap becomes Reset.",
    "file": "elements-everyday.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 39,
-    "keys": 556
-   },
-   "layers": 23,
-   "keys": 142,
    "texts": [
     {
      "id": "label",
@@ -9050,16 +7349,6 @@
    "duration": 3.9,
    "description": "A week grid settles in. The cursor presses in Wednesday at 10:00 and drags down: an accent event block grows from its top edge with the cursor while its time range snaps 10:30 → 11:00 → 11:30; on release the range steps down a line and the title types in.",
    "file": "elements-everyday.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 91,
-    "keys": 962
-   },
-   "layers": 54,
-   "keys": 180,
    "texts": [
     {
      "id": "title",
@@ -9133,16 +7422,6 @@
    "duration": 4.8,
    "description": "A stylised street map pops in and both pins drop; the route draws between them (Trim Paths), an ETA sheet slides up from the bottom edge, then a puck drives the route corner to corner — the road behind it greys out while the minutes count down — and arrives: the pin bumps and the sheet reads Arrived.",
    "file": "elements-everyday.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 37,
-    "keys": 330
-   },
-   "layers": 26,
-   "keys": 66,
    "texts": [
     {
      "id": "arrived",
@@ -9169,16 +7448,6 @@
    "duration": 3.6,
    "description": "A 3×3 photo grid ripples in. The cursor taps three photos: each shrinks inside its cell and a numbered accent badge pops on it; the first tap slides an action bar up from the bottom edge, and its count rolls 1 → 2 → 3 before the cursor settles on Share.",
    "file": "elements-everyday.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 84,
-    "keys": 806
-   },
-   "layers": 46,
-   "keys": 142,
    "texts": [
     {
      "id": "title",
@@ -9213,16 +7482,6 @@
    "duration": 4.3,
    "description": "A filmstrip of two shots sits in a trim frame. The cursor drags the left handle in, then the right one: the frame follows both, the trimmed-off ends dim as they grow, a timecode bubble rides each handle while it is held, and the duration counts down 12.0 → 7.4 s.",
    "file": "elements-everyday.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 83,
-    "keys": 1122
-   },
-   "layers": 50,
-   "keys": 130,
    "texts": [
     {
      "id": "title",
@@ -9269,16 +7528,6 @@
    "duration": 4.8,
    "description": "Record is tapped: the accent button breathes with a ripple ring and shows a stop square, the timer runs in tenths, and waveform bars are added one by one at the playhead while the strip scrolls left. Stop: the square spins away, an ink disc irises open over the button and a play triangle turns into place.",
    "file": "elements-everyday.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 58,
-    "keys": 565
-   },
-   "layers": 47,
-   "keys": 268,
    "texts": [
     {
      "id": "title",
@@ -9317,16 +7566,6 @@
    "duration": 3.5,
    "description": "The cursor grabs the bottom-right crop handle and drags it inward: the frame and its corner marks follow, rule-of-thirds lines fade in while the handle is held, the area outside the crop darkens as it grows, and the aspect chip pops to an accent 4:5.",
    "file": "elements-everyday.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 44,
-    "keys": 546
-   },
-   "layers": 27,
-   "keys": 112,
    "texts": [
     {
      "id": "aspectLbl",
@@ -9356,16 +7595,6 @@
    "duration": 4,
    "description": "Four file chips line up, then fly into the archive tile one after another (x, y and scale converge; each landing nudges the tile) while the size label adds them up to 24 MB. The camera closes in, the tile pops and squeezes, the size rolls down to 6 MB and an accent −75% chip pops.",
    "file": "elements-everyday.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 56,
-    "keys": 322
-   },
-   "layers": 38,
-   "keys": 120,
    "texts": [
     {
      "id": "chipName0",
@@ -9420,15 +7649,6 @@
    "duration": 3.7,
    "description": "A camera viewfinder frames a code plate. An accent scan line sweeps down and back up across it, then the four corner brackets contract onto the plate, the code dims and an accent check pops over it while the status swaps to Linked.",
    "file": "elements-everyday.js",
-   "formats": [
-    "html"
-   ],
-   "editorCost": {
-    "layers": 124,
-    "keys": 3041
-   },
-   "layers": 26,
-   "keys": 84,
    "texts": [
     {
      "id": "title",
@@ -9462,16 +7682,6 @@
    "duration": 3.4,
    "description": "Three concentric rings draw to different amounts on a stagger (Trim Paths) while their stat rows count up beside them. The outer ring closes, an accent lap sweeps round over it, the rings give a small pulse and the Move row reads Goal met.",
    "file": "elements-everyday.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 51,
-    "keys": 520
-   },
-   "layers": 31,
-   "keys": 90,
    "texts": [
     {
      "id": "title",
@@ -9534,16 +7744,6 @@
    "duration": 3.6,
    "description": "Six weekday circles fill one by one (ink disc pops, check writes on) while the streak digit rolls up with each; today gets an accent ring. The cursor taps today: it fills, the zap bumps and turns accent, the streak rolls 6 → 7 and a Personal best chip pops.",
    "file": "elements-everyday.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 67,
-    "keys": 674
-   },
-   "layers": 43,
-   "keys": 194,
    "texts": [
     {
      "id": "title",
@@ -9602,16 +7802,6 @@
    "duration": 4.2,
    "description": "A big battery outline pops in at 20 %. The charge climbs linearly: each segment fills left to right as the counter passes its band, the difference-blended bolt pulses in the middle (inverting where the fill runs under it), and at 100 an accent wipe sweeps across the segments and the status reads Fully charged.",
    "file": "elements-everyday.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 23,
-    "keys": 203
-   },
-   "layers": 18,
-   "keys": 80,
    "texts": [
     {
      "id": "charging",
@@ -9638,16 +7828,6 @@
    "duration": 4.3,
    "description": "The cursor drags a tall slider up from 6 %: the fill follows it, the level counts, and the speaker’s three wave arcs draw on one by one as 20, 50 and 80 % are passed. Then a tap on the speaker mutes it: the arcs collapse, an accent slash draws through it, the fill greys out and the level reads Muted.",
    "file": "elements-everyday.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 32,
-    "keys": 336
-   },
-   "layers": 16,
-   "keys": 98,
    "texts": [
     {
      "id": "title",
@@ -9674,16 +7854,6 @@
    "duration": 5.1,
    "description": "The email types in, the password types in as bullets, Sign in squeezes into a spinning circle; then the form blurs away, the card collapses into a compact strip and the circle glides left to become the avatar of a \"Welcome back, Ana\" card with an accent verified badge.",
    "file": "elements-work.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 55,
-    "keys": 1095
-   },
-   "layers": 33,
-   "keys": 186,
    "texts": [
     {
      "id": "title",
@@ -9753,16 +7923,6 @@
    "duration": 4.2,
    "description": "The cursor presses and holds the sensor: soft rings pulse out while the fingerprint ridges draw on over their faint copies from the centre outward. On release the print blurs away into an accent disc with a check, the shackle of the lock lifts and swings open, and the subtitle swaps to the signed-in name.",
    "file": "elements-work.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 69,
-    "keys": 766
-   },
-   "layers": 39,
-   "keys": 126,
    "texts": [
     {
      "id": "title",
@@ -9796,16 +7956,6 @@
    "duration": 4.1,
    "description": "A laptop window waits with a spinner. It slides aside as a phone slides in with an \"Approve sign-in?\" sheet; the cursor taps Approve, the sheet turns into an accent check, and a beat later the laptop spinner becomes an ink check with \"Signed in\".",
    "file": "elements-work.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 77,
-    "keys": 749
-   },
-   "layers": 45,
-   "keys": 120,
    "texts": [
     {
      "id": "waitTitle",
@@ -9867,16 +8017,6 @@
    "duration": 5.4,
    "description": "Three addresses type into the invite field; after each one the typed text is wrapped by a chip. The third no longer fits, so the field grows a line and everything below slides down. Send is clicked: the chips shrink and fly into the team row as avatars, the empty field folds back to one line and \"3 invites sent\" lands with an accent check.",
    "file": "elements-work.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 77,
-    "keys": 784
-   },
-   "layers": 48,
-   "keys": 226,
    "texts": [
     {
      "id": "title",
@@ -9958,15 +8098,6 @@
    "duration": 3.3,
    "description": "A permissions table of three people × five actions. The cursor clicks Leo’s role pill: it presses, darkens and rolls from Viewer to Editor while a soft band settles behind his column, and the three newly granted boxes tick on in accent one after another down the column. A saved note fades in.",
    "file": "elements-work.js",
-   "formats": [
-    "html"
-   ],
-   "editorCost": {
-    "layers": 150,
-    "keys": 1434
-   },
-   "layers": 100,
-   "keys": 136,
    "texts": [
     {
      "id": "title",
@@ -10032,16 +8163,6 @@
    "duration": 4.4,
    "description": "A shared doc with two collaborators. Maya’s ink cursor glides to a date and drag-selects it, a soft highlight growing exactly under her pointer. Leo’s accent cursor clicks the end of the last line: the text below slides down to open a line, and his sentence types in behind an accent caret. Both cursors drift off at the end.",
    "file": "elements-work.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 49,
-    "keys": 364
-   },
-   "layers": 28,
-   "keys": 106,
    "texts": [
     {
      "id": "docName",
@@ -10091,16 +8212,6 @@
    "duration": 3.9,
    "description": "Three numbered comment pins drop onto a page design, each pivoting on its tip. The cursor clicks pin 2: a thread bubble grows out of it with the comment, Reply and Resolve. Resolve folds the bubble away, the pin collapses into an accent check that shrinks to a small marker, and the open count rolls from 3 to 2.",
    "file": "elements-work.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 83,
-    "keys": 935
-   },
-   "layers": 51,
-   "keys": 164,
    "texts": [
     {
      "id": "fileName",
@@ -10135,15 +8246,6 @@
    "duration": 4.1,
    "description": "A doc beside its version list. The cursor slides down the list: a soft hover row glides after it (stretching as it travels) and the doc preview swaps to each version with a blur. On the older version the cursor clicks Restore: the accent Current badge travels down to it, the timeline dots trade places and a Restored toast lands on the doc.",
    "file": "elements-work.js",
-   "formats": [
-    "html"
-   ],
-   "editorCost": {
-    "layers": 134,
-    "keys": 2021
-   },
-   "layers": 102,
-   "keys": 150,
    "texts": [
     {
      "id": "docName",
@@ -10217,15 +8319,6 @@
    "duration": 4.2,
    "description": "A scheduling card with time slots over three days (one already taken). The cursor picks Tuesday 13:30: an ink fill grows inside the chip, the summary line swaps to the chosen time and Confirm wakes up. Confirm collapses the whole picker into a compact booked card while the camera moves in: a calendar tile with an accent header pops beside \"You’re booked\".",
    "file": "elements-work.js",
-   "formats": [
-    "html"
-   ],
-   "editorCost": {
-    "layers": 103,
-    "keys": 1944
-   },
-   "layers": 58,
-   "keys": 218,
    "texts": [
     {
      "id": "hostIni",
@@ -10271,15 +8364,6 @@
    "duration": 3.9,
    "description": "Three cities with their local times. The cursor drags the hour slider past 4 pm and back to 3 pm: every clock rolls through the hours on the same curve as the knob, each row’s working-hours band slides under a fixed accent needle, and the status icons flip — New York wakes into its workday (moon → sun) while Tokyo’s ends (sun → moon).",
    "file": "elements-work.js",
-   "formats": [
-    "html"
-   ],
-   "editorCost": {
-    "layers": 128,
-    "keys": 1252
-   },
-   "layers": 76,
-   "keys": 180,
    "texts": [
     {
      "id": "title",
@@ -10357,16 +8441,6 @@
    "duration": 3.9,
    "description": "A $126 dinner bill and three people. Split evenly is clicked: each amount (a COUNTER placeholder, Roll) rolls up to $42.00 and the button settles into an applied state. The cursor switches Maya off: her row dims as her share rolls back to zero, the other two roll on to $63.00 and small accent \"+$21\" chips pop beside them.",
    "file": "elements-work.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 77,
-    "keys": 838
-   },
-   "layers": 46,
-   "keys": 150,
    "texts": [
     {
      "id": "title",
@@ -10417,16 +8491,6 @@
    "duration": 3.7,
    "description": "Four budget rows fill their spent bars on a stagger. A new expense card slides in beside the card, then glides into the Dining row and shrinks into its bar: the bar grows past its limit notch, a red wipe runs along it, the spent figure counts up and turns red, an \"Over by $12\" chip pops and the left-to-spend total counts down.",
    "file": "elements-work.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 73,
-    "keys": 788
-   },
-   "layers": 48,
-   "keys": 102,
    "texts": [
     {
      "id": "title",
@@ -10505,16 +8569,6 @@
    "duration": 4.3,
    "description": "A live price card: the line draws across the time axis at a steady pace (Trim Paths keyed per vertex) while a dot rides its tip and the price counter ticks to each new value. When the price crosses the dashed open line the delta chip flips over (a vertical squash) between an accent “up” and a red “down”, and a volume bar pops under every tick.",
    "file": "elements-work.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 61,
-    "keys": 670
-   },
-   "layers": 42,
-   "keys": 236,
    "texts": [
     {
      "id": "name",
@@ -10577,16 +8631,6 @@
    "duration": 4.3,
    "description": "The cursor focuses the send field and 1,250 types in; the converted amount (a COUNTER placeholder, Odometer) rolls in column by column, the right-hand columns spinning a full turn. The accent swap button is clicked: it turns 180°, the USD and EUR pills trade places on crossing arcs, every result digit rolls on to the new value and the rate line swaps.",
    "file": "elements-work.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 58,
-    "keys": 558
-   },
-   "layers": 34,
-   "keys": 136,
    "texts": [
     {
      "id": "title",
@@ -10641,16 +8685,6 @@
    "duration": 4.6,
    "description": "A receipt feeds out of a printer slot in short mechanical bursts (a clip window growing line by line) while the camera eases down and out to follow it: header, items, subtotal, a bold total, a barcode, and last the zigzag torn edge. The printer status swaps to Done and an accent PAID stamp lands on the total.",
    "file": "elements-work.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 95,
-    "keys": 274
-   },
-   "layers": 66,
-   "keys": 80,
    "texts": [
     {
      "id": "printing",
@@ -10676,16 +8710,6 @@
    "duration": 5.3,
    "description": "Compose is clicked and the ink pill grows into a white mail window while the camera pulls back. A recipient chip pops into To, the subject types in, four body lines rise in. Send is clicked: the message blurs away and the window folds down onto the Send button, which rounds into an ink disc as its paper plane moves to the centre, then flies off up and to the right; the camera pushes in on a \"Message sent\" toast.",
    "file": "elements-work.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 62,
-    "keys": 1056
-   },
-   "layers": 41,
-   "keys": 152,
    "texts": [
     {
      "id": "winTitle",
@@ -10735,15 +8759,6 @@
    "duration": 4.3,
    "description": "A media search with facet checkboxes and a grid of eight results. The cursor ticks Video: the non-video cards blur out, the rest glide into the free slots, the result count rolls from 128 to 42 and an accent \"Video\" chip pops. Ticking Under 1 min drops one more card, the grid closes up again and the count rolls to 18.",
    "file": "elements-work.js",
-   "formats": [
-    "html"
-   ],
-   "editorCost": {
-    "layers": 176,
-    "keys": 2034
-   },
-   "layers": 107,
-   "keys": 266,
    "texts": [
     {
      "id": "filtersTitle",
@@ -10834,15 +8849,6 @@
    "duration": 3.7,
    "description": "A cinema seat map ripples in under a screen line that draws out from its centre; taken seats are solid grey. The cursor picks two free seats: each pops to the accent with a check, the seat list and the total roll on every pick, and Book 2 seats wakes from grey to ink.",
    "file": "elements-play.js",
-   "formats": [
-    "html"
-   ],
-   "editorCost": {
-    "layers": 111,
-    "keys": 1424
-   },
-   "layers": 81,
-   "keys": 328,
    "texts": [
     {
      "id": "title",
@@ -10904,16 +8910,6 @@
    "duration": 4.4,
    "description": "A boarding pass pops in. An accent plane flies the dashed arc from AMS to LIS, turning along the curve while the flown part turns solid behind it; gate, seat and boarding time fill in one after another, then the stub peels off along the perforation, rotating about its bottom corner, and drifts away while the pass slides the other way.",
    "file": "elements-play.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 77,
-    "keys": 903
-   },
-   "layers": 53,
-   "keys": 274,
    "texts": [
     {
      "id": "kind",
@@ -10987,16 +8983,6 @@
    "duration": 3.5,
    "description": "A coffee loyalty card with eight dashed stamp slots. Stamps press in one after another — each drops from 145 % onto its slot, squashes a little and settles at a slight angle — while the count rolls up. The eighth lands in the accent, the lock hint blurs away and a Free coffee chip pops.",
    "file": "elements-play.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 87,
-    "keys": 684
-   },
-   "layers": 62,
-   "keys": 140,
    "texts": [
     {
      "id": "title",
@@ -11027,16 +9013,6 @@
    "duration": 4.1,
    "description": "A gift sleeve pops in; the ink gift card slides up out of it (a clip at the sleeve mouth) with a slight tilt while the camera rises with it. The amount counts to $50, then the cursor clicks Show code: the grey cover wipes away to the right behind a thin accent edge and reveals the code.",
    "file": "elements-play.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 43,
-    "keys": 291
-   },
-   "layers": 25,
-   "keys": 68,
    "texts": [
     {
      "id": "kind",
@@ -11075,16 +9051,6 @@
    "duration": 4.3,
    "description": "A recipe step card. The cursor clicks Start timer: the ring drains (Trim Paths) while 0:45 counts down, an accent disc with a check pops over it and the button reads Done. Then the whole step slides out left as the next one slides in, the step counter rolls and the page dot glides (stretching) to step 3.",
    "file": "elements-play.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 73,
-    "keys": 606
-   },
-   "layers": 45,
-   "keys": 154,
    "texts": [
     {
      "id": "dish",
@@ -11135,16 +9101,6 @@
    "duration": 3.6,
    "description": "A quiz question with four answer rows. The cursor hovers and picks Saturn: the row fills ink. Then the answer is marked correct — an accent fill wipes across it from the left and a check pops — the other rows dim, +1 rises beside the score, the score rolls to 3 and the progress bar advances.",
    "file": "elements-play.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 75,
-    "keys": 721
-   },
-   "layers": 40,
-   "keys": 110,
    "texts": [
     {
      "id": "qNo",
@@ -11170,16 +9126,6 @@
    "duration": 3.5,
    "description": "A course lesson list: two lessons done, the third in progress. Its ring closes (Trim Paths) and turns into an ink check disc, the header rolls to 3 of 5; lesson 4’s lock springs open and swaps to a play disc while its title wakes from grey, and the accent Up next chip glides down to it, stretching as it travels.",
    "file": "elements-play.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 83,
-    "keys": 749
-   },
-   "layers": 54,
-   "keys": 108,
    "texts": [
     {
      "id": "title",
@@ -11237,16 +9183,6 @@
    "duration": 3.7,
    "description": "A vocabulary card on a small stack. The cursor taps it: the card lifts, squeezes to an edge (scale X 1 → 0) and opens again on its definition. Then the cursor drags it right — it tilts and gains a deeper shadow — and lets go: the card flies onto the Known pile, shrinking to 40 %, the pile flashes an accent ring, its count rolls 12 → 13 and the next card comes forward.",
    "file": "elements-play.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 56,
-    "keys": 278
-   },
-   "layers": 32,
-   "keys": 120,
    "texts": [
     {
      "id": "knownLbl",
@@ -11276,15 +9212,6 @@
    "duration": 4.6,
    "description": "Two columns of words, English and Spanish. The cursor drags from each word to its translation: a curved line draws behind the pointer (Trim Paths, keyed along the curve with the cursor), dots pop at both ends and on release both rows fill ink. The counter rolls 1 → 4 of 4 and an accent All matched chip pops.",
    "file": "elements-play.js",
-   "formats": [
-    "html"
-   ],
-   "editorCost": {
-    "layers": 114,
-    "keys": 1092
-   },
-   "layers": 62,
-   "keys": 462,
    "texts": [
     {
      "id": "title",
@@ -11318,16 +9245,6 @@
    "duration": 2.9,
    "description": "A hexagon badge pops in with a quarter turn while an accent ring sweeps round it (Trim Paths on a rotating group). The caption fades up, the title Early bird slides in from the left, and a +50 XP chip rises out of the badge to rest on its shoulder.",
    "file": "elements-play.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 24,
-    "keys": 163
-   },
-   "layers": 15,
-   "keys": 44,
    "texts": [
     {
      "id": "caption",
@@ -11353,16 +9270,6 @@
    "duration": 3.1,
    "description": "A level card at 460 / 500 XP. A +120 XP chip pops, an accent chunk fills the rest of the bar while the XP counts to 500; the bar overflows: the level badge bumps and its number rolls 7 → 8, an accent Level up chip pops, the full bar blurs away and a fresh bar refills to 80 / 550.",
    "file": "elements-play.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 35,
-    "keys": 363
-   },
-   "layers": 21,
-   "keys": 82,
    "texts": [
     {
      "id": "lvlLbl",
@@ -11397,16 +9304,6 @@
    "duration": 3.4,
    "description": "A play queue: the now-playing row has accent equalizer bars moving on smooth keys. The cursor grabs the first queued track by its handle — it lifts (scale + a deeper shadow) — and drags it down two slots; the two tracks it passes slide up one slot each as it crosses their midpoints, and it settles in place.",
    "file": "elements-play.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 79,
-    "keys": 953
-   },
-   "layers": 47,
-   "keys": 220,
    "texts": [
     {
      "id": "title",
@@ -11477,16 +9374,6 @@
    "duration": 4,
    "description": "A podcast player whose scrubber is split into chapter segments. It plays on (the played clip and knob creep, the time counts); the cursor hovers chapter 3 — a tooltip names it — and clicks: the playhead jumps there (the knob stretches in flight), the chapter line rolls, the title swaps to The interview and playback carries on.",
    "file": "elements-play.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 53,
-    "keys": 575
-   },
-   "layers": 34,
-   "keys": 112,
    "texts": [
     {
      "id": "show",
@@ -11534,16 +9421,6 @@
    "duration": 4.1,
    "description": "A photo editor: the main photo over a strip of filter thumbnails (the same picture under different tint and saturation overlays). The cursor picks Mono: the selection ring glides to it (stretching), the labels swap and the main photo’s saturation overlay crossfades in. Then the Intensity slider wakes and is dragged down to 55 %, easing the overlay back on the same keys.",
    "file": "elements-play.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 49,
-    "keys": 549
-   },
-   "layers": 27,
-   "keys": 136,
    "texts": [
     {
      "id": "fname0",
@@ -11635,16 +9512,6 @@
    "duration": 3.6,
    "description": "A 270° thermostat dial. The cursor grabs the knob and drags it clockwise round the arc (knob and cursor keyed along the circle): the ink value arc grows with it (Trim Paths) and the set point rolls 19 → 20 → 21 → 22° as each degree is passed. On release the arc is wiped over in the accent and the Idle chip gives way to an accent Heat chip.",
    "file": "elements-play.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 69,
-    "keys": 967
-   },
-   "layers": 50,
-   "keys": 294,
    "texts": [
     {
      "id": "room",
@@ -11674,16 +9541,6 @@
    "duration": 4,
    "description": "Four room tiles with bulb icons. Each tap floods its tile with ink from the tap point (a circular clip growing out of it, carrying the lit content: white text and an accent bulb), and the header rolls to 2 lights on. Then the cursor drags the Living room brightness bar up from 40 % to 85 % while its status counts along.",
    "file": "elements-play.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 86,
-    "keys": 742
-   },
-   "layers": 44,
-   "keys": 100,
    "texts": [
     {
      "id": "title",
@@ -11706,16 +9563,6 @@
    "duration": 4.8,
    "description": "A 0–10 recommendation scale. The cursor glides along the chips and each one greys under it as it passes, then clicks 9: an accent chip pops over it. The card grows downward (the camera follows), a follow-up question and a text field slide in and the answer types in behind a caret.",
    "file": "elements-play.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 69,
-    "keys": 340
-   },
-   "layers": 36,
-   "keys": 172,
    "texts": [
     {
      "id": "question",
@@ -11749,15 +9596,6 @@
    "duration": 4.2,
    "description": "The cursor grabs the card strip and drags it part-way; on release it snaps on to the next card (Power4 Out). The second drag overshoots past a card and the strip snaps back to it. The grabbed card dips while held and the ink page pill stretches from dot to dot on each snap.",
    "file": "elements-carousel.js",
-   "formats": [
-    "html"
-   ],
-   "editorCost": {
-    "layers": 68,
-    "keys": 1503
-   },
-   "layers": 38,
-   "keys": 174,
    "texts": [
     {
      "id": "title",
@@ -11876,16 +9714,6 @@
    "duration": 4,
    "description": "A centre card with its neighbours peeking in at the edges, scaled to 0.86 and dimmed. The next arrow is clicked twice: the strip glides one card each time and the scale and dim hand over as cards pass the centre, while the caption under the centre card swaps.",
    "file": "elements-carousel.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 48,
-    "keys": 1103
-   },
-   "layers": 24,
-   "keys": 142,
    "texts": [
     {
      "id": "title",
@@ -11972,16 +9800,6 @@
    "duration": 3.9,
    "description": "Faux-3D cover flow: side covers are squeezed to half width, shaded and stacked behind one another; the centre cover is full. Clicking the next cover flows the row along — the incoming cover un-squeezes as it reaches the centre while the old one squeezes away — the title swaps and the ink scrubber thumb stretches along.",
    "file": "elements-carousel.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 56,
-    "keys": 762
-   },
-   "layers": 30,
-   "keys": 230,
    "texts": [
     {
      "id": "album2",
@@ -12084,16 +9902,6 @@
    "duration": 4,
    "description": "Six photos sit on a flat ellipse — x follows the cosine, height, size and opacity follow the sine, so the back of the ring is small and faint. Each click on the next arrow turns the ring one step: every photo rides the curve to its neighbour's place and the new front photo gets its caption.",
    "file": "elements-carousel.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 51,
-    "keys": 539
-   },
-   "layers": 22,
-   "keys": 560,
    "texts": [
     {
      "id": "capTitle0",
@@ -12180,16 +9988,6 @@
    "duration": 3.7,
    "description": "Photo tiles drift round a centred title card on two elliptical rings, the inner one clockwise and faster, the outer one slower the other way. The cursor catches an inner tile as it passes; it flies to the centre and grows into the hero picture while the title card blurs away, the other tiles dim and keep orbiting behind, and a caption chip pops on the hero.",
    "file": "elements-carousel.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 70,
-    "keys": 474
-   },
-   "layers": 22,
-   "keys": 344,
    "texts": [
     {
      "id": "title",
@@ -12316,16 +10114,6 @@
    "duration": 4.2,
    "description": "Quotes sit in a clipped strip above a row of customer avatars. Clicking an avatar slides the strip to that quote (a two-slide jump carries a touch of motion blur), the ink ring stretches across to the new face, the other faces dim, and the name and role under the quote swap.",
    "file": "elements-carousel.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 51,
-    "keys": 553
-   },
-   "layers": 27,
-   "keys": 180,
    "texts": [
     {
      "id": "quoteMark",
@@ -12420,16 +10208,6 @@
    "duration": 4.4,
    "description": "An autoplaying hero carousel with three segmented progress bars on top. Each bar fills linearly while its slide slowly pushes in; when it is full the slide strip glides to the next photo and the caption swaps. The cursor hovers the third slide mid-fill: the bar and the push-in stop and a Paused chip pops.",
    "file": "elements-carousel.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 49,
-    "keys": 748
-   },
-   "layers": 28,
-   "keys": 84,
    "texts": [
     {
      "id": "pausedLbl",
@@ -12500,15 +10278,6 @@
    "duration": 4.2,
    "description": "A full-width hero: on each click of the next button the slide frame glides left while its photo moves at half the speed inside it (parallax), the old headline lifts out of its line masks and the new one rises into them line by line, and the slide counter rolls.",
    "file": "elements-carousel.js",
-   "formats": [
-    "html"
-   ],
-   "editorCost": {
-    "layers": 84,
-    "keys": 1834
-   },
-   "layers": 43,
-   "keys": 154,
    "texts": [
     {
      "id": "kicker0",
@@ -12603,15 +10372,6 @@
    "duration": 4.8,
    "description": "The cursor flicks the product strip: it follows the pointer, is let go at speed and glides on, decelerating on an Expo Out curve; a smaller flick back glides it the other way. Cards fade out as they near the clipped edges and fade back in as they come inside, and the scrollbar thumb tracks the scroll.",
    "file": "elements-carousel.js",
-   "formats": [
-    "html"
-   ],
-   "editorCost": {
-    "layers": 111,
-    "keys": 1914
-   },
-   "layers": 57,
-   "keys": 254,
    "texts": [
     {
      "id": "title",
@@ -12826,16 +10586,6 @@
    "duration": 4,
    "description": "A row of round portraits shrinking and fading toward the edges. Clicking a neighbour scrolls the row so it lands in the accent ring at the centre, growing as the old one shrinks away; the second click jumps two places. The name and role under the ring swap and the ring gives a small pulse as each face lands.",
    "file": "elements-carousel.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 51,
-    "keys": 1081
-   },
-   "layers": 23,
-   "keys": 202,
    "texts": [
     {
      "id": "title",
@@ -12946,15 +10696,6 @@
    "duration": 4.3,
    "description": "A travel app on a phone: a fingertip swipes the card carousel twice (a drag, then a snap to the next card), the ink page pill stretches along the dots. The finger then taps the Kyoto card, whose caption flips over on its horizontal axis to an accent Added to trip confirmation.",
    "file": "elements-carousel.js",
-   "formats": [
-    "html"
-   ],
-   "editorCost": {
-    "layers": 86,
-    "keys": 1709
-   },
-   "layers": 53,
-   "keys": 166,
    "texts": [
     {
      "id": "title",
@@ -13013,16 +10754,6 @@
    "duration": 5.5,
    "description": "An endless marquee of generic logo pills (icon + wordmark) scrolls left at a constant speed inside a clipped window. The strip is laid out twice back to back and travels exactly one strip length over the clip, so it loops without a seam; pills fade out at the left edge and fade in at the right.",
    "file": "elements-carousel.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 58,
-    "keys": 333
-   },
-   "layers": 35,
-   "keys": 74,
    "texts": [
     {
      "id": "title",
@@ -13040,16 +10771,6 @@
    "duration": 5,
    "description": "Two rows of photo tiles drift in opposite directions at different speeds — the upper, wider row faster to the left, the square row slower to the right — inside a rounded panel, with a View all work button at the centre, while the camera slowly pushes in.",
    "file": "elements-carousel.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 59,
-    "keys": 971
-   },
-   "layers": 23,
-   "keys": 80,
    "texts": [
     {
      "id": "ctaLbl",
@@ -13196,16 +10917,6 @@
    "duration": 4.4,
    "description": "An autoplaying slideshow: each photo drifts with a slow zoom and pan, and the next one crossfades in on top already moving in its own Ken Burns direction (the second zooms out), while the caption swaps, the counter rolls and the autoplay segments fill.",
    "file": "elements-slides.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 47,
-    "keys": 611
-   },
-   "layers": 28,
-   "keys": 74,
    "texts": [
     {
      "id": "title0",
@@ -13272,16 +10983,6 @@
    "duration": 4,
    "description": "Each click on Next wipes the next slide in from the right: a clip grows leftwards with a thin accent line riding its edge, the incoming photo settles from a small offset while the outgoing one is pushed a little left underneath, and the caption, counter and back arrow update.",
    "file": "elements-slides.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 56,
-    "keys": 821
-   },
-   "layers": 30,
-   "keys": 102,
    "texts": [
     {
      "id": "title0",
@@ -13348,16 +11049,6 @@
    "duration": 4.3,
    "description": "Clicking on the photo opens the next slide as a circle that grows from the click point until it covers the frame, its photo settling from a slight zoom inside; the second click, elsewhere, opens the third slide from there while the caption and page dots follow.",
    "file": "elements-slides.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 43,
-    "keys": 629
-   },
-   "layers": 24,
-   "keys": 116,
    "texts": [
     {
      "id": "title0",
@@ -13424,16 +11115,6 @@
    "duration": 4.1,
    "description": "Clicking the arrow turns the next photo in as six vertical slats — each a clipped window onto it — that open from edge-on (scale X 0 → 1) on a left-to-right stagger, like blinds rotating; a second click repeats it for the third slide as the caption and counter update.",
    "file": "elements-slides.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 99,
-    "keys": 1309
-   },
-   "layers": 51,
-   "keys": 104,
    "texts": [
     {
      "id": "title0",
@@ -13503,15 +11184,6 @@
    "duration": 4.1,
    "description": "Next assembles the following photo from a 4×3 mosaic: each tile is a clipped window onto it that scales up from its own centre, in a diagonal wave from the top-left corner; the second advance runs the wave back from the bottom-right while the caption and dots follow.",
    "file": "elements-slides.js",
-   "formats": [
-    "html"
-   ],
-   "editorCost": {
-    "layers": 138,
-    "keys": 2552
-   },
-   "layers": 72,
-   "keys": 164,
    "texts": [
     {
      "id": "title0",
@@ -13577,16 +11249,6 @@
    "duration": 4,
    "description": "Two drag-and-release swipes push the slides left. Each slide is a clip whose photo travels at half the slide’s speed, so pictures slide under their frames while the caption cards move at full speed with the slide; the page dots hand the pill along on each release.",
    "file": "elements-slides.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 52,
-    "keys": 1470
-   },
-   "layers": 28,
-   "keys": 128,
    "texts": [
     {
      "id": "title0",
@@ -13633,16 +11295,6 @@
    "duration": 4.3,
    "description": "One wide scene in three depth layers: each Next moves the far photo a fifth of the way, the hills and pines in the middle at half speed, and the foreground caption cards a full frame, so the landscape opens up in depth while a new stop card slides in; the counter and dots follow.",
    "file": "elements-slides.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 88,
-    "keys": 836
-   },
-   "layers": 51,
-   "keys": 116,
    "texts": [
     {
      "id": "title0",
@@ -13677,16 +11329,6 @@
    "duration": 4.3,
    "description": "A split feature slider that advances vertically: each click on the rail’s down button pushes the full-height slide up and out as the next one arrives, the accent progress rail on the side fills a third further, and the new headline rises line by line from behind its masks.",
    "file": "elements-slides.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 74,
-    "keys": 1263
-   },
-   "layers": 39,
-   "keys": 102,
    "texts": [
     {
      "id": "eyebrow0",
@@ -13777,16 +11419,6 @@
    "duration": 4.2,
    "description": "Five photo panels share one row. As the cursor glides across, the panel under it widens while the others narrow to make room (widths and positions ease together), and its caption card rises from the bottom edge as the previous one drops away; it visits three panels and rests on the last.",
    "file": "elements-slides.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 75,
-    "keys": 750
-   },
-   "layers": 35,
-   "keys": 170,
    "texts": [
     {
      "id": "title",
@@ -13849,16 +11481,6 @@
    "duration": 4.5,
    "description": "A before/after split with a horizontal divider: the top is the hazy original, the bottom the corrected photo, and the before layer is a top-pinned clip whose height follows the handle. The cursor drags the handle down, up past the middle, then settles it back near the centre.",
    "file": "elements-slides.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 33,
-    "keys": 772
-   },
-   "layers": 17,
-   "keys": 58,
    "texts": [],
    "numbers": [],
    "images": [
@@ -13888,16 +11510,6 @@
    "duration": 4.2,
    "description": "A photo slider driven by a timeline of years: the cursor drags the accent playhead from 2020 to 2023, and as it crosses each year tick the photo crossfades to that year, the year in the caption rolls and the label lights up; released just past 2023, the playhead snaps back onto the tick.",
    "file": "elements-slides.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 73,
-    "keys": 1013
-   },
-   "layers": 45,
-   "keys": 150,
    "texts": [
     {
      "id": "event0",
@@ -13980,16 +11592,6 @@
    "duration": 4.7,
    "description": "On a product page a round lens pops up under the cursor and follows it across the photo, showing a 2× copy that counter-moves inside a circular clip so the detail under the pointer stays centred; the cursor then picks the second thumbnail, the photo crossfades and the lens inspects the new view.",
    "file": "elements-slides.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 49,
-    "keys": 1138
-   },
-   "layers": 23,
-   "keys": 164,
    "texts": [
     {
      "id": "eyebrow",
@@ -14076,16 +11678,6 @@
    "duration": 4.1,
    "description": "The cursor drags the top card of a stack to the right: it tilts round the grab point, a Like stamp fades in and the heart button swells, then it is flung off while the next card rises to the top. The second card is dragged and flung left with a Pass stamp.",
    "file": "elements-stacks.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 92,
-    "keys": 696
-   },
-   "layers": 47,
-   "keys": 134,
    "texts": [],
    "numbers": [],
    "images": [
@@ -14139,16 +11731,6 @@
    "duration": 4.1,
    "description": "Shuffle is clicked: the deck splits into two tilted halves, then the halves riffle back together — bottom cards first, alternating sides, each landing a little askew on the growing pile — the pile squares up and the cursor deals the top card out to the right as the view follows.",
    "file": "elements-stacks.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 59,
-    "keys": 293
-   },
-   "layers": 31,
-   "keys": 186,
    "texts": [],
    "numbers": [],
    "images": [
@@ -14226,16 +11808,6 @@
    "duration": 3,
    "description": "A closed stack of photo cards fans open round a rivet at its bottom-left corner, each card rotating a little further than the one below. The cursor pulls the middle card up out of the fan: it slides along its own axis and grows while its neighbours part to let it through.",
    "file": "elements-stacks.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 39,
-    "keys": 112
-   },
-   "layers": 21,
-   "keys": 50,
    "texts": [],
    "numbers": [],
    "images": [
@@ -14289,16 +11861,6 @@
    "duration": 4.4,
    "description": "A pile of four photos, the older ones peeking above. The cursor pulls the front photo down: it slides out below the pile, then rises behind it into the last slot while the others step forward one place. Three cycles, the caption under the pile swapping each time.",
    "file": "elements-stacks.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 54,
-    "keys": 292
-   },
-   "layers": 23,
-   "keys": 174,
    "texts": [],
    "numbers": [],
    "images": [
@@ -14368,16 +11930,6 @@
    "duration": 3.2,
    "description": "Five polaroids drop onto the table one after another, each settling at its own angle and overlapping the last. The cursor picks one half-buried in the pile: it comes to the front (a quick cross-fade to a copy above the others), straightens and grows to the centre while the table dims behind it.",
    "file": "elements-stacks.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 47,
-    "keys": 143
-   },
-   "layers": 21,
-   "keys": 70,
    "texts": [
     {
      "id": "polaroid0Cap",
@@ -14464,16 +12016,6 @@
    "duration": 3.8,
    "description": "A tidy, slightly askew stack of four photos. The cursor hovers it and the photos spread into a row with small tilts (the view pulls back to hold them); the photo under the cursor lifts, and when the cursor leaves they gather back into the stack.",
    "file": "elements-stacks.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 25,
-    "keys": 166
-   },
-   "layers": 9,
-   "keys": 98,
    "texts": [
     {
      "id": "title",
@@ -14528,16 +12070,6 @@
    "duration": 4,
    "description": "A full-screen story plays under a segmented progress bar. Two taps on the right edge: each completes the current segment, slides the next photo in from the right and starts the next segment filling, while the posted-time label swaps. A reply field sits at the bottom.",
    "file": "elements-stacks.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 54,
-    "keys": 735
-   },
-   "layers": 35,
-   "keys": 102,
    "texts": [
     {
      "id": "name",
@@ -14600,15 +12132,6 @@
    "duration": 4.5,
    "description": "A vertical feed of full-screen video cards with a play button, an action rail and a caption panel. The cursor drags the feed up and releases: the next card snaps into place, its play button fades as it starts, and its like count ticks up twice. Then once more to the third card.",
    "file": "elements-stacks.js",
-   "formats": [
-    "html"
-   ],
-   "editorCost": {
-    "layers": 107,
-    "keys": 1165
-   },
-   "layers": 62,
-   "keys": 78,
    "texts": [
     {
      "id": "reelsTitle",
@@ -14675,16 +12198,6 @@
    "duration": 3,
    "description": "An open photo book. The cursor takes the right page by its edge and turns it: the page squeezes into the spine (scale X 1 → 0) darkening and lifting slightly, then its back opens over the left page (0 → 1) while the page beneath comes out of shadow, and the page count swaps.",
    "file": "elements-stacks.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 60,
-    "keys": 227
-   },
-   "layers": 30,
-   "keys": 58,
    "texts": [
     {
      "id": "countA",
@@ -14739,16 +12252,6 @@
    "duration": 3.7,
    "description": "A photo cube, flicked left twice. Each turn squeezes the front face toward its left edge (scale X = cos θ) while the next face grows from the shared edge (sin θ), so the pair widens mid-turn like a real cube; the face turning away darkens, the incoming one comes out of shadow, and the caption and dots follow.",
    "file": "elements-stacks.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 36,
-    "keys": 264
-   },
-   "layers": 19,
-   "keys": 254,
    "texts": [
     {
      "id": "cap0",
@@ -14807,16 +12310,6 @@
    "duration": 3.9,
    "description": "A date-and-time picker of three wheels in a clipped window, the items shrinking, squashing and fading with their distance from the centre band. The cursor flicks the date wheel (a short pull, then momentum settles five days on) and then the hour wheel; the summary line swaps to the new value.",
    "file": "elements-stacks.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 73,
-    "keys": 761
-   },
-   "layers": 38,
-   "keys": 522,
    "texts": [
     {
      "id": "title",
@@ -14950,16 +12443,6 @@
    "duration": 4,
    "description": "A single-line news ticker: each headline holds, then the column rolls up to the next inside a clipped window. The category chip beside it rolls its label in step and stretches or shrinks to fit the new word; the live dot pulses.",
    "file": "elements-stacks.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 33,
-    "keys": 286
-   },
-   "layers": 19,
-   "keys": 60,
    "texts": [
     {
      "id": "headline0",
@@ -14989,15 +12472,6 @@
    "duration": 3.9,
    "description": "A four-column masonry of photos drops in column by column. Load more is clicked: a spinner turns, then a new row of photos rises in under the uneven columns and pushes the grid up under the header while the count ticks to 28.",
    "file": "elements-grids.js",
-   "formats": [
-    "html"
-   ],
-   "editorCost": {
-    "layers": 63,
-    "keys": 1576
-   },
-   "layers": 27,
-   "keys": 156,
    "texts": [
     {
      "id": "moreLbl",
@@ -15128,16 +12602,6 @@
    "duration": 4.3,
    "description": "The view toggle is clicked: each photo of a 3×2 grid shrinks and crops to a square thumbnail as it glides to the left of its row, and titles, meta and dates fade in beside them. The grid button morphs everything back.",
    "file": "elements-grids.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 80,
-    "keys": 1400
-   },
-   "layers": 44,
-   "keys": 260,
    "texts": [
     {
      "id": "title",
@@ -15208,16 +12672,6 @@
    "duration": 3.3,
    "description": "The Nature chip is clicked: the ink indicator stretches over to it, the photos that don’t match shrink out with a blur, the four matches glide into the gaps on the first row and the card tightens round them as the count drops to 4.",
    "file": "elements-grids.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 53,
-    "keys": 616
-   },
-   "layers": 25,
-   "keys": 166,
    "texts": [
     {
      "id": "title",
@@ -15324,16 +12778,6 @@
    "duration": 3.5,
    "description": "A bento grid builds in tile by tile — photos, a stat tile with an accent trend chip, an ink story tile and a See all tile. The tall portrait tile is clicked and expands to fill the whole layout, uncropping as the other tiles sink away, and a caption card rises in.",
    "file": "elements-grids.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 55,
-    "keys": 846
-   },
-   "layers": 27,
-   "keys": 166,
    "texts": [],
    "numbers": [],
    "images": [
@@ -15379,16 +12823,6 @@
    "duration": 4.2,
    "description": "A thumbnail is clicked and grows into a centred lightbox while a shade dims the grid. The next arrow slides the following photo in (the counter rolls 5 → 6, the caption swaps), then close shrinks the lightbox back down onto that photo’s own thumbnail.",
    "file": "elements-grids.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 74,
-    "keys": 1048
-   },
-   "layers": 33,
-   "keys": 224,
    "texts": [
     {
      "id": "title",
@@ -15536,16 +12970,6 @@
    "duration": 4,
    "description": "The cursor grabs the accent playhead and scrubs it along a filmstrip, right then back: the preview above hard-cuts to whichever frame the playhead is over (timed to the drag’s easing) and its timecode chip follows.",
    "file": "elements-grids.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 78,
-    "keys": 1180
-   },
-   "layers": 33,
-   "keys": 174,
    "texts": [
     {
      "id": "tc0",
@@ -15708,16 +13132,6 @@
    "duration": 3.8,
    "description": "Clicking thumbnails on a vertical rail slides the ink ring down to them — its leading edge first, the trailing edge catching up — while the main image crossfades to the new photo settling from a slight zoom, and the page counter rolls 1 → 2 → 4.",
    "file": "elements-grids.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 40,
-    "keys": 610
-   },
-   "layers": 16,
-   "keys": 136,
    "texts": [],
    "numbers": [
     {
@@ -15800,15 +13214,6 @@
    "duration": 4.4,
    "description": "A 4×3 wall of generic logo tiles builds in on a diagonal stagger, then single cells flip one after another in a scattered order — each squashes flat on its vertical axis, swaps its logo while edge-on and opens back out with the new one.",
    "file": "elements-grids.js",
-   "formats": [
-    "html"
-   ],
-   "editorCost": {
-    "layers": 145,
-    "keys": 820
-   },
-   "layers": 118,
-   "keys": 184,
    "texts": [
     {
      "id": "lead",
@@ -15830,16 +13235,6 @@
    "duration": 4.3,
    "description": "An empty album of six dashed slots. Photos drop in one by one from above — shrinking onto the card with a small settle and a fading lift shadow — each slot’s dashed border fading as it fills while the counter rolls 0 → 6; the last one wipes the Create album button to the accent.",
    "file": "elements-grids.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 68,
-    "keys": 669
-   },
-   "layers": 41,
-   "keys": 148,
    "texts": [
     {
      "id": "title",
@@ -15923,16 +13318,6 @@
    "duration": 4.7,
    "description": "Three photos wait in a tray beside a template of three empty frames. The cursor drags each one across — it lifts and tilts — and on release it snaps to its frame and grows into it, the 4:3 crop opening up to the frame’s own shape; the frame tints as the photo arrives.",
    "file": "elements-grids.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 33,
-    "keys": 421
-   },
-   "layers": 20,
-   "keys": 142,
    "texts": [],
    "numbers": [],
    "images": [
@@ -15970,15 +13355,6 @@
    "duration": 3.8,
    "description": "A wall of 56 photos ripples in and drifts closer. One cell is clicked and the camera dives into it — a log-space zoom from 0.68× to 5.1× — until the photo fills the frame, then its title card, a back pill and an accent save button rise in.",
    "file": "elements-grids.js",
-   "formats": [
-    "html"
-   ],
-   "editorCost": {
-    "layers": 189,
-    "keys": 1964
-   },
-   "layers": 69,
-   "keys": 468,
    "texts": [],
    "numbers": [],
    "images": [
@@ -16440,16 +13816,6 @@
    "duration": 3.5,
    "description": "The cursor lifts the bottom-left photo of a 3×3 grid (it scales up, tilts and gains a deeper shadow) and carries it to the top row. As it arrives, the five photos in between shift one slot on in a quick wave and an accent dashed slot opens; on release it snaps into the slot and settles.",
    "file": "elements-grids.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 53,
-    "keys": 549
-   },
-   "layers": 28,
-   "keys": 150,
    "texts": [
     {
      "id": "title",
@@ -16544,15 +13910,6 @@
    "duration": 3.9,
    "description": "Numbered pins sit along a dotted walk on a stylised map. Clicking pin 3 pops it to the accent and slides the photo-card strip along the bottom to its card (a two-card jump with a touch of motion blur); clicking pin 2 hands the highlight back and slides the strip one card the other way.",
    "file": "elements-grids.js",
-   "formats": [
-    "html"
-   ],
-   "editorCost": {
-    "layers": 106,
-    "keys": 1186
-   },
-   "layers": 57,
-   "keys": 130,
    "texts": [],
    "numbers": [],
    "images": [
@@ -16594,16 +13951,6 @@
    "duration": 6,
    "description": "A 3×3 wall of app screens builds in; the top row slides out left and the bottom row right, each screen dropping into the middle row’s line, the camera dives onto the head of the strip and tours it screen by screen to the tail under short step labels, then pulls back as the rows fold home into the grid.",
    "file": "elements-showcase.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 55,
-    "keys": 522
-   },
-   "layers": 19,
-   "keys": 188,
    "texts": [
     {
      "id": "label1",
@@ -16726,16 +14073,6 @@
    "duration": 4.5,
    "description": "A 3×3 wall of app screens builds in; the rest of the wall dims as one screen lifts, then it grows out of its cell into a centred hero while the others step back and fade in a ripple from it, the camera eases in, and a short feature label rises under the hero.",
    "file": "elements-showcase.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 39,
-    "keys": 297
-   },
-   "layers": 11,
-   "keys": 168,
    "texts": [
     {
      "id": "label",
@@ -16826,16 +14163,6 @@
    "duration": 5.5,
    "description": "A large desktop screen beside a column of four step cards; an accent ring steps down the list and each time the chosen step's thumbnail grows out of its card to take over the main view, while the screen it replaces shrinks back into its own card.",
    "file": "elements-showcase.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 59,
-    "keys": 297
-   },
-   "layers": 23,
-   "keys": 134,
    "texts": [
     {
      "id": "num1",
@@ -16918,16 +14245,6 @@
    "duration": 4,
    "description": "A desktop screen floats in with a smaller screen inside it; the view dives into that screen at a steady zoom until it fills the frame, eases for a breath as a third screen appears inside it, then dives on and lands with the last screen exactly full-frame, its corners squaring off.",
    "file": "elements-showcase.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 15,
-    "keys": 95
-   },
-   "layers": 6,
-   "keys": 92,
    "texts": [],
    "numbers": [],
    "images": [
@@ -16965,16 +14282,6 @@
    "duration": 4.9,
    "description": "One screen reshapes from a phone to a tablet to a desktop window, stretching as it goes, while its screenshot swaps inside and the device row below follows.",
    "file": "elements-showcase.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 26,
-    "keys": 222
-   },
-   "layers": 17,
-   "keys": 154,
    "texts": [
     {
      "id": "phoneLabel",
@@ -17025,15 +14332,6 @@
    "duration": 4.8,
    "description": "An app screen lands in an isometric view and three layers slide out from beneath it; the stack then opens into evenly spaced layers as the view pulls back, each layer gets a label, and the view drifts in on the hold.",
    "file": "elements-showcase.js",
-   "formats": [
-    "html"
-   ],
-   "editorCost": {
-    "layers": 48,
-    "keys": 145
-   },
-   "layers": 28,
-   "keys": 60,
    "texts": [
     {
      "id": "label3",
@@ -17096,16 +14394,6 @@
    "duration": 8,
    "description": "Four columns of phone screens drift past in alternating directions — up, down, up, down — at one calm linear speed, bleeding off the top and bottom of the frame; each column moves exactly two screens per loop, so it repeats seamlessly.",
    "file": "elements-showcase.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 68,
-    "keys": 8
-   },
-   "layers": 20,
-   "keys": 8,
    "texts": [],
    "numbers": [],
    "images": [
@@ -17191,16 +14479,6 @@
    "duration": 8,
    "description": "A wall of desktop app windows turned −15° fills the frame; its three rows slide along the tilt in alternating directions at one steady linear speed, each moving exactly three windows per loop, so it repeats seamlessly.",
    "file": "elements-showcase.js",
-   "formats": [
-    "layers",
-    "html"
-   ],
-   "editorCost": {
-    "layers": 76,
-    "keys": 6
-   },
-   "layers": 22,
-   "keys": 6,
    "texts": [],
    "numbers": [],
    "images": [

@@ -35,7 +35,7 @@ const spinner = (o) => path({ id: o.id, x: o.x || 0, y: o.y || 0, d: ring(o.R), 
 
 // 1 ─ Masonry load: columns drop in one after another, Load more pushes a new row in from below
 UIK.define({
-  id: 'masonry-load', formats: ['html'], name: 'Masonry load more', cat: 'gallery', T: 3.9, cam: 1.02,
+  id: 'masonry-load', name: 'Masonry load more', cat: 'gallery', T: 3.9, cam: 1.02,
   desc: 'A four-column masonry of photos drops in column by column. Load more is clicked: a spinner turns, then a new row of photos rises in under the uneven columns and pushes the grid up under the header while the count ticks to 28.',
   build: () => {
     const CX = [-414, -138, 138, 414], CW = 256, G = 20, TOP = -300, C = 1.7, L = 2.15, S = 200, BY0 = 320;
@@ -336,7 +336,7 @@ UIK.define({
 
 // 8 ─ Logo wall: cells flip one at a time in a scattered order to reveal new logos
 UIK.define({
-  id: 'logo-wall-flip', formats: ['html'], name: 'Logo wall flip', cat: 'gallery', T: 4.4, cam: { zoom: 1.12, y: 60 },
+  id: 'logo-wall-flip', name: 'Logo wall flip', cat: 'gallery', T: 4.4, cam: { zoom: 1.12, y: 60 },
   desc: 'A 4×3 wall of generic logo tiles builds in on a diagonal stagger, then single cells flip one after another in a scattered order — each squashes flat on its vertical axis, swaps its logo while edge-on and opens back out with the new one.',
   build: () => {
     const GX = [-465, -155, 155, 465], GY = [-60, 110, 280];
@@ -464,7 +464,7 @@ UIK.define({
 
 // 11 ─ Zoom into grid: the camera dives from a wall of photos into one cell until it fills the frame
 UIK.define({
-  id: 'zoom-into-grid', formats: ['html'], name: 'Zoom into grid', cat: 'gallery', T: 3.8,
+  id: 'zoom-into-grid', name: 'Zoom into grid', cat: 'gallery', T: 3.8,
   cam: (() => {
     // log-space zoom sampled into Linear legs: the dive keeps one perceived speed, and the camera centre is solved
     // so the target's screen position eases to the middle while the zoom runs (no drifting off at high zoom)
@@ -552,7 +552,7 @@ UIK.define({
 
 // 13 ─ Map gallery: numbered photo pins on a map drive a strip of photo cards
 UIK.define({
-  id: 'map-gallery', formats: ['html'], name: 'Map gallery', cat: 'gallery', T: 3.9, cam: 1.0,
+  id: 'map-gallery', name: 'Map gallery', cat: 'gallery', T: 3.9, cam: 1.0,
   desc: 'Numbered pins sit along a dotted walk on a stylised map. Clicking pin 3 pops it to the accent and slides the photo-card strip along the bottom to its card (a two-card jump with a touch of motion blur); clicking pin 2 hands the highlight back and slides the strip one card the other way.',
   build: () => {
     const C1 = 1.3, C2 = 2.6, SY = 272, PITCH = 460;

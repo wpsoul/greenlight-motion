@@ -208,7 +208,7 @@ UIK.define({
 
 // 5 ─ Code decode banner: a dark app banner drops in and the code's letters roll into place like slot reels, left to right
 UIK.define({
-  id: 'code-decode', formats: ['html'], name: 'Code decode banner', cat: 'promo', T: 3.2, cam: 1.2,
+  id: 'code-decode', name: 'Code decode banner', cat: 'promo', T: 3.2, cam: 1.2,
   desc: 'A dark sale banner drops in from above with a blur. Its code chip decodes SUMMER30: each letter is a reel of random characters (a clip window) that rolls up and lands on its letter, left to right. On the last one an accent outline fades in around the chip as it gives a small settle.',
   build: () => {
     const CODE = 'SUMMER30', D0 = 0.9, GAP = 0.085, DUR = 0.58, H = 62, CXC = 374, SZ = 44;

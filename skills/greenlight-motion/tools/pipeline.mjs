@@ -6,10 +6,11 @@
 //   node tools/pipeline.mjs <project> --require <key>             a gate opens again (the user wants changes)
 //   node tools/pipeline.mjs <project> --done                      the film is finished
 //   node tools/pipeline.mjs <project> --json                      the pipeline as it is recorded
-// Steps: brief (the starter: the brief and its pictures) · capture · scenario · script · storyboard · preview ·
+// Steps: brief (the starter: the brief and its pictures) · capture · scenario · storyboard · preview ·
 // render (Render & export) · final (Final film). capture is there when the brief names a website (or the site
-// is captured), storyboard unless the brief skips it. The card tools fill it themselves: capture.mjs, story.mjs,
-// script.mjs, storyboard.mjs and preview.mjs put their card in its lane and set their step finished with its
+// is captured), storyboard unless the brief skips it. A step that is no longer in the list (an older version's
+// Script step) is removed with its lane and card. The card tools fill it themselves: capture.mjs, story.mjs,
+// storyboard.mjs and preview.mjs put their card in its lane and set their step finished with its
 // gate "Requires Approval" (every open gate before it becomes "Approved", a step that never ran "Skipped");
 // render.mjs and export.mjs fill Render &
 // export and the Final film. Pictures in the pipeline are uploaded COPIES (<film>-pipeline folder): deleting a
@@ -18,23 +19,28 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { loadProject, board, boardState, freeSpot, readJSON, ensureUpload, arg } from './project.mjs';
+import { loadProject, board, boardState, freeSpot, readJSON, ensureUpload, arg, isQuick } from './project.mjs';
 
-export const STEP_KEYS = ['capture', 'scenario', 'script', 'storyboard', 'preview', 'render'];
+export const STEP_KEYS = ['capture', 'scenario', 'storyboard', 'preview', 'render'];
 const STEPS = {
   capture: { name: 'Capture the site', lane: 'Site capture', size: [1134, 1382] },
-  scenario: { name: 'Scenario', lane: 'Scenario', size: [600, 980], gate: true,
+  scenario: { name: 'Scenario', lane: 'Scenario', size: [1200, 800], gate: true,
     instr: 'Write the story first: a logline and the beats, in words only. No items or layouts yet. You approve it.', inputs: 'The brief · the site capture' },
-  script: { name: 'Script', lane: 'Script', size: [600, 1400], gate: true,
-    instr: 'Turn the story into the script: an item per scene, every line of copy, the voice-over and the timing. You approve it.', inputs: 'The approved scenario · the GL Motion library' },
   storyboard: { name: 'Storyboard', lane: 'Storyboard', size: [1400, 1020], gate: true,
-    instr: 'Two or three visual directions for the script, one frame per shot. You pick one, or mix them.', inputs: 'The approved script' },
+    instr: 'Two or three directions for the story: the shots with their items, every line of copy, the voice-over and the timing, one frame per shot. You pick one, or mix them.', inputs: 'The approved scenario · the GL Motion library' },
   preview: { name: 'Preview', lane: 'Preview', size: [1600, 1000], gate: true,
-    instr: 'Build the film from the picked direction: the player preview with design tokens and fonts. You approve it before anything is rendered.', inputs: 'The picked direction · the voice-over' },
+    instr: 'Build the film from the picked direction: the player preview, where you edit the texts, colours and fonts. You approve it before anything is rendered.', inputs: 'The picked direction (or the scenario) · the voice-over' },
   render: { name: 'Render & export',
     instr: 'After your approval: render the film and export it for editing.', inputs: 'The approved preview' },
 };
-const LANE_NOTE = (k) => ({ capture: 'The screenshots and site.json: in the review lane below ↓', scenario: 'The story: in the review lane below ↓', script: 'The script: in the review lane below ↓',
+// what an empty lane says until its card arrives, so the user doesn't take it for blank space and miss the card
+const LANE_WAIT = {
+  capture: 'The site’s screenshots and its copy appear here.',
+  scenario: 'The scenario appears here: the film’s story, in words. Read it first. Nothing is built until you approve it.',
+  storyboard: 'The storyboard appears here: two or three directions, every shot with its words. You pick one.',
+  preview: 'The film’s preview appears here. You edit it, then approve it before the render.',
+};
+const LANE_NOTE = (k) => ({ capture: 'The screenshots and site.json: in the review lane below ↓', scenario: 'The story: in the review lane below ↓',
   storyboard: 'The directions: in the review lane below ↓', preview: 'The film: in the review lane below ↓' }[k]);
 
 // the app's geometry (frontend/src/pipelines/pipelineUtils.js)
@@ -58,8 +64,9 @@ function context(project) {
   const hasScenario = fs.existsSync(path.join(project.dir, 'scenario.json'));
   const name = (hasScenario && project.raw.name) || (brief && brief.product && brief.product.name) || path.basename(project.dir);
   const url = (brief && brief.product && brief.product.url) || (site && site.url) || '';
-  const steps = STEP_KEYS.filter((k) => (k === 'capture' ? !!url : k === 'storyboard' ? !(brief && brief.workflow && brief.workflow.storyboard === 0) : true));
-  return { brief, site, name, url, steps, slug: path.basename(project.dir).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'film' };
+  const quick = !!(brief && brief.workflow && brief.workflow.mode === 'quick');
+  const steps = STEP_KEYS.filter((k) => (k === 'capture' ? !!url : k === 'storyboard' ? !quick && !(brief && brief.workflow && brief.workflow.storyboard === 0) : true));
+  return { brief, site, name, url, steps, quick, slug: path.basename(project.dir).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'film' };
 }
 function briefText(ctx, project) {
   const b = ctx.brief; const f = (b && b.film) || {}; const l = (b && b.look) || {}; const w = (b && b.workflow) || {};
@@ -92,6 +99,15 @@ export async function ensurePipeline(B, project, state = boardState(project, B.i
     pl = state.st.pipeline = { container: null, origin: { x: spot.x, y: spot.y }, nodes: {}, lanes: {}, edges: {}, pics: {} };
   }
   pl.lanes = pl.lanes || {}; pl.nodes = pl.nodes || {}; pl.edges = pl.edges || {}; pl.pics = pl.pics || {};
+  // a step that is no longer in the list (an older version's Script step, a storyboard the brief now skips):
+  // its frame, panes and notes, its lane and the cards in it go; its arrows go below
+  const drop = async (ids) => { for (const id of ids) if (id && byId.has(id)) { await B.call('DELETE', `/api/moodboards/${B.id}/elements/${id}`).catch(() => {}); byId.delete(id); } };
+  for (const k of Object.keys(pl.nodes)) if (!nodeKeys.includes(k)) { await drop([...(pl.nodes[k].members || []), pl.nodes[k].id]); delete pl.nodes[k]; }
+  for (const k of Object.keys(pl.lanes)) if (!laneKeys.includes(k)) {
+    const content = pl.lanes[k].content || [];
+    await drop([...content, pl.lanes[k].placeholder, pl.lanes[k].id]); delete pl.lanes[k];
+    for (const [ck, cid] of Object.entries(state.st.cards || {})) if (content.includes(cid)) delete state.st.cards[ck];
+  }
   const note = async (text, r, o = {}) => {
     const n = await B.call('POST', `/api/moodboards/${B.id}/notes`, { text, x: r.x, y: r.y, width: r.w, height: r.h, font_size: o.size || 16, ...(o.color ? { text_color: o.color } : {}), ...(o.bg === false ? { background: false } : {}) });
     if (o.pane) await B.call('PUT', `/api/moodboards/${B.id}/elements/${n.id}`, { data: { ...(n.data || {}), parentPaneId: o.pane } });
@@ -138,7 +154,8 @@ export async function ensurePipeline(B, project, state = boardState(project, B.i
       rec.members.push(await note('The final film lands here.', { x: r.x + M + 6, y: r.y + 46, w: g.width - 2 * M - 12, h: 60 }, { ...grey, bg: false }));
     } else {
       const S = STEPS[k];
-      const instr = k === 'capture' ? `Capture ${ctx.url || 'the product site'}: desktop and phone screenshots, the copy, colours and logo.` : S.instr;
+      const instr = k === 'capture' ? `Capture ${ctx.url || 'the product site'}: desktop and phone screenshots, the copy, colours and logo.`
+        : k === 'scenario' && ctx.quick ? 'The story the agent works from: a logline and the beats. Quick mode: it goes straight on to the preview, where you approve the film.' : S.instr;
       rec.members.push(await note(instr, pr.instruction, { pane: rec.panes.instruction, size: 17 }));
       rec.members.push(await note(k === 'capture' ? (ctx.url || 'The product site') : S.inputs, pr.assets, { pane: rec.panes.assets, ...grey }));
       rec.members.push(rec.results = await note(LANE_NOTE(k) || 'The rendered film and the project for editing appear here.', pr.results, { pane: rec.panes.results, ...grey }));
@@ -150,6 +167,15 @@ export async function ensurePipeline(B, project, state = boardState(project, B.i
     if (pl.lanes[k] && byId.has(pl.lanes[k].id)) continue;
     const r = L.lanes[k];
     pl.lanes[k] = { id: await frame(STEPS[k].lane, r, { frameRole: 'frame', pipelineId: pl.container }), size: (pl.lanes[k] && pl.lanes[k].size) || STEPS[k].size, content: [] };
+    state.save();
+  }
+  // an empty lane says what will appear in it (placeInLane removes the note when the card arrives); placed from the
+  // lane's own frame, so the reflow below moves it with the lane
+  for (const k of laneKeys) {
+    const ln = pl.lanes[k];
+    if ((ln.content || []).length || (ln.placeholder && byId.has(ln.placeholder)) || !LANE_WAIT[k]) continue;
+    const f = byId.get(ln.id); const r = f ? { x: f.x, y: f.y, w: f.width } : L.lanes[k];
+    ln.placeholder = await note(LANE_WAIT[k], { x: r.x + M, y: r.y + LANE_T + M, w: Math.min(r.w - 2 * M, 820), h: 130 }, { size: 30, color: '#C2BDB4', bg: false });
     state.save();
   }
   // ── the arrows: the steps in order, every step to its lane ──
@@ -179,7 +205,7 @@ async function reflow(B, state, L) {
     for (const id of [anchor, ...ids]) { const e = byId.get(id); if (e) moves.push({ id, x: e.x + dx, y: e.y + dy }); }
   };
   for (const [k, r] of Object.entries(L.pos)) if (pl.nodes[k]) shift(pl.nodes[k].id, r, pl.nodes[k].members || []);
-  for (const [k, r] of Object.entries(L.lanes)) if (pl.lanes[k]) shift(pl.lanes[k].id, r, pl.lanes[k].content || []);
+  for (const [k, r] of Object.entries(L.lanes)) if (pl.lanes[k]) shift(pl.lanes[k].id, r, [...(pl.lanes[k].content || []), ...(pl.lanes[k].placeholder ? [pl.lanes[k].placeholder] : [])]);
   if (moves.length) await B.call('PUT', `/api/moodboards/${B.id}/elements`, { elements: moves });
   // lanes resize in place (the element endpoint: a frame endpoint would re-sink them under the container);
   // the container fits around everything through the frame endpoint, which keeps it under all it holds
@@ -219,6 +245,7 @@ export async function placeInLane(B, project, state, key, items) {
   const lane = pl.lanes[key]; if (!lane) return null;
   const w = Math.max(...items.map((i) => i.x + i.w)); const h = Math.max(...items.map((i) => i.y + i.h));
   const keep = new Set(items.map((i) => i.id));
+  if (lane.placeholder) { await B.call('DELETE', `/api/moodboards/${B.id}/elements/${lane.placeholder}`).catch(() => {}); delete lane.placeholder; }
   for (const id of lane.content || []) if (!keep.has(id)) {
     const e = await B.call('GET', `/api/moodboards/${B.id}/elements/${id}`).catch(() => null);
     if (e && ['image', 'video'].includes(e.type)) await B.call('DELETE', `/api/moodboards/${B.id}/elements/${id}`).catch(() => {});
@@ -266,7 +293,9 @@ export async function approveBefore(B, state, key) {
 export async function showCard(B, project, state, key, cardId, w, h) {
   await placeInLane(B, project, state, key, [{ id: cardId, x: 0, y: 0, w, h }]);
   await approveBefore(B, state, key);
-  await setStep(B, state, key, { status: 'finished', approval: STEPS[key].gate ? 'required' : undefined });
+  // quick mode: the story is the agent's plan, not a stop — the preview is the one approval
+  const gate = STEPS[key].gate && !(key === 'scenario' && isQuick(project.dir));
+  await setStep(B, state, key, { status: 'finished', approval: gate ? 'required' : undefined });
 }
 /** Text in a step's Results pane (Render & export lists what it made). */
 export async function setResults(B, state, key, text) {

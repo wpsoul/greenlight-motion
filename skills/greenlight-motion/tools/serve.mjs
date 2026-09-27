@@ -1,12 +1,13 @@
 // The preview with working buttons, for standalone use: serves the project folder and runs the render
 // engine and the exports when the preview's Render / Export are pressed.
 //   node tools/serve.mjs <project> [--port 4817] [--python /path/to/python3]
-// Open the printed URL. The page is rebuilt on every load, so edit scenario.json and reload. The preview's edits
-// (design tokens, element options) are saved into scenario.json → edits; a picture chosen there goes to assets/.
+// Open the printed URL. The page is rebuilt on every load, so edit scenario.json or a scene page and reload. The
+// preview's edits (the film's colours and font, every element changed on a scene) are saved into scenario.json → edits;
+// a picture chosen there goes to assets/.
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
-import { loadProject, MIME, arg, saveEdits, sha1 } from './project.mjs';
+import { loadProject, MIME, arg, saveEdits, sha1, isQuick } from './project.mjs';
 import { previewPage } from './build.mjs';
 import { renderLocal, findPython } from './render.mjs';
 import { exportLocal } from './export.mjs';
@@ -22,7 +23,7 @@ const send = (res, code, body, type = 'application/json') => {
   res.end(typeof body === 'string' || Buffer.isBuffer(body) ? body : JSON.stringify(body));
 };
 const readBody = (req) => new Promise((resolve) => { let b = ''; req.on('data', (d) => { b += d; }); req.on('end', () => { try { resolve(JSON.parse(b || '{}')); } catch { resolve({}); } }); });
-// fresh on every request: the agent edits scenario.json / items while the page is open
+// fresh on every request: the agent edits scenario.json and the scene pages while the page is open
 const fresh = () => loadProject(dir);
 const rel = (f) => '/' + path.relative(dir, f).split(path.sep).map(encodeURIComponent).join('/');
 
@@ -30,7 +31,8 @@ const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, 'http://x');
   try {
     if (req.method === 'GET' && (url.pathname === '/' || url.pathname === '/preview.html')) {
-      return send(res, 200, previewPage(fresh(), { target: 'local', mode: { kind: 'local' } }), 'text/html; charset=utf-8');
+      // quick mode: the page saves the user's edits here, but Render / Export are the agent's (after the approval)
+      return send(res, 200, previewPage(fresh(), { target: 'local', mode: { kind: 'local', agent: isQuick(dir) } }), 'text/html; charset=utf-8');
     }
     // the user's edits from the preview → scenario.json → edits (null clears them)
     if (req.method === 'POST' && url.pathname === '/mu/edits') {
@@ -59,8 +61,9 @@ const server = http.createServer(async (req, res) => {
     }
     if (req.method === 'POST' && url.pathname === '/mu/export') {
       const body = await readBody(req);
-      const out = await exportLocal(fresh(), body.format || 'glea-layers');
-      return send(res, 200, { file: path.relative(dir, out.file), url: rel(out.file), hint: out.hint });
+      const out = await exportLocal(fresh(), body.format || 'glea');
+      return send(res, 200, { file: path.relative(dir, out.file), url: rel(out.file), hint: out.hint,
+        ...(out.prompt ? { prompt: path.relative(dir, out.prompt), notice: out.notice } : {}) });
     }
     if (req.method === 'GET') {
       const f = path.resolve(dir, decodeURIComponent(url.pathname.slice(1)));

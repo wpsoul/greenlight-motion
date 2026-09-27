@@ -1,15 +1,12 @@
-/* UI Motion Kit → a standalone HTML page (the "HTML" preset type).
+/* GreenLight Motion — a library item (or a library scene: UIK.compose(…, { scene })) as a standalone HTML page.
  *
- * UIK.toHTML(spec, { theme, accent, colors, sources, background }) returns one self-contained page that plays the
- * element on a TRANSPARENT background (or `background`, a CSS colour, for a finished film): the kit's scripts are inlined (`sources` = { easings, engine, file } —
- * the text of easings.js, engine.js and the element's own elements-*.js file). The stage keeps the
- * element's 1:1 px size centred in whatever viewport the page gets, like the Video Editor layers do.
+ * UIK.toHTML(spec, { theme, accent, colors, sources, background }) returns one self-contained page that plays the item
+ * on a TRANSPARENT background (or `background`, a CSS colour): the library's scripts are inlined (`sources` =
+ * { easings, engine, files, film }). The stage keeps the item's 1:1 px size centred in whatever viewport the page gets.
  *
- * Time: under the Video Editor's HTML-clip clock (window.__glHtmlClipClockInstalled — the virtual clock
- * the bake / live layer drives) the rAF timestamp IS the clip time, so every frame is exact; in a plain
- * browser the element plays from the first frame. After T it holds the last frame.
- * window.__uikSeek(t) — also window.__glSeek(seconds), the HTML card renderer's parallel-render contract —
- * seeks directly and takes over from the playing clock.
+ * Time: the page draws any moment directly — window.__glSeek(seconds) (and __glStateless says so), which the player,
+ * renders and stills use. Under the GreenLight Dash Video Editor's HTML-clip clock (window.__glHtmlClipClockInstalled)
+ * the frame's timestamp IS the clip time; in a plain browser it plays from the first frame. After T it holds.
  */
 (function () {
 'use strict';
@@ -59,13 +56,13 @@ K.toHTML = function toHTML(spec, opt = {}) {
   var seek = function (t) { inst.seek(Math.max(0, Math.min(T, t))); };
   // a manual seek (tools, thumbnails) takes over from the playing clock. With canvas layers on the
   // page it returns a promise: their pictures load first (a render awaits it), then the frame
-  window.__uikSeek = function (t) {
+  window.__glSeek = function (t) {
     manual = true; seek(t);
     if (K.media && K.media.pending.size) return K.media.ready().then(function () { seek(t); });
   };
-  // the HTML card renderer's contract: a page that draws any moment directly renders in parallel
-  window.__glSeek = window.__uikSeek;
-  window.__uikDuration = T;
+  // the renderers' contract: a page that draws any moment directly renders in parallel
+  window.__glStateless = true;
+  window.__glDuration = T;
   function frame(ts) {
     var clock = window.__glHtmlClipClockInstalled;
     if (t0 === null) t0 = ts;
@@ -82,7 +79,7 @@ K.toHTML = function toHTML(spec, opt = {}) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(spec.name)}</title>
 <meta name="description" content="${esc(spec.desc || '')}">
-<meta name="generator" content="UI Motion Kit · ${esc(spec.id)} · ${spec.T}s">
+<meta name="generator" content="GreenLight Motion · ${esc(spec.id)} · ${spec.T}s">
 <style>${STAGE_CSS}${opt.background ? `html, body { background: ${String(opt.background).replace(/[<>;{}]/g, '')}; }` : ''}</style>
 </head>
 <body>

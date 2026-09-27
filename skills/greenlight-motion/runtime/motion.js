@@ -1,16 +1,23 @@
-/* GL Motion — the film runtime shared by the preview page (browser) and the tools (node).
+/* GreenLight Motion — the film runtime, shared by the pages (browser) and the tools (node).
  *
- * Everything here is a pure function of the scenario + the GL Motion library (window.UIK), so the
- * preview's buttons and the agent's CLI produce the same files:
- *   MU.normalize(scenario, { edits })      → the scenario with defaults filled in and the user's edits applied
- *   MU.applyEdits(scenario, edits)         → the scenario with an edits overlay merged into its own fields
- *   MU.film(scenario)                      → the whole film as one kit element (UIK.compose)
- *   MU.tokens(scenario)                    → the design tokens (colours) and fonts the film uses
- *   MU.pageHtml(scenario, sources, opt)    → a standalone page: the film, or one scene (opt.scene)
- *   MU.veLayers(scenario, opt)             → a Video Editor project: every layer editable
- *   MU.veHtmlCards(scenario, opt)          → a Video Editor project: one HTML clip per scene
- *   MU.aeScript(scenario, opt)             → an After Effects .jsx (+ the pictures it imports)
- *   MU.zip(entries)                        → a .zip (stored) as bytes
+ * A film is a list of scenes, each an HTML page:
+ *   · { html: 'scenes/intro.html' } — any page the agent writes (references/scenes.md)
+ *   · { item: 'coupon-ticket' }     — a ready-made scene from the library, drawn by its engine (window.UIK)
+ * Everything here is a pure function of the scenario + the sources, so the preview's buttons and the agent's CLI
+ * make the same files:
+ *   MU.normalize(scenario, { edits })   → defaults filled in, the user's edits applied
+ *   MU.applyEdits(scenario, edits)      → an edits overlay merged into the scenario's own fields
+ *   MU.timing(scenario)                 → every scene's start / end and visible window
+ *   MU.sceneTheme(scenario)             → the colours (CSS variables --gl-*) and font every scene gets
+ *   MU.tokens(scenario)                 → the film's colours and font, for the Design panel
+ *   MU.scenePage(scenario, i, sources, { hosted, editor })   → scene i as a page
+ *   MU.plan(scenario, sources, opt)     → the player's plan (GLPlayer): timing + every scene page
+ *   MU.pageHtml(scenario, sources, opt) → the whole film as one page (renders), or scene opt.scene alone
+ *   MU.glea(scenario, opt)              → a GreenLight Dash Video Editor project: one HTML clip per scene
+ *   MU.gleaBundle(project, media), MU.zip(entries)
+ *   MU.pageSources(doc, scenes)          → the sources in a page the tools built (its script tags)
+ * sources = { clock, overrides, kit, player, editor?, three?, scenes: [page source per scene],
+ *             easings, engine, film, files: { 'elements-x.js': text } } — the library's scripts for item scenes.
  * Scenario format: references/scenario.md.
  */
 (function () {
@@ -19,6 +26,9 @@ const root = typeof window !== 'undefined' ? window : globalThis;
 const MU = root.MU = root.MU || {};
 const K = () => root.UIK;
 const r3 = (v) => Math.round(v * 1000) / 1000;
+const plain = (o) => (o && typeof o === 'object' && !Array.isArray(o) ? o : null);
+const safe = (src) => String(src).replace(/<\/(script)/gi, '<\\/$1');
+const json = (v) => JSON.stringify(v).replace(/</g, '\\u003c');
 
 // The words spoken over each scene → [string per scene]: the recorded clips when there are any (a take's parts go
 // to their own scenes), else the scenario's lines — a scene's own `voice`, or its part of a take
@@ -38,17 +48,15 @@ MU.sceneVoices = (scenario) => {
     if (v && typeof v === 'object' && !Array.isArray(v) && Array.isArray(v.take)) { v.take.forEach((p, k) => add(written, i + k, textOf(p))); covered = i + v.take.length - 1; return; }
     (Array.isArray(v) ? v : v ? [v] : []).forEach((l) => add(written, i, textOf(l)));
   });
-  // per scene: what was recorded, else what is written (a line not recorded yet still shows)
   return scenes.map((_, i) => (recorded[i].length ? recorded[i] : written[i]).join(' '));
 };
 
 MU.slug = (s) => String(s || 'film').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'film';
 
-// The user's changes from the preview (scenario.edits) — an overlay the agent can read, reset or fold:
-//   { film: { theme, accent, background, colors: { token: hex }, recolor: { hex: hex }, font },
-//     scenes: { "<scene number>": { text: { id: s }, images: { id: url }, style: { key: { prop: v } }, params: { name: v } } } }
-// Merged into the scenario's own fields (the same names), key by key.
-const plain = (o) => (o && typeof o === 'object' && !Array.isArray(o) ? o : null);
+// The user's changes from the preview (scenario.edits) — an overlay the agent can read, fold or clear:
+//   { film: { theme, accent, background, colors: { name: hex }, recolor: { hex: hex }, font },
+//     scenes: { "<scene number>": { text: { id: s }, style: { id: { prop: v } }, images: { id: url }, params: { name: v } } } }
+// id = an element's data-gl id. Merged into the scenario's own fields (the same names), key by key.
 MU.applyEdits = (scenario, edits) => {
   const E = plain(edits); if (!E) return scenario;
   const s = Object.assign({}, scenario);
@@ -62,127 +70,129 @@ MU.applyEdits = (scenario, edits) => {
     for (const k of ['text', 'images', 'params']) if (plain(e[k])) o[k] = Object.assign({}, plain(sc[k]), e[k]);
     if (plain(e.style)) {
       o.style = Object.assign({}, plain(sc.style));
-      for (const [key, st] of Object.entries(e.style)) {
-        if (!plain(st)) continue;
-        const cur = Object.assign({}, plain(o.style[key]));
-        // a colour's swaps ({ acc: '#F00' }) add to the film's own
-        for (const [p, v] of Object.entries(st)) cur[p] = plain(v) && plain(cur[p]) ? Object.assign({}, cur[p], v) : v;
-        o.style[key] = cur;
-      }
+      for (const [id, st] of Object.entries(e.style)) if (plain(st)) o.style[id] = Object.assign({}, plain(o.style[id]), st);
     }
     return o;
   });
   return s;
 };
 
+const COLOR_NAME = /^[a-z][a-z0-9-]*$/i;
 MU.normalize = (scenario, opt = {}) => {
   let s = Object.assign({}, scenario);
   if (opt.edits !== false && s.edits) s = MU.applyEdits(s, s.edits);
   delete s.edits;
-  s.name = s.name || 'GL Motion film';
+  s.name = s.name || 'GreenLight Motion film';
   s.id = MU.slug(s.id || s.name);
   const size = s.size || {};
   s.size = { w: Math.max(16, Math.round(size.w || 1920)), h: Math.max(16, Math.round(size.h || 1080)) };
   s.fps = Math.max(1, Math.min(120, Math.round(s.fps || 30)));
   s.theme = s.theme === 'dark' ? 'dark' : 'light';
   s.accent = s.accent || null;
-  // the film's tokens: colours by token name, item colours swapped, its font
+  // the film's colours by name: the theme's tokens (ink, card, acc …) and any names of its own (every scene gets them
+  // as --gl-<name>); library colours swapped (recolor); its font
   const colors = {};
-  for (const [k, v] of Object.entries(plain(s.colors) || {})) if (K().TOKENS.includes(k) && typeof v === 'string' && v) colors[k] = v;
+  for (const [k, v] of Object.entries(plain(s.colors) || {})) if (COLOR_NAME.test(k) && typeof v === 'string' && v) colors[k] = v;
   s.colors = Object.keys(colors).length ? colors : null;
   const recolor = {};
-  for (const [k, v] of Object.entries(plain(s.recolor) || {})) if (/^#[0-9a-f]{3,8}$/i.test(k) && typeof v === 'string' && v) recolor[K().style ? K().style.normHex(k) : k.toUpperCase()] = v;
+  for (const [k, v] of Object.entries(plain(s.recolor) || {})) if (/^#[0-9a-f]{3,8}$/i.test(k) && typeof v === 'string' && v) recolor[k.toUpperCase()] = v;
   s.recolor = Object.keys(recolor).length ? recolor : null;
   s.font = s.font && K().FONTS && K().FONTS[s.font] && s.font !== K().FONT_DEFAULT ? s.font : null;
   // background: a CSS colour, 'theme' (the theme's canvas colour) or null / 'transparent'
   s.background = s.background === 'theme' ? K().THEMES[s.theme].bg : (s.background && s.background !== 'transparent' ? s.background : null);
-  // motion: the easing preset every scene takes (K.MOTION_PRESETS — spring by default; 'authored' = as built)
+  // motion: the feel of the library scenes (references/motion.md — spring by default; 'authored' = as built)
   s.motion = s.motion || K().MOTION_DEFAULT || 'spring';
-  // the film's engine: 'default' (GL Motion items → editable layers, 3D space) or '3d' (HTML scenes — each scene a page
-  // of its own, three.js for real 3D; the Video Editor gets them as HTML clips, After Effects nothing)
-  s.engine = s.engine === '3d' ? '3d' : 'default';
-  s.scenes = (s.scenes || []).map((sc) => Object.assign({ transition: 'cut' }, sc, s.engine === '3d' && !(Number(sc.duration) > 0) ? { duration: 4 } : {}));
+  s.scenes = (s.scenes || []).map((sc) => Object.assign({ transition: 'cut' }, sc, sc.html && !(Number(sc.duration) > 0) ? { duration: 4 } : {}));
   s.voiceover = s.voiceover || null;
   return s;
 };
-
-MU.film = (scenario, opt = {}) => K().compose(MU.normalize(scenario), opt);
-MU.is3dEngine = (scenario) => !!scenario && scenario.engine === '3d';
-// a 3D-engine film's player plan (UIK.scenePlan): docs = each scene's page source
-MU.scenePlan = (scenario, docs) => K().scenePlan(MU.normalize(scenario), docs);
 MU.timing = (scenario) => K().filmTiming(MU.normalize(scenario));
+MU.kindOf = (scene) => (scene && scene.html ? 'html' : 'item');
 
-// ── design tokens + fonts: every colour and type style the film's layers really use ──
-MU.tokens = (scenario) => {
+// ── colours and font ──
+// every theme token (with the film's own values) plus the film's own colour names, and the font
+MU.sceneTheme = (scenario) => {
   const s = MU.normalize(scenario);
   K().setTheme(s.theme, s.accent, s.colors);
-  // a 3D-engine film has no layers to read: its tokens are the theme's (the scenes use them all)
-  if (s.engine === '3d') {
-    const th = K().theme();
-    return { theme: s.theme, accent: th.acc, colors: K().TOKENS.map((name) => ({ name: name === 'acc' ? 'accent' : name, value: th[name], role: name, uses: 1 })),
-      fonts: [{ family: s.font || K().FONT_DEFAULT, stack: K().fontOf(s.font).stack, note: s.font ? 'the film\'s font' : 'the scenes\' font', styles: [] }] };
-  }
-  const theme = K().theme();
-  const used = new Map(); const hex = new Map(); const type = new Map();
-  const note = (v) => {
-    if (typeof v !== 'string' || !v) return;
-    const name = v.split('/')[0];
-    if (Object.prototype.hasOwnProperty.call(theme, name)) used.set(name, (used.get(name) || 0) + 1);
-    else if (/^#|^rgb/i.test(name)) hex.set(name.toUpperCase(), (hex.get(name.toUpperCase()) || 0) + 1);
-  };
-  const walk = (L) => {
-    for (const p of ['fill', 'stroke', 'color', 'caretColor']) note(L[p]);
-    for (const p of ['fill', 'stroke', 'color']) if (L.k && L.k[p]) [].concat(L.k[p]).forEach((seg) => { if (Array.isArray(seg)) note(seg[seg.length === 2 ? 1 : 2]); else note(seg); });
-    if (L.type === 'text') {
-      const key = `${L.weight || 400}`;
-      const t = type.get(key) || { weight: L.weight || 400, sizes: new Set(), samples: [] };
-      t.sizes.add(L.size || 40);
-      const txt = String(L.text || '').replace(/\{\{\{[^}]*\}\}\}/g, '123');
-      if (txt.trim() && t.samples.length < 3 && !t.samples.includes(txt)) t.samples.push(txt.slice(0, 40));
-      type.set(key, t);
-    }
-    (L.ch || []).forEach(walk);
-  };
-  const film = K().compose(s);
-  K().build(film).forEach(walk);
+  const th = K().theme(); const tokens = {};
+  for (const k of K().TOKENS) tokens[k] = th[k];
+  for (const [k, v] of Object.entries(s.colors || {})) tokens[k] = v;
+  if (s.background) tokens.bg = s.background;
+  return { tokens, font: { stack: K().fontOf(s.font).stack, url: s.font ? K().fontUrl(s.font) : null } };
+};
+MU.tokens = (scenario) => {
+  const s = MU.normalize(scenario);
+  const th = MU.sceneTheme(s).tokens;
   const ROLE = { bg: 'canvas', card: 'surface', panel: 'panel', ink: 'text', inv: 'text on accent', muted: 'secondary text', line: 'hairlines',
     skel: 'skeleton', soft: 'soft fill', dim: 'dim fill', acc: 'accent', bad: 'error', shade: 'scrim', white: 'white' };
-  const colors = [...used.entries()].sort((a, b) => b[1] - a[1]).map(([name, n]) => ({ name: name === 'acc' ? 'accent' : name, value: theme[name], role: ROLE[name] || name, uses: n }));
-  const bgv = String(s.background || '').toUpperCase();
-  if (bgv) colors.unshift({ name: 'background', value: s.background, role: 'film background', uses: 1 });
-  // literal colours in the items, unless a token already has that value
-  const have = new Set(colors.map((c) => String(c.value).toUpperCase()));
-  for (const [v, n] of hex) if (!have.has(v)) { have.add(v); colors.push({ name: 'literal', value: v, role: 'item colour', uses: n }); }
-  const weights = [...type.values()].sort((a, b) => a.weight - b.weight);
-  return {
-    theme: s.theme, accent: theme.acc, colors,
-    fonts: [{ family: s.font || K().FONT_DEFAULT, stack: K().fontOf(s.font).stack, note: s.font ? 'the film\'s font' : 'the Video Editor\'s text font',
-      styles: weights.map((t) => ({ weight: t.weight, sizes: [...t.sizes].sort((a, b) => a - b), sample: t.samples[0] || '' })) }],
-  };
+  const colors = Object.entries(th).map(([name, value]) => ({ name: name === 'acc' ? 'accent' : name, token: name, value, role: ROLE[name] || 'the film\'s colour', uses: 1 }));
+  if (s.background) colors.unshift({ name: 'background', token: 'bg', value: s.background, role: 'film background', uses: 1 });
+  return { theme: s.theme, accent: th.acc, colors, fonts: [{ family: s.font || K().FONT_DEFAULT, stack: K().fontOf(s.font).stack, note: s.font ? 'the film\'s font' : 'the default font', styles: [] }] };
 };
 
 // ── pages ──
-// sources = { easings, engine, film, files: { 'elements-x.js': text, … } } — the library's script texts
+// a page with `head` put first in its <head>
+const inHead = (doc, head) => {
+  const src = String(doc || '');
+  if (/<head[^>]*>/i.test(src)) return src.replace(/<head[^>]*>/i, (m) => m + head);
+  if (/<html[^>]*>/i.test(src)) return src.replace(/<html[^>]*>/i, (m) => m + '<head>' + head + '</head>');
+  return '<!doctype html><html><head>' + head + '</head><body>' + src + '</body></html>';
+};
+// scene i as a page. hosted: played by the player (no real-time play of its own); editor: the preview's element picker
+MU.scenePage = (scenario, i, sources, opt = {}) => {
+  const s = MU.normalize(scenario);
+  const sc = s.scenes[i]; if (!sc) throw new Error(`scenePage: no scene ${i + 1}`);
+  const tm = MU.timing(s)[i];
+  const edits = { style: sc.style || {}, text: sc.text || {}, images: sc.images || {} };
+  const editor = opt.editor && sources.editor ? `<script>${safe(sources.editor)}</script>` : '';
+  if (sc.html) {
+    const doc = (sources.scenes || [])[i] || '';
+    const boot = { kind: 'html', hosted: !!opt.hosted, theme: MU.sceneTheme(s), images: sc.images || {}, params: sc.params || {}, duration: tm.duration, frame: s.size };
+    const three = sources.three && /\bTHREE\b/.test(doc) ? `<script>${safe(sources.three)}</script>` : '';
+    return inHead(doc, `<script>window.__glScene=${json(boot)};window.__glSceneKind="html";window.__glEdits=${json(edits)};</script>`
+      + `<script>${safe(sources.clock)}</script><script>${safe(sources.overrides)}</script><script>${safe(sources.kit)}</script>${three}${editor}`
+      + '<style>html,body{margin:0;background:transparent}</style>');
+  }
+  // a library scene: its item on its own clock (the other scenes keep only their timing), drawn by the engine
+  const tmAll = MU.timing(s);
+  const one = Object.assign({}, s, { scenes: s.scenes.map((x, j) => Object.assign({}, x, { duration: tmAll[j].duration })) });
+  const spec = K().compose(one, { scene: i });
+  const file = spec.film.scenes[0].file;
+  if (!sources.files || !sources.files[file]) throw new Error(`scenePage: no source for ${file}`);
+  const page = K().toHTML(spec, { theme: s.theme, accent: s.accent, colors: s.colors, sources: { easings: sources.easings, engine: sources.engine, film: sources.film, files: [sources.files[file]] } });
+  return inHead(page, `<script>window.__glSceneKind="item";window.__glEdits=${json({ style: sc.style || {} })};</script><script>${safe(sources.overrides)}</script>${editor}`);
+};
+// the sources in a page the tools built: every script it carries is tagged data-mu-src (tools/page.mjs)
+MU.pageSources = (doc, scenes) => {
+  const text = (n) => { const el = doc.querySelector(`script[data-mu-src="${n}"]`); return el ? el.textContent : undefined; };
+  const files = {};
+  for (const n of (K() && K().FILES) || []) { const t = text(n); if (t !== undefined) files[n] = t; }
+  const out = { clock: text('clock.js'), overrides: text('overrides.js'), kit: text('scene.js'), player: text('player.js'), editor: text('editor.js'),
+    three: text('three.js'), easings: text('easings.js'), engine: text('engine.js'), film: text('film.js'), files, scenes: scenes || [] };
+  for (const k of Object.keys(out)) if (out[k] === undefined) delete out[k];
+  return out;
+};
+// the player's plan: the timing and every scene page
+MU.plan = (scenario, sources, opt = {}) => {
+  const s = MU.normalize(scenario);
+  const timing = MU.timing(s);
+  return {
+    W: s.size.w, H: s.size.h, fps: s.fps, T: timing.length ? timing[timing.length - 1].end : 0, background: s.background,
+    scenes: timing.map((tm, i) => ({ kind: MU.kindOf(s.scenes[i]), title: s.scenes[i].title || '', start: tm.start, end: tm.end, from: tm.from, to: tm.to,
+      fadeIn: tm.from < tm.start, fadeOut: tm.to > tm.end, duration: tm.duration,
+      page: MU.scenePage(s, i, sources, { hosted: true, editor: !!opt.editor }) })),
+  };
+};
 MU.pageHtml = (scenario, sources, opt = {}) => {
   let s = MU.normalize(scenario);
-  // a 3D-engine film: the whole film as one page hosting its scenes, or one scene alone (its HTML clip)
-  if (s.engine === '3d') {
-    if (!sources.sceneRuntime || !sources.sceneHost || !sources.scenes) throw new Error('pageHtml: a 3D-engine film needs sources.scenes, sceneRuntime, sceneHost (and three)');
-    if (opt.background !== undefined) s = Object.assign({}, s, { background: opt.background });
-    const plan = K().scenePlan(s, sources.scenes);
-    return opt.scene != null ? K().toScenePageHTML(plan, opt.scene, { three: sources.three, runtime: sources.sceneRuntime })
-      : K().toSceneFilmHTML(plan, { three: sources.three, runtime: sources.sceneRuntime, host: sources.sceneHost });
-  }
-  // a scene page carries only its own item: the other scenes keep just their timing
-  if (opt.scene != null) { const tm = MU.timing(s); s = Object.assign({}, s, { scenes: s.scenes.map((x, i) => Object.assign({}, x, { duration: tm[i].duration })) }); }
-  const spec = K().compose(s, opt.scene != null ? { scene: opt.scene } : {});
-  const need = (opt.scene != null ? [spec.film.scenes[0]] : spec.film.scenes).map((x) => x.file);
-  const files = [...new Set(need)].map((f) => { if (!sources.files[f]) throw new Error(`pageHtml: no source for ${f}`); return sources.files[f]; });
-  return K().toHTML(spec, { theme: s.theme, accent: s.accent, colors: s.colors, background: opt.scene != null ? null : (opt.background !== undefined ? opt.background : s.background),
-    sources: { easings: sources.easings, engine: sources.engine, film: sources.film, files } });
+  if (opt.background !== undefined) s = Object.assign({}, s, { background: opt.background });
+  if (opt.scene != null) return MU.scenePage(s, opt.scene, sources, { hosted: false });
+  if (!sources.player) throw new Error('pageHtml: the film page needs sources.player (player.js)');
+  if (!root.GLPlayer) throw new Error('pageHtml: player.js is not loaded');
+  return root.GLPlayer.filmPage(MU.plan(s, sources), sources.player);
 };
 
-// ── Video Editor projects ──
+// ── the GreenLight Dash Video Editor: one HTML clip per scene ──
 let nid = 0;
 const uid = (p) => `${p}${Date.now().toString(36)}${(++nid).toString(36)}${Math.random().toString(36).slice(2, 6)}`;
 const baseItem = (clipId, dur, extra) => Object.assign({
@@ -210,7 +220,6 @@ const voiceChannel = (voice) => {
 };
 // sfx = [{ url, start, duration, gain | vol, name }] → audio channels ("Sound effects"): overlapping sounds go on
 // separate lanes (a channel holds one item at a time); volume = the cue's gain as a percentage (≤ 100 %).
-// The editor has no ducking: the effects play at their own levels.
 const sfxChannels = (sfx) => {
   const clips = []; const lanes = [];
   const byUrl = new Map();
@@ -226,108 +235,34 @@ const sfxChannels = (sfx) => {
   }
   return lanes.length ? { clips, channels: lanes.map((l, i) => ({ id: uid('mc'), name: lanes.length > 1 ? `Sound effects ${i + 1}` : 'Sound effects', visible: true, unsnapped: true, kind: 'audio', items: l.items })) } : null;
 };
-
-// the scenes alternate between two banks of channels when they overlap (fades), so no channel ever
-// holds two live items at once; a bank has as many channels as its biggest scene has layers
-const bankOf = (timing, i) => (timing.some((t) => t.from < t.start) ? i % 2 : 0);
-
-// the scenes whose item can't become editor layers (formats: ['html']): a layers export places them as
-// HTML clips (they need their scene pages), After Effects gets them as pre-rendered footage
-MU.htmlOnlyScenes = (scenario) => (MU.normalize(scenario).engine === '3d' ? MU.timing(scenario).map((tm, i) => i) : MU.timing(scenario).map((tm, i) => {
-  const el = K().elements.find((e) => e.id === tm.item);
-  return el && !K().canLayers(el) ? i : -1;
-}).filter((i) => i >= 0));
-MU.footageScenes = MU.htmlOnlyScenes;
-const htmlClip = (s, tm, i, url) => {
-  const dur = r3(tm.to - tm.from); const id = uid('mh');
-  const name = s.scenes[i].title || K().elements.find((e) => e.id === tm.item)?.name || tm.item;
-  return { clip: { id, source: 'REMOTE', mediaType: 'html', url, proxyUrl: null, thumbnailUrl: null, name, duration: dur, html: { width: s.size.w, height: s.size.h } },
-    item: baseItem(id, dur, { customName: name, freeStart: r3(tm.from) }) };
-};
-
-// every layer editable: scene i = UIK.compose(…, { scene: i }) converted, its items placed at the
-// scene's window on the bank's channels. opt.imageSizes = { url: {w, h} }, opt.url(path) → media URL.
-// An HTML-only scene goes in as its HTML clip: opt.htmlUrls[i] = that scene page's URL.
-MU.veLayers = (scenario, opt = {}) => {
-  const s = MU.normalize(scenario);
-  if (s.engine === '3d') throw new Error('a 3D-engine film goes into the Video Editor as HTML scenes: export glea-html');
-  const timing = MU.timing(s);
-  const clips = []; const banks = [[], []]; const approx = new Set();
-  const htmlOnly = new Set(MU.htmlOnlyScenes(s));
-  timing.forEach((tm, i) => {
-    if (htmlOnly.has(i)) {
-      const url = (opt.htmlUrls || [])[i];
-      if (!url) throw new Error(`veLayers: scene ${i + 1} (${tm.item}) goes in as its HTML clip — pass its page URL in opt.htmlUrls[${i}]`);
-      const bank = banks[bankOf(timing, i)];
-      if (!bank[0]) bank[0] = { id: uid('mc'), name: 'Scene', visible: true, unsnapped: true, items: [] };
-      const h = htmlClip(s, tm, i, url); clips.push(h.clip); bank[0].items.push(h.item);
-      approx.add(`scene ${i + 1} (${tm.item}): an HTML clip — the item is too heavy for editor layers`);
-      return;
-    }
-    const spec = K().compose(s, { scene: i });
-    const { preset, report } = K().toVE(spec, { theme: s.theme, accent: s.accent, colors: s.colors, videoSize: s.size, imageSizes: opt.imageSizes });
-    report.approx.forEach((a) => approx.add(a));
-    for (const c of preset.sequence.clips) clips.push(Object.assign({}, c, c.url && opt.url ? { url: opt.url(c.url) } : {}));
-    const bank = banks[bankOf(timing, i)];
-    preset.sequence.channels.forEach((ch, j) => {
-      if (!bank[j]) bank[j] = { id: uid('mc'), name: ch.name, visible: true, unsnapped: true, items: [] };
-      else if (!bank[j].name.includes(ch.name)) bank[j].name = `${bank[j].name} · ${ch.name}`.slice(0, 60);
-      for (const it of ch.items) bank[j].items.push(Object.assign({}, it, { freeStart: r3(tm.from) }));
-    });
-  });
-  // bank 0 under bank 1 (a later scene fades in on top); channel names stay short
-  const channels = [...banks[0], ...banks[1]].map((ch) => Object.assign(ch, { name: ch.name.split(' · ')[0] }));
-  const vo = voiceChannel(opt.voice);
-  if (vo) { clips.push(...vo.clips); channels.unshift(vo.channel); }
-  const fx = sfxChannels(opt.sfx);
-  if (fx) { clips.push(...fx.clips); channels.unshift(...fx.channels); }
-  return { name: s.name, data: state(s, clips, channels), approx: [...approx] };
-};
-
-// one HTML clip per scene: opt.htmlUrls[i] = the scene page's media URL (MU.pageHtml(…, { scene: i }))
-MU.veHtmlCards = (scenario, opt = {}) => {
+// scenes joined by a fade overlap: they alternate between two channels, so no channel holds two clips at once
+MU.glea = (scenario, opt = {}) => {
   const s = MU.normalize(scenario);
   const timing = MU.timing(s);
   const clips = []; const banks = [{ id: uid('mc'), name: 'Scenes', visible: true, unsnapped: true, items: [] }];
-  if (timing.some((t) => t.from < t.start)) banks.push({ id: uid('mc'), name: 'Scenes (fades)', visible: true, unsnapped: true, items: [] });
+  const fades = timing.some((t) => t.from < t.start);
+  if (fades) banks.push({ id: uid('mc'), name: 'Scenes (fades)', visible: true, unsnapped: true, items: [] });
   timing.forEach((tm, i) => {
     const url = (opt.htmlUrls || [])[i];
-    if (!url) throw new Error(`veHtmlCards: no page URL for scene ${i + 1}`);
-    const h = htmlClip(s, tm, i, url); clips.push(h.clip); banks[bankOf(timing, i)].items.push(h.item);
+    if (!url) throw new Error(`glea: no page URL for scene ${i + 1}`);
+    const dur = r3(tm.to - tm.from); const id = uid('mh');
+    const name = s.scenes[i].title || (s.scenes[i].item ? (K().elements.find((e) => e.id === s.scenes[i].item) || {}).name : '') || `Scene ${i + 1}`;
+    clips.push({ id, source: 'REMOTE', mediaType: 'html', url, proxyUrl: null, thumbnailUrl: null, name, duration: dur, html: { width: s.size.w, height: s.size.h } });
+    banks[fades ? i % 2 : 0].items.push(baseItem(id, dur, { customName: name, freeStart: r3(tm.from) }));
   });
   const channels = banks.filter((b) => b.items.length);
   const vo = voiceChannel(opt.voice);
   if (vo) { clips.push(...vo.clips); channels.unshift(vo.channel); }
   const fx = sfxChannels(opt.sfx);
   if (fx) { clips.push(...fx.clips); channels.unshift(...fx.channels); }
-  return { name: s.name, data: state(s, clips, channels), approx: [] };
+  return { name: s.name, data: state(s, clips, channels) };
 };
-
 // the editor's project bundle (POST /api/moodboards/{id}/video-projects/import): project.json + media/<rel>
 // — media URLs inside are /media/<rel>, which the import copies into the board and remaps
-MU.veBundle = (project, media) => MU.zip([
+MU.gleaBundle = (project, media) => MU.zip([
   { name: 'project.json', data: JSON.stringify({ version: 1, kind: 've-project-export', name: project.name, data: project.data }, null, 1) },
   ...media.map((m) => ({ name: 'media/' + m.rel, data: m.data })),
 ]);
-
-// ── After Effects ──
-// the pictures sit next to the script in assets/: returns { jsx, files: { url: 'assets/x' }, approx,
-// renders }. An HTML-only scene is FOOTAGE: renders = [{ scene, file: 'assets/scene-N.mov', duration }]
-// the exporter records (ProRes 4444 with alpha, MU.pageHtml(…, { scene })) next to the script.
-MU.aeScript = (scenario, opt = {}) => {
-  const s = MU.normalize(scenario);
-  if (s.engine === '3d') throw new Error('a 3D-engine film has no After Effects export (its scenes are HTML pages): render it, or export glea-html');
-  const timing = MU.timing(s);
-  const skip = MU.footageScenes(s);
-  const spec = K().compose(s, { skip });
-  const files = {}; const taken = new Set();
-  const walk = (L) => { if (L.img && !files[L.img]) { let b = String(L.img).split('/').pop().split('?')[0] || 'picture.png'; while (taken.has(b)) b = '1-' + b; taken.add(b); files[L.img] = 'assets/' + b; } (L.ch || []).forEach(walk); };
-  K().build(spec).forEach(walk);
-  const renders = skip.map((i) => ({ scene: i, file: `assets/scene-${i + 1}.mov`, start: timing[i].from, duration: r3(timing[i].to - timing[i].from),
-    name: s.scenes[i].title || K().elements.find((e) => e.id === timing[i].item)?.name || timing[i].item }));
-  const out = K().toAE(spec, { theme: s.theme, accent: s.accent, colors: s.colors, fps: s.fps, name: s.name, videoSize: s.size, imageSizes: opt.imageSizes, files, footage: renders });
-  return { jsx: out.jsx, files, renders, layers: out.layers, approx: out.approx.concat(renders.map((r) => `scene ${r.scene + 1} (${r.name}): pre-rendered footage — the item is HTML-only`)) };
-};
 
 // ── zip (stored, no compression — media is compressed already) ──
 const CRC = (() => { const t = new Uint32Array(256); for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();

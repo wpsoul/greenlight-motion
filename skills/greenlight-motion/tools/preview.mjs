@@ -1,16 +1,15 @@
-// The preview: the film playing with a scene bar, and a right panel with the design tokens, the fonts,
-// the voice-over, Render and Export.
+// The preview: the film playing with a scene bar, and a right panel: the elements of the scene on screen (click any of
+// them on the stage to change it), the film's colours and font, the voice-over, Render and Export.
 //   node tools/preview.mjs <project> [--artifact] [--standalone] [--board <id>] [--api <url>]
-// Standalone → <project>/preview.html + film.html (the page the render engine records). Open
-// preview.html as a file to watch it; run `node tools/serve.mjs <project>` to get working Render and
-// Export buttons. --artifact also writes preview.artifact.html (pictures inlined, buttons show the
-// commands) for the Artifact tool. Under a GreenLight Dash board → an HTML card in the pipeline's Preview lane.
-// Every target lets the user edit the design tokens and the elements (the Elements tab: your `ui` panels and
-// `params`); the edits are saved to scenario.json → edits (serve.mjs), on the card (board), or in the browser
-// (a file / an artifact: "Copy for the agent"). node tools/edits.mjs lists them.
+// Standalone → <project>/preview.html + film.html (the page the render engine records). Open preview.html as a file
+// to watch it; run `node tools/serve.mjs <project>` to get working Render and Export buttons. --artifact also writes
+// preview.artifact.html (pictures inlined, buttons show the commands) for the Artifact tool. Under a GreenLight Dash
+// board → an HTML card in the pipeline's Preview lane. The user's edits are saved to scenario.json → edits
+// (serve.mjs), on the card (board), or in the browser (a file / an artifact: "Copy for the agent").
+// node tools/edits.mjs lists them.
 import fs from 'node:fs';
 import path from 'node:path';
-import { loadProject, board, boardState, upsertHtmlCard, pullEdits } from './project.mjs';
+import { loadProject, board, boardState, upsertHtmlCard, pullEdits, isQuick } from './project.mjs';
 import { showCard } from './pipeline.mjs';
 import { previewPage, filmPage, boardAssets } from './build.mjs';
 
@@ -22,16 +21,17 @@ const B = await board(argv);
 if (B) ({ project } = await pullEdits(B, project));
 const { scenario } = project;
 for (const p of project.problems) console.warn('! ' + p);
-if (project.problems.some((p) => /unknown item|fails to build|no scenes/.test(p))) process.exit(1);
+if (project.problems.some((p) => /unknown library scene|fails to build|no scenes|page not found/.test(p))) process.exit(1);
 
 if (!B) {
   const out = path.join(project.dir, 'preview.html');
-  fs.writeFileSync(out, previewPage(project, { target: 'local', mode: { kind: 'static' } }));
+  // quick mode: no Render / Export on the page — the agent asks for the approval, then renders
+  fs.writeFileSync(out, previewPage(project, { target: 'local', mode: { kind: 'static', agent: isQuick(project.dir) } }));
   fs.writeFileSync(path.join(project.dir, 'film.html'), filmPage(project));
   console.log(`preview: ${out}`);
   if (argv.includes('--artifact')) {
     const art = path.join(project.dir, 'preview.artifact.html');
-    fs.writeFileSync(art, previewPage(project, { target: 'artifact', mode: { kind: 'static' } }));
+    fs.writeFileSync(art, previewPage(project, { target: 'artifact', mode: { kind: 'static', agent: isQuick(project.dir) } }));
     console.log(`artifact page: ${art} (publish it with the Artifact tool)`);
   }
   console.log(JSON.stringify({ ok: true, mode: 'standalone', file: out, film: path.join(project.dir, 'film.html') }));

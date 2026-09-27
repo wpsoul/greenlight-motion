@@ -392,7 +392,7 @@ UIK.define({
 
 // 7 ─ Breadcrumbs: folder clicks append crumbs, the path scrolls when long, Home collapses it back
 UIK.define({
-  id: 'breadcrumbs', formats: ['html'], name: 'Breadcrumbs', cat: 'mobile', T: 4.2, cam: 1.35,
+  id: 'breadcrumbs', name: 'Breadcrumbs', cat: 'mobile', T: 4.2, cam: 1.35,
   desc: 'Clicking folders appends crumbs that slide in while the list swaps with a directional slide; the third crumb overflows, so the path scrolls left. Clicking Home collapses every crumb back in reverse order and the root list slides in from the other side.',
   build: () => {
     const C1 = 1.0, C2 = 2.05, C3 = 3.15, BY = -176, RY = [-58, 42, 142];
@@ -453,7 +453,7 @@ UIK.define({
 
 // 8 ─ Pagination: the ink page pill stretches along the pager, the grid swaps with a directional slide
 UIK.define({
-  id: 'pagination', formats: ['html'], name: 'Pagination', cat: 'mobile', T: 3.6, cam: 1.2,
+  id: 'pagination', name: 'Pagination', cat: 'mobile', T: 3.6, cam: 1.2,
   desc: 'Clicking 2, then 3: the ink page pill stretches along the pager (leading edge first, numbers invert through it), the six-card grid slides out to the left and the next page slides in from the right column by column, and the range label swaps.',
   build: () => {
     const C1 = 1.1, C2 = 2.3, NX = [-120, -40, 40, 120], PY = 290, CX = [-344, 0, 344], RY = [-120, 104], DARK = [1, 3, 5];
@@ -718,7 +718,7 @@ UIK.define({
 
 // 14 ─ App launch: a tapped home-screen tile morphs into the full-screen app while the grid recedes
 UIK.define({
-  id: 'app-launch', formats: ['html'], name: 'App launch', cat: 'mobile', T: 3.4, cam: PHONE_CAM,
+  id: 'app-launch', name: 'App launch', cat: 'mobile', T: 3.4, cam: PHONE_CAM,
   desc: 'Home-screen tiles pop in on a diagonal stagger. A tap on the ink player tile grows that one shape into the full-screen app (position, size and corners) while the grid behind shrinks, fades and blurs away; then the player content settles in and playback runs.',
   build: () => {
     const C = 1.15, M = C + 0.07, EZ = 'Expo Out', CX = [-165, -55, 55, 165], RY = [-150, -30, 90, 210], TR = 1, TC = 2;

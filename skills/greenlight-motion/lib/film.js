@@ -1,40 +1,26 @@
-/* UI Motion Kit — films: several kit items played one after another as ONE element.
- *
- * UIK.compose(scenario) returns an ordinary element spec (id, name, T, cam, build), so everything
- * that plays or converts one item plays or converts a whole film: the engine, the Video Editor
- * converter (converter.js), the HTML export (html-export.js) and the After Effects export.
+/* GreenLight Motion — a library scene: a library item played on the film's clock, with the scene's copy, pictures,
+ * parameters and motion preset. The player gives every library scene a page of its own: UIK.compose(scenario,
+ * { scene: i }) is scene i alone, on its own clock (t = 0 is the start of its visible window).
  *
  *   scenario = {
- *     id, name,
  *     scenes: [{
- *       item: 'odometer',        // a kit element id (library or your own UIK.define)
- *       duration: 3.2,           // seconds on screen (default: the item's own T); longer holds the end
- *       text: { label: 'Orders' },   // copy overrides: text-layer id → new text (see the registry)
- *       images: { hero: 'assets/shot.png', '#2': 'assets/b.jpg' },  // photo id or '#n' (n-th photo) → your picture
+ *       item: 'odometer',          // a library item id (the registry lists them)
+ *       duration: 3.2,             // seconds on screen (default: the item's own length); longer holds the end
+ *       text: { label: 'Orders' }, // copy: a text layer's id (or its key, ~0.2.1) → new text
+ *       images: { hero: 'assets/shot.png', '#2': 'assets/b.jpg' },  // a photo's id, key or '#n' (n-th photo) → a picture
  *       transition: 'cut' | 'fade', // into THIS scene (fade = 0.35 s cross-fade)
- *       motion: 'spring',        // this scene's motion preset (default: the film's)
- *       params: { glow: 0.4 },   // the item's own parameters (UIK.define({ params }), build(H, P))
- *       style: { price: { color: '#111', size: 120 } },   // per layer (id, or ~<path> without one): colour
- *                                // (color / fill / stroke), size, weight, upper, ls, r, sw, text
- *       ui: [{ layer: 'card', label, controls }],   // the agent's controls for the preview (not drawn)
- *     }, …],
- *     motion: 'spring',          // the film's motion preset — K.MOTION_PRESETS (default 'spring';
- *                                // 'authored' keeps every item's own easing)
+ *       motion: 'spring',          // this scene's motion preset (default: the film's)
+ *       params: { glow: 0.4 },     // the item's own parameters
+ *       ui: [{ layer: 'card', label, controls }],   // the agent's panels for the preview (not drawn)
+ *     }, …],                       // (a scene with `html` instead of `item` is a page of its own: only its timing counts here)
+ *     motion: 'spring',            // the film's motion preset — K.MOTION_PRESETS ('authored' keeps every item's own easing)
  *     recolor: { '#FFFFFF': '#111111' },   // item colours: a literal colour swapped in every layer
- *     font: 'Inter',             // the film's font (K.FONTS; default Helvetica Neue) — the spec carries it
+ *     font: 'Inter',               // the film's font (K.FONTS) — the spec carries it
  *   }
- * (Token colours — scenario.colors — are the theme's: K.setTheme(theme, accent, colors) by whoever plays the film.)
- *
- * A style colour recolours the layer's RESTING colour: its value and every keyframe with that same colour (a flash
- * to another colour stays); an object swaps colours on that property ({ acc: '#F00' }: every accent value of it); size / r / sw scale their keyframes, ls shifts them. Every built layer carries _key (its
- * style key) and _scene (its scene index) for the preview's element picking; a scene's `ui` panels sit on their
- * anchor layers as _ui.
- *
- * How: each scene's layer tree is cloned with every keyframe time shifted to the scene's start
- * (segments, steps, caret times, placeholder `start=` options), wrapped in a group that is only
- * visible during the scene, and the scenes' cameras become one camera with a step at each cut.
- * UIK.compose(scenario, { scene: i }) is scene i alone on its own clock (for per-scene exports), and
- * UIK.filmTiming(scenario) lists every scene's start / end and visible window.
+ * (Token colours — scenario.colors — are the theme's: K.setTheme(theme, accent, colors) by whoever plays it.)
+ * Every built layer carries _key (its id, or ~<path>: child indexes) — the engine puts it on its node as data-gl, which
+ * the preview's element picker and the user's edits (CSS, per element) address — and _scene; a scene's `ui` panels sit
+ * on their anchor layers as _ui. UIK.filmTiming(scenario) lists every scene's start / end and visible window.
  */
 (function () {
 'use strict';
@@ -98,7 +84,7 @@ const shiftTokens = (text, dt) => String(text).replace(/\{\{\{\s*(COUNTER|TIMER)
   if (!found && dt > 0 && !parts.slice(1).some((p) => /^\s*kf\s*=/.test(p))) opts.push(` start=${r3(dt)}`);
   return `{{{${type}:${[main, ...opts].join(';')}}}}`;
 });
-// ── styles: the user's (or the agent's) per-layer values, applied to the copies while a scene is built ──
+// ── colours ──
 const hasOwn = (o, k) => !!o && k != null && Object.prototype.hasOwnProperty.call(o, k);
 const normHex = (c) => {
   const v = String(c == null ? '' : c).trim();
@@ -107,67 +93,13 @@ const normHex = (c) => {
   if (h.length === 3 || h.length === 4) h = h.split('').map((x) => x + x).join('');
   return '#' + h.toUpperCase();
 };
-const sameColor = (a, b) => a != null && b != null && normHex(a) === normHex(b);
 const COLORS = ['fill', 'stroke', 'color', 'caretColor'];
-const SCALED = new Set(['size', 'r', 'sw']);
-const DEF = { size: 40, weight: 400, ls: 0, r: 0, sw: 0, upper: false, italic: false };
 // a track's values mapped: [init?, [t0, t1, v, e] | [t, v] …]
 const mapTrack = (tr, fn) => (Array.isArray(tr) ? tr : [tr]).map((x) => {
   if (!Array.isArray(x)) return fn(x);
   if (x.length === 2) return [x[0], fn(x[1])];
   const o = x.slice(); o[2] = fn(x[2]); return o;
 });
-// the value a layer rests at: its own, else its track's first value, else (a colour that animates in) the settled one
-const restOf = (L, p) => {
-  if (L[p] !== undefined && L[p] !== null) return L[p];
-  const tr = L.k && L.k[p];
-  if (tr !== undefined) {
-    const a = Array.isArray(tr) ? tr : [tr];
-    if (a.length && !Array.isArray(a[0])) return a[0];
-    const segs = a.filter(Array.isArray);
-    if (segs.length && COLORS.includes(p)) { const x = segs[segs.length - 1]; return x.length === 2 ? x[1] : x[2]; }
-  }
-  if (p === 'color' && (L.type === 'text' || L.type === 'icon')) return 'ink';
-  if (p === 'stroke' && L.type === 'path' && !L.fill) return 'ink';
-  if (p === 'text') return L.text ?? '';
-  return hasOwn(DEF, p) ? DEF[p] : null;
-};
-// one property of a (copied) layer, as set
-const setProp = (o, p, v) => {
-  const tr = o.k && o.k[p];
-  if (COLORS.includes(p) && v && typeof v === 'object') {
-    // swaps on this property: { acc: '#F00', ink: '#222' } — every value (static or keyframe) that is one of them
-    const map = {}; for (const [x, y] of Object.entries(v)) map[normHex(x)] = y;
-    const swap = (c) => (typeof c === 'string' && hasOwn(map, normHex(c)) ? map[normHex(c)] : c);
-    const first = Array.isArray(tr) ? tr[0] : tr;
-    const implicit = restOf(Object.assign({}, o, { k: null }), p);   // what an unset colour draws as (ink for text / icons)
-    if (typeof o[p] === 'string') o[p] = swap(o[p]);
-    else if (tr === undefined) { if (implicit != null && hasOwn(map, normHex(implicit))) o[p] = map[normHex(implicit)]; }
-    if (tr !== undefined) {
-      let t = mapTrack(tr, swap);
-      // a track with no start value starts from the layer's (unset → implicit) colour
-      if (o[p] == null && Array.isArray(first) && implicit != null && hasOwn(map, normHex(implicit))) t = [map[normHex(implicit)], ...t];
-      o.k = Object.assign({}, o.k, { [p]: t });
-    }
-    return;
-  }
-  if (COLORS.includes(p)) {
-    const from = restOf(o, p);
-    if (o[p] != null || tr === undefined) o[p] = v;
-    if (tr !== undefined) o.k = Object.assign({}, o.k, { [p]: mapTrack(tr, (x) => (sameColor(x, from) ? v : x)) });
-    return;
-  }
-  if (SCALED.has(p) || p === 'ls') {
-    const from = +restOf(o, p) || 0;
-    o[p] = v;
-    if (tr !== undefined) {
-      const f = p === 'ls' ? (x) => r3(x + (v - from)) : from > 0 ? (x) => Math.round(x * (v / from) * 1e4) / 1e4 : null;
-      if (f) o.k = Object.assign({}, o.k, { [p]: mapTrack(tr, (x) => (typeof x === 'number' ? f(x) : x)) });
-    }
-    return;
-  }
-  o[p] = v;
-};
 // item colours: literal colours swapped wherever a layer uses them
 const recolor = (o, map) => {
   const swap = (c) => (typeof c === 'string' && hasOwn(map, normHex(c)) ? map[normHex(c)] : c);
@@ -176,9 +108,9 @@ const recolor = (o, map) => {
     if (o.k && o.k[p] !== undefined) o.k = Object.assign({}, o.k, { [p]: mapTrack(o.k[p], swap) });
   }
 };
-K.style = { restOf, setProp, recolor, normHex, sameColor, mapTrack, COLORS };
+K.normHex = normHex;
 
-// sc = { dt, text, images, photos, style, recolor, ui, scene } — one per scene; `photos` numbers the photo slots depth-first, so a
+// sc = { dt, text, images, photos, recolor, ui, scene } — one per scene; `photos` numbers the photo slots depth-first, so a
 // slot without an id is still addressable as '#1', '#2' … (the registry lists them)
 const hasKey = (o, k) => !!o && k != null && Object.prototype.hasOwnProperty.call(o, k);
 const shiftLayer = (L, sc, path) => {
@@ -187,13 +119,11 @@ const shiftLayer = (L, sc, path) => {
   const key = L.id != null && L.id !== '' ? String(L.id) : '~' + path;
   o._key = key; o._scene = sc.scene;
   if (sc.recolor) recolor(o, sc.recolor);
-  const st = sc.style && sc.style[key];
-  if (st) for (const [p, v] of Object.entries(st)) setProp(o, p, v);
   if (sc.ui && sc.ui[key]) o._ui = sc.ui[key];
   // images: photo / box id (or '#n') → the user's picture (the stand-in composition goes)
   const slot = L.media != null ? '#' + (++sc.photos) : null;
   // by id, by the shared picture name (src — every window / copy of it), or by slot number
-  const pic = hasKey(sc.images, L.id) ? sc.images[L.id] : hasKey(sc.images, L.src) ? sc.images[L.src] : hasKey(sc.images, slot) ? sc.images[slot] : null;
+  const pic = hasKey(sc.images, L.id) ? sc.images[L.id] : hasKey(sc.images, key) ? sc.images[key] : hasKey(sc.images, L.src) ? sc.images[L.src] : hasKey(sc.images, slot) ? sc.images[slot] : null;
   if (pic != null && (L.type === 'rect' || L.type === 'ellipse')) {
     o.img = String(pic); o.clip = true;
     if (L.media != null) { o.ch = (L.ch || []).slice(L._n || 0); o._n = 0; }
@@ -210,6 +140,7 @@ const shiftLayer = (L, sc, path) => {
   if (L.caretFrom != null) o.caretFrom = r3(L.caretFrom + dt);
   if (L.caretUntil != null) o.caretUntil = r3(L.caretUntil + dt);
   if (hasKey(sc.text, L.id)) o.text = String(sc.text[L.id]);
+  else if (hasKey(sc.text, key) && L.type === 'text') o.text = String(sc.text[key]);
   if (typeof o.text === 'string') o.text = shiftTokens(o.text, dt);
   if (o.ch) o.ch = o.ch.map((c, j) => shiftLayer(c, sc, path + '.' + j));
   return o;
@@ -240,18 +171,15 @@ K.FILM_FADE = FADE;
 K.filmTiming = (scenario) => scenesOf(scenario).scenes.map((s) => ({ item: s.item, start: s.start, end: s.end, from: s.from, to: s.to, duration: s.dur }));
 
 // opt.scene = i → only that scene, on its own clock: t = 0 is the start of its visible window
-// (spec.window = { start, end } in film time) — how the Video Editor exports place one scene per slot.
-// opt.skip = [i, …] → the whole film without those scenes (their time stays: the After Effects export
-// puts pre-rendered footage there for HTML-only items)
+// (spec.window = { start, end } in film time)
 K.compose = function compose(scenario, opt = {}) {
   const all = scenesOf(scenario);
   const only = opt.scene != null ? all.scenes[opt.scene] : null;
   if (opt.scene != null && !only) throw new Error(`compose: no scene ${opt.scene + 1}`);
   const off = only ? only.from : 0;
-  const skip = new Set(opt.skip || []);
   // each scene's motion preset: its own `motion`, else the film's, else the default (spring)
   const easeOf = (s) => motionEase(s.motion != null ? s.motion : scenario.motion);
-  const scenes = only ? [only] : all.scenes.filter((s, i) => !skip.has(i));
+  const scenes = only ? [only] : all.scenes;
   scenes.forEach((s) => { if (!s.spec) throw new Error(`compose: scene ${all.scenes.indexOf(s) + 1} uses an unknown item "${s.item}"`); });
   const T = only ? r3(only.to - only.from) : all.T;
   // item colours: keys as #RRGGBB(AA)
@@ -259,11 +187,7 @@ K.compose = function compose(scenario, opt = {}) {
   for (const [from, to] of Object.entries(scenario.recolor || {})) if (to) (recolorMap = recolorMap || {})[normHex(from)] = to;
   // the camera: each scene's own, from its start (a cut is a step; its moves are shifted)
   const cam = { zoom: 1, x: 0, y: 0, k: { zoom: [], x: [], y: [] } };
-  // a camera that tilts or dollies (3D space) in any scene: those props too (0 where a scene doesn't)
-  const CAM3 = ['tiltX', 'tiltY', 'dolly'];
-  const uses3 = scenes.some((s) => { const c = camOf(s.spec); return CAM3.some((p) => c[p] || (c.k && c.k[p])); });
-  const camProps = uses3 ? ['zoom', 'x', 'y', ...CAM3] : ['zoom', 'x', 'y'];
-  if (uses3) for (const p of CAM3) { cam[p] = 0; cam.k[p] = []; }
+  const camProps = ['zoom', 'x', 'y'];
   scenes.forEach((s, i) => {
     const c = camOf(s.spec);
     for (const p of camProps) {
@@ -293,7 +217,7 @@ K.compose = function compose(scenario, opt = {}) {
       const ui = {};
       for (const card of [].concat(s.ui || [])) if (card && card.layer != null) (ui[String(card.layer)] = ui[String(card.layer)] || []).push(card);
       const sc = { dt: a, text: s.text, images: s.images, photos: 0, ease: easeOf(s), scene: i,
-        style: s.style, recolor: recolorMap, ui: Object.keys(ui).length ? ui : null };
+        recolor: recolorMap, ui: Object.keys(ui).length ? ui : null };
       return H.group({ id: `scene${i + 1}`, k: { opacity: op }, ch: K.build(s.spec, s.params).map((L, j) => shiftLayer(L, sc, String(j))) });
     }),
   };

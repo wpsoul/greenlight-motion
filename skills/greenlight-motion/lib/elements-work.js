@@ -260,7 +260,7 @@ UIK.define({
 
 // 5 ─ Role matrix: a role pill is promoted Viewer → Editor and the new permissions tick on down its column
 UIK.define({
-  id: 'role-matrix', formats: ['html'], name: 'Role permissions', cat: 'work', T: 3.3, cam: 1.2,
+  id: 'role-matrix', name: 'Role permissions', cat: 'work', T: 3.3, cam: 1.2,
   desc: 'A permissions table of three people × five actions. The cursor clicks Leo’s role pill: it presses, darkens and rolls from Viewer to Editor while a soft band settles behind his column, and the three newly granted boxes tick on in accent one after another down the column. A saved note fades in.',
   build: () => {
     const C = 1.35, X = [-40, 200, 440], RY = [-2, 62, 126, 190, 254], PY = -86, HY = -142;
@@ -425,7 +425,7 @@ UIK.define({
 
 // 8 ─ Version history: hovering versions previews them in the doc, Restore hands the Current badge to the picked one
 UIK.define({
-  id: 'version-history', formats: ['html'], name: 'Version history', cat: 'work', T: 4.1, cam: 1.15,
+  id: 'version-history', name: 'Version history', cat: 'work', T: 4.1, cam: 1.15,
   desc: 'A doc beside its version list. The cursor slides down the list: a soft hover row glides after it (stretching as it travels) and the doc preview swaps to each version with a blur. On the older version the cursor clicks Restore: the accent Current badge travels down to it, the timeline dots trade places and a Restored toast lands on the doc.',
   build: () => {
     const RY = [-196, -92, 12, 116, 220], LX = 164, BX = 505, DX = -250, DY = 30, R = 2.7;
@@ -496,7 +496,7 @@ const RECEIPT = ['M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1
 
 // 9 ─ Book a meeting: a slot is picked from three days, Confirm collapses the picker into a booked card with a date tile
 UIK.define({
-  id: 'meeting-slots', formats: ['html'], name: 'Book a meeting', cat: 'work', T: 4.2,
+  id: 'meeting-slots', name: 'Book a meeting', cat: 'work', T: 4.2,
   cam: { zoom: 1.2, k: { zoom: [[2.35, 3.0, 1.7, 'Power2 Smooth']] } },
   desc: 'A scheduling card with time slots over three days (one already taken). The cursor picks Tuesday 13:30: an ink fill grows inside the chip, the summary line swaps to the chosen time and Confirm wakes up. Confirm collapses the whole picker into a compact booked card while the camera moves in: a calendar tile with an accent header pops beside "You’re booked".',
   build: () => {
@@ -556,7 +556,7 @@ UIK.define({
 
 // 10 ─ Time zones: dragging the hour slider rolls every city's clock in sync while each working-hours band slides under a fixed needle
 UIK.define({
-  id: 'timezone-slider', formats: ['html'], name: 'Time zone slider', cat: 'work', T: 3.9, cam: 1.2,
+  id: 'timezone-slider', name: 'Time zone slider', cat: 'work', T: 3.9, cam: 1.2,
   desc: 'Three cities with their local times. The cursor drags the hour slider past 4 pm and back to 3 pm: every clock rolls through the hours on the same curve as the knob, each row’s working-hours band slides under a fixed accent needle, and the status icons flip — New York wakes into its workday (moon → sun) while Tokyo’s ends (sun → moon).',
   build: () => {
     const G = 1.1, M = 2.05, R = 2.55, PS = 'Power2 Smooth', H0 = 9, H1 = 16, H2 = 15, PX = 36, TX = 240, TW = 440, SY = 196, HH = 60;
@@ -931,7 +931,7 @@ UIK.define({
 
 // 17 ─ Search facets: ticking filters removes cards (the grid reflows), the result count rolls down, applied chips appear
 UIK.define({
-  id: 'search-facets', formats: ['html'], name: 'Search filters', cat: 'work', T: 4.3, cam: 1.1,
+  id: 'search-facets', name: 'Search filters', cat: 'work', T: 4.3, cam: 1.1,
   desc: 'A media search with facet checkboxes and a grid of eight results. The cursor ticks Video: the non-video cards blur out, the rest glide into the free slots, the result count rolls from 128 to 42 and an accent "Video" chip pops. Ticking Under 1 min drops one more card, the grid closes up again and the count rolls to 18.',
   build: () => {
     const F = [1.3, 2.5], GX = [-150, 62, 274, 486], GY = [-20, 210], BX = -566, CY = -214;

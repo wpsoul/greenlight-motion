@@ -378,7 +378,7 @@ UIK.define({
 
 // 8 ─ Reels swipe: a vertical feed of full-height video cards, swiped up twice; each new card's like count ticks
 UIK.define({
-  id: 'reels-swipe', formats: ['html'], name: 'Reels swipe', cat: 'gallery', T: 4.5, cam: PHONE_CAM,
+  id: 'reels-swipe', name: 'Reels swipe', cat: 'gallery', T: 4.5, cam: PHONE_CAM,
   desc: 'A vertical feed of full-screen video cards with a play button, an action rail and a caption panel. The cursor drags the feed up and releases: the next card snaps into place, its play button fades as it starts, and its like count ticks up twice. Then once more to the third card.',
   build: () => {
     const S = [1.0, 2.45], DR = 0.3, UP = 170, SNAP = 0.55;
