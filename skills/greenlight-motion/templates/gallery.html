@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!--MU:HEAD-->
+<title>@@TITLE@@</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style id="mu-tokens">@@TOKENS@@</style>
+<style>
+/* the kit's stage (items are laid out 1:1 around the film's centre) */
+.uik-stage { position: absolute; left: 0; top: 0; overflow: hidden; transform-origin: 0 0; background: transparent;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #0B0B0B; -webkit-font-smoothing: antialiased; }
+.uik-root { position: absolute; left: 50%; top: 50%; width: 0; height: 0; }
+.uik-n { position: absolute; left: 0; top: 0; width: 0; height: 0; }
+.uik-b { position: absolute; box-sizing: border-box; }
+.uik-c { position: absolute; width: 0; height: 0; }
+.uik-t { position: absolute; left: 0; top: 0; white-space: nowrap; line-height: 1.15; }
+.uik-svg { position: absolute; left: 0; top: 0; width: 1px; height: 1px; overflow: visible; }
+.uik-dw { display: inline-grid; position: relative; justify-items: center; vertical-align: top; clip-path: inset(calc((1lh - 1.1em) / 2) -0.5em); }
+.uik-dz { grid-area: 1 / 1; visibility: hidden; height: 1lh; overflow: hidden; }
+.uik-ds { grid-area: 1 / 1; position: relative; }
+.uik-d1 { position: absolute; left: 0; right: 0; top: 1.1em; text-align: center; }
+.uik-caret { display: inline-block; width: .085em; height: 1.02em; vertical-align: -0.15em; margin: 0 .03em; border-radius: 2px; }
+.uik-cursor svg { filter: drop-shadow(0 2px 3px rgba(0,0,0,.28)); }
+
+/* gallery chrome — every colour is a token (mu-tokens) */
+.mugl-app { box-sizing: border-box; position: fixed; inset: 0; overflow: auto; background: var(--mu-bg); color: var(--mu-txt);
+  font: 14px/1.5 Inter, 'Helvetica Neue', system-ui, sans-serif; -webkit-font-smoothing: antialiased;
+  padding: 28px max(16px, 3vw) 56px; display: flex; flex-direction: column; gap: 34px; }
+.mugl-app *, .mugl-app *::before, .mugl-app *::after { box-sizing: border-box; }
+.mugl-app button { font: inherit; color: inherit; }
+.mugl-head { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px 28px; }
+.mugl-title { flex: 1 1 360px; min-width: 0; }
+.mugl-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; color: var(--mu-sub); }
+.mugl-title h1 { margin: 6px 0 0; font-size: clamp(24px, 3.2vw, 34px); line-height: 1.12; font-weight: 600; letter-spacing: -0.025em; text-wrap: balance; }
+.mugl-title p { margin: 8px 0 0; color: var(--mu-sub); max-width: 68ch; }
+.mugl-facts { display: flex; flex-wrap: wrap; gap: 8px; }
+.mugl-fact { border: 1px solid var(--mu-line); border-radius: 8px; padding: 6px 10px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.mugl-fact b { font-weight: 600; margin-right: 4px; }
+.mugl-fact span { color: var(--mu-sub); }
+.mugl-sec h2 { margin: 0 0 4px; font-size: 16px; font-weight: 600; letter-spacing: -0.01em; }
+.mugl-sec > p { margin: 0 0 14px; color: var(--mu-sub); font-size: 13px; }
+/* storyboard: one strip, each scene as wide as its share of the film */
+.mugl-ruler { position: relative; height: 22px; margin-bottom: 8px; border-bottom: 1px solid var(--mu-line); font-size: 11px; color: var(--mu-sub); font-variant-numeric: tabular-nums; }
+.mugl-ruler i { position: absolute; bottom: 0; height: 6px; border-left: 1px solid var(--mu-line); }
+.mugl-ruler i span { position: absolute; bottom: 7px; left: 3px; font-style: normal; }
+.mugl-board { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+.mugl-scene { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.mugl-scr { position: relative; width: 100%; max-width: 100%; border-radius: 10px; overflow: hidden; background: var(--mu-stage); border: 1px solid var(--mu-line); cursor: pointer; }
+.mugl-scr:focus-visible { outline: 2px solid var(--mu-acc); outline-offset: 2px; }
+.mugl-num { position: absolute; left: 10px; top: 10px; z-index: 2; min-width: 24px; height: 24px; padding: 0 7px; border-radius: 12px; background: var(--mu-chip); color: var(--mu-chip-txt); font-size: 12px; font-weight: 600; display: grid; place-items: center; font-variant-numeric: tabular-nums; }
+.mugl-tr { position: absolute; right: 10px; top: 10px; z-index: 2; height: 22px; padding: 0 8px; border-radius: 11px; background: var(--mu-chip); color: var(--mu-chip-txt); font-size: 11px; display: grid; place-items: center; }
+.mugl-sc-meta { display: flex; flex-direction: column; gap: 4px; }
+.mugl-sc-top { display: flex; align-items: baseline; gap: 8px; }
+.mugl-sc-top b { font-weight: 600; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mugl-sc-top span { margin-left: auto; color: var(--mu-sub); font-size: 12px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.mugl-sc-item { color: var(--mu-sub); font-size: 12px; }
+.mugl-copy { display: flex; flex-direction: column; gap: 3px; font-size: 12.5px; }
+.mugl-copy div { display: flex; gap: 6px; min-width: 0; }
+.mugl-copy em { font-style: normal; color: var(--mu-sub); flex: none; }
+.mugl-copy q { quotes: '“' '”'; min-width: 0; overflow-wrap: anywhere; }
+.mugl-vo { font-size: 12.5px; color: var(--mu-txt); border-left: 2px solid var(--mu-acc); padding-left: 8px; }
+/* library picks */
+.mugl-bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 14px; }
+.mugl-chip { border: 1px solid var(--mu-line); background: transparent; border-radius: 999px; padding: 5px 12px; cursor: pointer; color: var(--mu-sub); white-space: nowrap; }
+.mugl-chip:hover { color: var(--mu-txt); }
+.mugl-chip[aria-pressed="true"] { background: var(--mu-txt); color: var(--mu-bg); border-color: var(--mu-txt); }
+.mugl-chip:focus-visible, .mugl-x:focus-visible { outline: 2px solid var(--mu-acc); outline-offset: 2px; }
+.mugl-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 18px 16px; }
+.mugl-tile { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.mugl-tmeta { display: flex; align-items: baseline; gap: 8px; min-width: 0; }
+.mugl-tmeta b { font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mugl-tmeta span { margin-left: auto; color: var(--mu-sub); font-size: 12px; white-space: nowrap; }
+.mugl-tag { font-size: 11px; border-radius: 6px; padding: 1px 6px; background: var(--mu-soft); color: var(--mu-sub); white-space: nowrap; }
+.mugl-tag.is-used { background: var(--mu-acc); color: var(--mu-on-acc); }
+.mugl-tag.is-new { border: 1px solid var(--mu-acc); background: transparent; color: var(--mu-txt); }
+.mugl-tdesc { font-size: 12px; color: var(--mu-sub); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.mugl-empty { color: var(--mu-sub); padding: 24px 0; }
+/* the big player */
+.mugl-dlg { position: fixed; inset: 0; z-index: 20; background: var(--mu-scrim); display: flex; align-items: center; justify-content: center; padding: 16px; }
+/* anything the page hides stays hidden: a class's own display (the tiles are flex) beats the browser's [hidden] */
+.mugl-app [hidden] { display: none !important; }
+.mugl-card { width: min(1100px, 100%); max-height: 100%; overflow: auto; background: var(--mu-panel); border: 1px solid var(--mu-line); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.mugl-card header { display: flex; align-items: center; gap: 12px; }
+.mugl-card header b { font-size: 15px; font-weight: 600; }
+.mugl-card header span { color: var(--mu-sub); font-size: 12px; }
+.mugl-x { margin-left: auto; border: 1px solid var(--mu-line); background: transparent; border-radius: 8px; padding: 4px 10px; cursor: pointer; }
+.mugl-ctl { display: flex; align-items: center; gap: 10px; }
+.mugl-ctl button { border: 0; border-radius: 8px; padding: 6px 12px; background: var(--mu-acc); color: var(--mu-on-acc); font-weight: 600; cursor: pointer; min-width: 74px; }
+.mugl-ctl input { flex: 1; min-width: 0; accent-color: var(--mu-acc); }
+.mugl-ctl output { font-variant-numeric: tabular-nums; color: var(--mu-sub); font-size: 12px; min-width: 88px; text-align: right; }
+@media (prefers-reduced-motion: reduce) { .mugl-scr { scroll-behavior: auto; } }
+</style>
+<!--/MU:HEAD-->
+</head>
+<body>
+<!--MU:BODY-->
+<div class="mugl-app" id="mugl">
+  <header class="mugl-head">
+    <div class="mugl-title">
+      <div class="mugl-eyebrow" id="mugl-eyebrow">GL Motion · scenario</div>
+      <h1 id="mugl-name"></h1>
+      <p id="mugl-brief"></p>
+    </div>
+    <div class="mugl-facts" id="mugl-facts"></div>
+  </header>
+  <section class="mugl-sec" aria-labelledby="mugl-h-story">
+    <h2 id="mugl-h-story">Scenario</h2>
+    <p>Each scene plays with your copy. Click one to open it larger.</p>
+    <div class="mugl-ruler" id="mugl-ruler"></div>
+    <div class="mugl-board" id="mugl-board"></div>
+  </section>
+  <section class="mugl-sec" aria-labelledby="mugl-h-lib">
+    <h2 id="mugl-h-lib">GL Motion items</h2>
+    <p id="mugl-lib-note">The library items this film uses, alternatives for each scene, and anything built new for it.</p>
+    <div class="mugl-bar" id="mugl-filter" role="group" aria-label="Show"></div>
+    <div class="mugl-grid" id="mugl-grid"></div>
+  </section>
+  <div class="mugl-dlg" id="mugl-dlg" hidden role="dialog" aria-modal="true" aria-labelledby="mugl-dname">
+    <div class="mugl-card">
+      <header><b id="mugl-dname"></b><span id="mugl-dsub"></span><button class="mugl-x" id="mugl-dclose" type="button">Close</button></header>
+      <div class="mugl-scr" id="mugl-dscr"></div>
+      <div class="mugl-ctl"><button type="button" id="mugl-dplay">Pause</button><input type="range" id="mugl-dscrub" min="0" max="1" step="0.0005" value="0" aria-label="Time"><output id="mugl-dtime"></output></div>
+    </div>
+  </div>
+</div>
+@@SCRIPTS@@
+<script>
+(function () {
+'use strict';
+const DATA = @@DATA@@;
+const K = window.UIK, MU = window.MU, $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const sc = MU.normalize(DATA.scenario);
+const W = sc.size.w, H = sc.size.h, HOLD = 0.9;
+K.setTheme(sc.theme, sc.accent);
+const stageBg = sc.background || K.theme().bg;
+$('mugl').style.setProperty('--mu-stage', stageBg);
+const fmt = (t) => { const m = Math.floor(t / 60), s = t - m * 60; return `${m}:${s.toFixed(2).padStart(5, '0')}`; };
+const timing = MU.timing(sc);
+const T = timing.length ? timing[timing.length - 1].end : 0;
+
+$('mugl-name').textContent = sc.name;
+$('mugl-brief').textContent = DATA.brief || `${timing.length} scenes built from the GL Motion library.`;
+document.title = sc.name;
+$('mugl-facts').innerHTML = [
+  [`${W}×${H}`, W >= H ? 'landscape' : 'vertical'], [`${sc.fps}`, 'fps'], [T.toFixed(1) + ' s', `${Math.round(T * sc.fps)} frames`],
+  [timing.length, 'scenes'], [sc.theme === 'dark' ? 'Dark' : 'Light', 'theme'],
+].map(([a, b]) => `<div class="mugl-fact"><b>${esc(a)}</b><span>${esc(b)}</span></div>`).join('') +
+  `<div class="mugl-fact"><b style="display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:-1px;background:${esc(K.theme().acc)}"></b><span>accent ${esc(K.theme().acc)}</span></div>`;
+
+// ── players: a host box at the film's ratio, the stage scaled into it ──
+const players = [];
+const mount = (host, spec) => {
+  host.style.aspectRatio = `${W} / ${H}`;
+  const inst = new K.Instance(spec, host);
+  Object.assign(inst.stage.style, { width: W + 'px', height: H + 'px' });
+  const P = { host, spec, inst, t: 0, vis: false };
+  P.fit = () => { inst.stage.style.transform = `scale(${host.clientWidth / W})`; };
+  P.fit(); inst.seek(Math.min(spec.T, spec.T * 0.7));
+  players.push(P);
+  return P;
+};
+const io = new IntersectionObserver((ents) => { for (const en of ents) { const P = players.find((p) => p.host === en.target); if (P) P.vis = en.isIntersecting; } }, { rootMargin: '80px' });
+const ro = new ResizeObserver(() => players.forEach((P) => P.fit()));
+
+// ── the storyboard ──
+const ruler = $('mugl-ruler');
+const step = T > 40 ? 10 : T > 16 ? 5 : T > 6 ? 2 : 1;
+for (let t = 0; t <= T + 1e-6; t += step) ruler.insertAdjacentHTML('beforeend', `<i style="left:${(t / T) * 100}%"><span>${t}s</span></i>`);
+const board = $('mugl-board');
+const VOICES = MU.sceneVoices(sc);   // a take's parts go to their own scenes
+const voiceOf = (i) => VOICES[i] || '';
+timing.forEach((tm, i) => {
+  const s = sc.scenes[i]; const item = K.elements.find((e) => e.id === tm.item);
+  const el = document.createElement('article'); el.className = 'mugl-scene';
+  const copy = Object.entries(s.text || {}).map(([k, v]) => `<div><em>${esc(k)}</em><q>${esc(v)}</q></div>`).join('');
+  const pics = Object.keys(s.images || {}).length;
+  const vo = voiceOf(i);
+  el.innerHTML = `<div class="mugl-scr" tabindex="0" role="button" aria-label="Open scene ${i + 1}"><span class="mugl-num">${i + 1}</span>${i ? `<span class="mugl-tr">${s.transition === 'fade' ? 'fade 0.35 s' : 'cut'}</span>` : ''}</div>
+    <div class="mugl-sc-meta"><div class="mugl-sc-top"><b>${esc(s.title || item?.name || tm.item)}</b><span>${fmt(tm.start)} – ${fmt(tm.end)}</span></div>
+    <div class="mugl-sc-item">${esc(item?.name || tm.item)} · ${tm.duration.toFixed(2)} s${pics ? ` · ${pics} picture${pics > 1 ? 's' : ''}` : ''}${item && !K.canLayers(item) ? ' · <span title="Too heavy for editable Video Editor layers: this scene exports as one HTML clip">HTML only</span>' : ''}</div></div>
+    ${copy ? `<div class="mugl-copy">${copy}</div>` : ''}${vo ? `<div class="mugl-vo">${esc(vo)}</div>` : ''}`;
+  board.appendChild(el);
+  const host = el.querySelector('.mugl-scr');
+  const P = mount(host, K.compose(sc, { scene: i }));
+  P.label = `Scene ${i + 1} · ${s.title || item?.name || tm.item}`; P.sub = `${item?.name || tm.item} · ${tm.duration.toFixed(2)} s`;
+  io.observe(host); ro.observe(host);
+  const open = () => openDlg(P.spec, P.label, P.sub);
+  host.onclick = open; host.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } };
+});
+
+// ── library picks ──
+const ROLE = { used: 'In the film', alt: 'Alternatives', new: 'Built new' };
+const items = DATA.items.map((it) => Object.assign({}, it, { spec: K.elements.find((e) => e.id === it.id) })).filter((it) => it.spec);
+const counts = { all: items.length }; items.forEach((it) => { counts[it.role] = (counts[it.role] || 0) + 1; });
+let show = 'all';
+const filterEl = $('mugl-filter');
+filterEl.innerHTML = [['all', 'All'], ...Object.entries(ROLE)].filter(([k]) => counts[k]).map(([k, l]) => `<button type="button" class="mugl-chip" data-k="${k}" aria-pressed="${k === 'all'}">${l} · ${counts[k]}</button>`).join('');
+const grid = $('mugl-grid');
+const tiles = items.map((it) => {
+  const el = document.createElement('article'); el.className = 'mugl-tile';
+  const tag = it.role === 'used' ? `<span class="mugl-tag is-used">scene ${it.scenes.join(', ')}</span>` : it.role === 'new' ? '<span class="mugl-tag is-new">new</span>' : `<span class="mugl-tag">${esc(it.for ? 'for scene ' + it.for : 'alternative')}</span>`;
+  const html = K.canLayers(it.spec) ? '' : '<span class="mugl-tag" title="Too heavy for editable Video Editor layers: it exports as one HTML clip">HTML only</span>';
+  el.innerHTML = `<div class="mugl-scr" tabindex="0" role="button" aria-label="Open ${esc(it.spec.name)}"></div><div class="mugl-tmeta"><b>${esc(it.spec.name)}</b>${tag}${html}<span>${it.spec.T}s</span></div><div class="mugl-tdesc">${esc(it.spec.desc || '')}</div>`;
+  grid.appendChild(el);
+  const host = el.querySelector('.mugl-scr');
+  const P = mount(host, it.spec); io.observe(host); ro.observe(host);
+  const sub = `${K.CATS ? (K.CATS[it.spec.cat] || it.spec.cat) : it.spec.cat} · ${it.spec.id} · ${it.spec.T} s`;
+  const open = () => openDlg(it.spec, it.spec.name, sub);
+  host.onclick = open; host.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } };
+  return { it, el };
+});
+filterEl.onclick = (e) => {
+  const b = e.target.closest('.mugl-chip'); if (!b) return; show = b.dataset.k;
+  filterEl.querySelectorAll('.mugl-chip').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+  tiles.forEach(({ it, el }) => { el.hidden = !(show === 'all' || it.role === show); });
+};
+if (!tiles.length) grid.innerHTML = '<div class="mugl-empty">No library items listed.</div>';
+
+// ── the big player ──
+const D = { P: null, t: 0, playing: true };
+const dlg = $('mugl-dlg');
+function openDlg(spec, name, sub) {
+  $('mugl-dname').textContent = name; $('mugl-dsub').textContent = sub;
+  const host = $('mugl-dscr'); host.innerHTML = '';
+  const i = players.findIndex((p) => p === D.P); if (i >= 0) players.splice(i, 1);
+  dlg.hidden = false;
+  D.P = mount(host, spec); D.t = 0; D.playing = true; $('mugl-dplay').textContent = 'Pause';
+  requestAnimationFrame(() => D.P.fit());
+  $('mugl-dclose').focus();
+}
+const closeDlg = () => { dlg.hidden = true; };
+$('mugl-dclose').onclick = closeDlg;
+dlg.onclick = (e) => { if (e.target === dlg) closeDlg(); };
+addEventListener('keydown', (e) => { if (e.key === 'Escape' && !dlg.hidden) closeDlg(); });
+$('mugl-dplay').onclick = () => { D.playing = !D.playing; $('mugl-dplay').textContent = D.playing ? 'Pause' : 'Play'; };
+$('mugl-dscrub').oninput = (e) => { D.playing = false; $('mugl-dplay').textContent = 'Play'; D.t = +e.target.value * D.P.spec.T; };
+
+// ── one clock for every visible player ──
+const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+let last = performance.now();
+const loop = (now) => {
+  const dt = Math.min(0.1, (now - last) / 1000); last = now;
+  if (!document.hidden) {
+    if (!dlg.hidden && D.P) {
+      if (D.playing) { D.t += dt; if (D.t > D.P.spec.T + 0.6) D.t = 0; }
+      const t = Math.min(D.t, D.P.spec.T); D.P.inst.seek(t);
+      $('mugl-dscrub').value = (t / D.P.spec.T).toFixed(4); $('mugl-dtime').textContent = `${t.toFixed(2)} / ${D.P.spec.T.toFixed(2)} s`;
+    } else if (!still) {
+      for (const P of players) {
+        if (!P.vis || P === D.P) continue;
+        const span = P.spec.T + HOLD; P.t = (P.t + dt) % span;
+        P.inst.seek(Math.min(P.t, P.spec.T));
+      }
+    }
+  }
+  requestAnimationFrame(loop);
+};
+requestAnimationFrame(loop);
+window.__muReady = true;
+})();
+</script>
+<!--/MU:BODY-->
+</body>
+</html>

@@ -1,0 +1,2195 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!--MU:HEAD-->
+<title>@@TITLE@@</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style id="mu-tokens">@@TOKENS@@</style>
+<style>
+/* the kit's stage (items are laid out 1:1 around the film's centre) */
+.uik-stage { position: absolute; left: 0; top: 0; overflow: hidden; transform-origin: 0 0; background: transparent;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #0B0B0B; -webkit-font-smoothing: antialiased; }
+.uik-root { position: absolute; left: 50%; top: 50%; width: 0; height: 0; }
+.uik-n { position: absolute; left: 0; top: 0; width: 0; height: 0; }
+.uik-b { position: absolute; box-sizing: border-box; }
+.uik-c { position: absolute; width: 0; height: 0; }
+.uik-t { position: absolute; left: 0; top: 0; white-space: nowrap; line-height: 1.15; }
+.uik-svg { position: absolute; left: 0; top: 0; width: 1px; height: 1px; overflow: visible; }
+.uik-dw { display: inline-grid; position: relative; justify-items: center; vertical-align: top; clip-path: inset(calc((1lh - 1.1em) / 2) -0.5em); }
+.uik-dz { grid-area: 1 / 1; visibility: hidden; height: 1lh; overflow: hidden; }
+.uik-ds { grid-area: 1 / 1; position: relative; }
+.uik-d1 { position: absolute; left: 0; right: 0; top: 1.1em; text-align: center; }
+.uik-caret { display: inline-block; width: .085em; height: 1.02em; vertical-align: -0.15em; margin: 0 .03em; border-radius: 2px; }
+.uik-cursor svg { filter: drop-shadow(0 2px 3px rgba(0,0,0,.28)); }
+
+/* ── preview chrome: "studio inspector" + the theatre's Export panel and full stage — every colour is a token (mu-tokens) ── */
+.mupv-app { --side-w: clamp(336px, 26.5vw, 384px); --ease: cubic-bezier(.22, .8, .24, 1); --dur: 300ms;
+  position: fixed; inset: 0; box-sizing: border-box; display: grid; overflow: hidden; overflow: clip;
+  grid-template-columns: minmax(0, 1fr) var(--side-w); grid-template-rows: auto minmax(0, 1fr);
+  background: var(--mu-bg); color: var(--mu-txt); font: 13px/1.45 Inter, 'Helvetica Neue', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased; font-feature-settings: 'cv11', 'ss01'; }
+.mupv-app *, .mupv-app *::before, .mupv-app *::after { box-sizing: border-box; }
+.mupv-app button, .mupv-app select { font: inherit; color: inherit; }
+.mupv-app :focus-visible { outline: 2px solid var(--mu-acc); outline-offset: 2px; }
+.mupv-app svg { display: block; flex: none; }
+.mupv-app.is-instant, .mupv-app.is-instant * { transition: none !important; }
+.mupv-num { font-variant-numeric: tabular-nums; }
+
+/* app bar */
+.mupv-top { grid-column: 1 / -1; display: flex; align-items: center; gap: 8px 18px; min-height: 48px; padding: 8px 16px 8px 20px; border-bottom: 1px solid var(--mu-line); min-width: 0; }   /* right: 16 px = the inspector's text edge, so Export ends with the text below */
+.mupv-top h1 { margin: 0; font-size: 14px; font-weight: 600; letter-spacing: -0.012em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.mupv-badge { display: flex; align-items: center; color: var(--mu-sub); font-size: 12px; font-variant-numeric: tabular-nums; white-space: nowrap; min-width: 0; overflow: hidden; }
+.mupv-badge span + span::before { content: ''; display: inline-block; width: 3px; height: 3px; border-radius: 50%; background: var(--mu-line); margin: 0 9px; vertical-align: middle; }
+.mupv-mode { margin-left: auto; flex: none; display: inline-flex; align-items: center; gap: 7px; height: 26px; padding: 0 10px; border: 1px solid var(--mu-line); border-radius: 13px; font-size: 12px; color: var(--mu-sub); white-space: nowrap; }
+.mupv-mode i { width: 6px; height: 6px; border-radius: 50%; background: var(--mu-sub); }
+.mupv-mode.is-live { color: var(--mu-txt); }
+.mupv-mode.is-live i { background: var(--mu-good); box-shadow: 0 0 0 3px color-mix(in srgb, var(--mu-good) 22%, transparent); }
+.mupv-mode.is-disk { color: var(--mu-txt); }
+.mupv-agentline { flex: none; font-size: 12.5px; color: var(--mu-sub); white-space: nowrap; }
+@media (max-width: 760px) { .mupv-agentline { display: none; } }
+.mupv-mode.is-disk i { background: var(--mu-warn); }
+/* a board card opened from the disk: rendering and exporting happen in the app */
+.mupv-disk { display: flex; flex-direction: column; gap: 6px; padding: 12px 14px; border: 1px solid color-mix(in srgb, var(--mu-warn) 45%, var(--mu-line)); border-radius: 10px; background: color-mix(in srgb, var(--mu-warn) 8%, transparent); font-size: 12.5px; line-height: 1.5; }
+.mupv-disk b { font-weight: 600; font-size: 13px; }
+.mupv-disk span { color: var(--mu-sub); }
+.mupv-app .mupv-disk a { align-self: flex-start; margin-top: 4px; display: inline-flex; align-items: center; height: 30px; padding: 0 12px; border-radius: 8px; background: var(--mu-acc); color: var(--mu-on-acc); font-weight: 600; text-decoration: none; }
+.mupv-app .mupv-xbtn, .mupv-app .mupv-show { position: relative; flex: none; display: inline-flex; align-items: center; gap: 7px; height: 32px; padding: 0 12px 0 10px; margin: -2px 0;
+  border: 0; border-radius: 8px; background: transparent; color: var(--mu-txt); font-weight: 500; white-space: nowrap; cursor: pointer;
+  box-shadow: inset 0 0 0 1px var(--mu-line); transition: background-color .15s, box-shadow .15s; }
+.mupv-app .mupv-xbtn svg, .mupv-app .mupv-show svg { width: 15px; height: 15px; }
+.mupv-app .mupv-show:hover { background: var(--mu-soft); }
+/* Export: the page's primary action — a filled accent button with dark text; open = an outer ring */
+.mupv-app .mupv-xbtn { background: var(--mu-acc); color: var(--mu-on-acc); font-weight: 600; box-shadow: none; transition: filter .15s, box-shadow .15s; }
+.mupv-app .mupv-xbtn svg { color: var(--mu-on-acc); }
+.mupv-app .mupv-xbtn:hover { background: var(--mu-acc); filter: brightness(1.07); }
+.mupv-app .mupv-xbtn[aria-expanded="true"] { background: var(--mu-acc); box-shadow: 0 0 0 2px var(--mu-bg), 0 0 0 3px var(--mu-acc); }
+.mupv-xbtn .mupv-dot { position: absolute; top: 5px; right: 5px; width: 6px; height: 6px; border-radius: 50%; background: transparent; }
+.mupv-xbtn .mupv-dot.is-busy { background: var(--mu-on-acc); animation: mupv-pulse 1.1s ease-in-out infinite; }
+.mupv-xbtn .mupv-dot.is-good { background: var(--mu-on-acc); }
+.mupv-xbtn .mupv-dot.is-bad { background: var(--mu-bad); box-shadow: 0 0 0 1.5px var(--mu-on-acc); }
+@keyframes mupv-pulse { 50% { opacity: .3; } }
+.mupv-app .mupv-show { display: none; padding-right: 7px; color: var(--mu-sub); }
+.mupv-app .mupv-show:hover { color: var(--mu-txt); }
+.mupv-app.is-stage .mupv-show { display: inline-flex; animation: mupv-in var(--dur) var(--ease) both; }
+@keyframes mupv-in { from { opacity: 0; transform: translateX(10px); } }
+
+/* player column */
+.mupv-main { position: relative; display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+.mupv-view { position: relative; flex: 1; min-height: 180px; margin: 18px 20px 0; }
+.mupv-frame { position: absolute; overflow: hidden; border-radius: 4px; box-shadow: 0 0 0 1px var(--mu-line), 0 18px 48px -20px var(--mu-scrim); }
+.mupv-frame.is-clear, .mupv-clear { background-color: #fff; background-image: linear-gradient(45deg, #d9d7d2 25%, transparent 25%), linear-gradient(-45deg, #d9d7d2 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #d9d7d2 75%), linear-gradient(-45deg, transparent 75%, #d9d7d2 75%); background-size: 24px 24px; background-position: 0 0, 0 12px, 12px -12px, -12px 0; }
+.mupv-clear { background-size: 10px 10px; background-position: 0 0, 0 5px, 5px -5px, -5px 0; }
+
+/* transport */
+.mupv-transport { container-type: inline-size; position: relative; z-index: 2; background: var(--mu-bg); display: flex; align-items: center; gap: 8px 14px; padding: 14px 20px 12px; flex-wrap: wrap; }
+.mupv-tgroup { display: flex; align-items: center; gap: 4px; }
+.mupv-app .mupv-play { display: inline-flex; align-items: center; justify-content: center; gap: 7px; height: 32px; min-width: 88px; padding: 0 14px 0 12px; border: 0; border-radius: 7px;
+  background: var(--mu-acc); color: var(--mu-on-acc); font-weight: 600; cursor: pointer; margin-right: 4px; }
+.mupv-app .mupv-play svg { width: 14px; height: 14px; }
+.mupv-app .mupv-play:hover { filter: brightness(1.06); }
+.mupv-icon { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 32px; min-width: 32px; padding: 0 8px; border: 1px solid transparent; border-radius: 7px; background: transparent; color: var(--mu-sub); cursor: pointer; white-space: nowrap; font-size: 12.5px; }
+.mupv-icon svg { width: 15px; height: 15px; }
+.mupv-icon:hover { color: var(--mu-txt); background: var(--mu-soft); }
+.mupv-icon[hidden] { display: none; }
+.mupv-icon[aria-pressed] { border-color: var(--mu-line); }
+.mupv-icon[aria-pressed="true"] { color: var(--mu-txt); background: var(--mu-soft); border-color: var(--mu-soft); }
+.mupv-icon[aria-pressed="false"] span { text-decoration: line-through; text-decoration-color: var(--mu-sub); }
+.mupv-time { display: flex; align-items: baseline; gap: 8px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.mupv-time b { font-size: 16px; font-weight: 600; letter-spacing: -0.01em; min-width: 62px; }
+.mupv-time span { color: var(--mu-sub); }
+.mupv-time em { font-style: normal; color: var(--mu-sub); font-size: 11.5px; padding: 1px 6px; border: 1px solid var(--mu-line); border-radius: 5px; }
+.mupv-now { flex: 1; min-width: 0; display: flex; align-items: center; justify-content: center; gap: 8px; color: var(--mu-sub); font-size: 12.5px; white-space: nowrap; }
+.mupv-now b { color: var(--mu-txt); font-weight: 500; overflow: hidden; text-overflow: ellipsis; }
+.mupv-now i { font-style: normal; font-variant-numeric: tabular-nums; }
+.mupv-speed { display: flex; height: 32px; padding: 2px; gap: 2px; border: 1px solid var(--mu-line); border-radius: 8px; background: var(--mu-field); }
+.mupv-speed button { border: 0; background: transparent; border-radius: 6px; padding: 0 8px; min-width: 36px; color: var(--mu-sub); cursor: pointer; font-size: 12px; font-variant-numeric: tabular-nums; }
+.mupv-speed button:hover { color: var(--mu-txt); }
+.mupv-speed button[aria-pressed="true"] { background: var(--mu-soft); color: var(--mu-txt); font-weight: 500; }
+
+/* timeline: ruler · filmstrip · voice-over lane, one playhead through all three */
+.mupv-tlwrap { padding: 0 20px 14px; transition: transform var(--dur) var(--ease), opacity var(--dur) var(--ease), visibility 0s; }
+/* full stage: a hairline scrubber on the transport's top edge */
+.mupv-mini { position: absolute; left: 20px; right: 20px; top: 1px; height: 14px; cursor: pointer; touch-action: none; opacity: 0; visibility: hidden;
+  transition: opacity var(--dur) var(--ease), visibility 0s linear var(--dur); }
+.mupv-mini::before, .mupv-mini i { content: ''; position: absolute; left: 0; right: 0; top: 6px; height: 2px; border-radius: 2px; transition: top .12s, height .12s; }
+.mupv-mini::before { background: var(--mu-line); }
+.mupv-mini i { background: var(--mu-acc); transform-origin: 0 50%; transform: scaleX(0); }
+.mupv-mini:hover::before, .mupv-mini:hover i, .mupv-mini.is-drag::before, .mupv-mini.is-drag i { top: 5px; height: 4px; }
+.mupv-bar { position: relative; height: 108px; cursor: pointer; touch-action: none; user-select: none; -webkit-user-select: none; outline-offset: 4px; }
+.mupv-ruler { position: absolute; left: 0; right: 0; top: 0; height: 18px; border-bottom: 1px solid var(--mu-line); }
+.mupv-tick { position: absolute; bottom: 0; width: 1px; height: 4px; background: var(--mu-line); }
+.mupv-tick.is-major { height: 8px; background: var(--mu-sub); opacity: .55; }
+.mupv-tick span { position: absolute; left: 4px; bottom: 4px; font-size: 10.5px; line-height: 1; color: var(--mu-sub); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.mupv-strip { position: absolute; left: 0; right: 0; top: 24px; height: 70px; }
+.mupv-seg { position: absolute; top: 0; height: 70px; min-width: 0; container-type: inline-size; }
+.mupv-seg-th { position: relative; height: 48px; border-radius: 4px; overflow: hidden; background: var(--mu-soft); }
+.mupv-seg-th > .uik-stage { opacity: .74; transition: opacity .18s; }
+.mupv-seg-th::after { content: ''; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px var(--mu-line); pointer-events: none; }
+.mupv-seg:hover .mupv-seg-th > .uik-stage { opacity: .9; }
+.mupv-seg.is-on .mupv-seg-th > .uik-stage { opacity: 1; }
+.mupv-seg.is-on .mupv-seg-th::after { box-shadow: inset 0 0 0 2px var(--mu-acc); }
+.mupv-seg-cap { display: flex; gap: 6px; align-items: baseline; margin-top: 5px; padding: 0 6px 0 1px; font-size: 11.5px; line-height: 16px; color: var(--mu-sub); white-space: nowrap; overflow: hidden; }
+.mupv-seg-cap b { font-weight: 600; font-variant-numeric: tabular-nums; flex: none; }
+.mupv-seg-cap span { overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.mupv-seg-th em { position: absolute; right: 4px; bottom: 4px; z-index: 1; font-style: normal; font-size: 10.5px; line-height: 15px; padding: 0 5px; border-radius: 4px; background: var(--mu-chip); color: var(--mu-chip-txt); font-variant-numeric: tabular-nums; pointer-events: none; }
+@container (max-width: 86px) { .mupv-seg-th em { display: none; } }
+.mupv-seg.is-on .mupv-seg-cap { color: var(--mu-txt); }
+.mupv-lane { position: absolute; left: 0; right: 0; top: 98px; height: 10px; }
+.mupv-vo { position: absolute; top: 2px; height: 6px; border-radius: 3px; background: var(--mu-sub); opacity: .55; transition: opacity .15s; }
+.mupv-vo.is-on { opacity: 1; background: var(--mu-txt); }
+.mupv-vo.is-script { top: 4px; height: 2px; border-radius: 0; background: repeating-linear-gradient(90deg, var(--mu-sub) 0 2px, transparent 2px 5px); opacity: .7; }
+.mupv-vo.is-script.is-on { opacity: 1; background: repeating-linear-gradient(90deg, var(--mu-txt) 0 2px, transparent 2px 5px); }
+.mupv-sfx { position: absolute; top: 0; width: 1px; height: 10px; background: var(--mu-sub); opacity: .5; pointer-events: none; }
+.mupv-head { position: absolute; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: var(--mu-acc); box-shadow: 0 0 0 1px var(--mu-bg); pointer-events: none; z-index: 3; }
+.mupv-head::before { content: ''; position: absolute; left: -5px; top: -1px; width: 12px; height: 15px; background: var(--mu-acc); border-radius: 3px 3px 0 0; clip-path: polygon(0 0, 100% 0, 100% 62%, 50% 100%, 0 62%); }
+.mupv-ghost { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--mu-txt); opacity: 0; pointer-events: none; z-index: 2; transition: opacity .1s; }
+.mupv-ghost span { position: absolute; top: 0; left: 6px; padding: 1px 5px; border-radius: 4px; background: var(--mu-soft); color: var(--mu-txt); font-size: 10.5px; line-height: 14px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.mupv-bar.is-hover .mupv-ghost { opacity: .4; }
+.mupv-bar.is-hover .mupv-ghost span { opacity: 1; }
+.mupv-bar.is-drag .mupv-ghost { opacity: 0; }
+.mupv-tlfoot { display: flex; align-items: center; justify-content: space-between; gap: 6px 18px; flex-wrap: wrap; margin-top: 10px; font-size: 11.5px; color: var(--mu-sub); }
+.mupv-keys { display: flex; align-items: center; gap: 5px 12px; flex-wrap: wrap; }
+.mupv-keys span { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
+.mupv-app kbd { font: 500 10.5px/1 Inter, system-ui, sans-serif; min-width: 18px; padding: 3px 5px; text-align: center; border-radius: 4px; background: var(--mu-soft); color: var(--mu-txt); box-shadow: inset 0 -1px 0 var(--mu-line); }
+.mupv-legend { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
+.mupv-legend i { width: 18px; height: 6px; border-radius: 3px; background: var(--mu-sub); opacity: .7; }
+.mupv-legend i.is-script { height: 2px; border-radius: 0; background: repeating-linear-gradient(90deg, var(--mu-sub) 0 2px, transparent 2px 5px); }
+
+/* inspector: two panes on a track — Scenes/Design tabs, and the Export panel that slides in over them */
+.mupv-side { position: relative; z-index: 3; grid-column: 2; grid-row: 2; min-height: 0; min-width: 0; overflow: hidden; overflow: clip; background: var(--mu-panel); border-left: 1px solid var(--mu-line);
+  transition: transform var(--dur) var(--ease), opacity var(--dur) var(--ease), visibility 0s; }
+.mupv-track { display: flex; width: 200%; height: 100%; transition: transform var(--dur) var(--ease); }
+.mupv-track > * { flex: none; width: 50%; min-width: 0; min-height: 0; height: 100%; display: flex; flex-direction: column; transition: opacity var(--dur) var(--ease); }
+.mupv-side.is-deliver .mupv-track { transform: translateX(-50%); }
+.mupv-side.is-deliver .mupv-insp, .mupv-side:not(.is-deliver) .mupv-deliver { opacity: 0; }
+.mupv-tabs { flex: none; display: flex; align-items: stretch; height: 44px; padding: 0 7px 0 8px; border-bottom: 1px solid var(--mu-line); }   /* right: 16 px (the text edge) minus the icon’s 9 px inset: the glyph ends with Export and the text */
+.mupv-tablist { display: flex; gap: 2px; }
+.mupv-tab { position: relative; display: inline-flex; align-items: center; gap: 7px; padding: 0 10px; border: 0; background: transparent; color: var(--mu-sub); font-weight: 500; cursor: pointer; }
+.mupv-tab svg { width: 15px; height: 15px; }
+.mupv-tab:hover { color: var(--mu-txt); }
+.mupv-tab[aria-selected="true"] { color: var(--mu-txt); }
+.mupv-tab[aria-selected="true"]::after { content: ''; position: absolute; left: 10px; right: 10px; bottom: -1px; height: 2px; border-radius: 2px 2px 0 0; background: var(--mu-txt); }
+.mupv-tab small { font-size: 11px; color: var(--mu-sub); font-variant-numeric: tabular-nums; font-weight: 500; }
+.mupv-tabs .mupv-hide { margin-left: auto; align-self: center; }
+.mupv-panel { flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--mu-line) transparent; }
+.mupv-panel[hidden] { display: none !important; }
+/* anything the page hides stays hidden: a class's own display beats the browser's [hidden] */
+.mupv-app [hidden] { display: none !important; }
+.mupv-phead { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; padding: 14px 16px 8px; font-size: 12px; color: var(--mu-sub); }
+.mupv-phead b { color: var(--mu-txt); font-weight: 500; }
+.mupv-h { margin: 0; font-size: 11px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--mu-sub); display: flex; align-items: baseline; gap: 8px; }
+.mupv-h span { margin-left: auto; letter-spacing: 0; text-transform: none; font-weight: 500; font-variant-numeric: tabular-nums; }
+.mupv-note { color: var(--mu-sub); font-size: 12px; margin: 0; }
+
+/* Scenes */
+.mupv-scenes { display: flex; flex-direction: column; padding: 0 8px 8px; }
+.mupv-scene { position: relative; display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 12px; align-items: start; width: 100%; padding: 9px 8px; border: 0; border-radius: 8px; background: transparent; text-align: left; cursor: pointer; }
+.mupv-scene + .mupv-scene::after { content: ''; position: absolute; left: 8px; right: 8px; top: 0; height: 1px; background: var(--mu-line); }
+.mupv-scene:hover { background: var(--mu-soft); }
+.mupv-scene.is-on { background: var(--mu-soft); }
+.mupv-scene:hover::after, .mupv-scene:hover + .mupv-scene::after, .mupv-scene.is-on::after, .mupv-scene.is-on + .mupv-scene::after { opacity: 0; }
+.mupv-sth { position: relative; display: block; width: 96px; aspect-ratio: 16 / 9; border-radius: 4px; overflow: hidden; background: var(--mu-soft); }
+.mupv-sth::after { content: ''; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px var(--mu-line); pointer-events: none; }
+.mupv-scene.is-on .mupv-sth::after { box-shadow: inset 0 0 0 2px var(--mu-acc); }
+.mupv-sprog { position: absolute; left: 0; bottom: 0; height: 3px; width: 0; background: var(--mu-acc); z-index: 1; display: none; }
+.mupv-scene.is-on .mupv-sprog { display: block; }
+.mupv-sbody { display: flex; flex-direction: column; gap: 2px; min-width: 0; padding-top: 1px; }
+.mupv-shead { display: flex; align-items: baseline; gap: 8px; min-width: 0; }
+.mupv-shead i { font-style: normal; color: var(--mu-sub); font-variant-numeric: tabular-nums; font-size: 12px; flex: none; width: 12px; }
+.mupv-shead b { font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.mupv-shead span { margin-left: auto; flex: none; color: var(--mu-sub); font-size: 11.5px; font-variant-numeric: tabular-nums; }
+.mupv-scene.is-on .mupv-shead i { color: var(--mu-acc); }
+.mupv-smeta { color: var(--mu-sub); font-size: 11.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-left: 20px; }
+.mupv-sline { display: flex; gap: 6px; align-items: flex-start; padding-left: 20px; margin-top: 3px; font-size: 12px; line-height: 1.4; color: var(--mu-txt); opacity: .82; }
+.mupv-sline svg { width: 12px; height: 12px; margin-top: 2px; color: var(--mu-sub); }
+.mupv-sline span { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.mupv-vonote { margin: 4px 16px 18px; padding: 10px 12px; border: 1px dashed var(--mu-line); border-radius: 8px; }
+
+/* Design */
+.mupv-dsec { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.mupv-dsec + .mupv-dsec { border-top: 1px solid var(--mu-line); }
+.mupv-keycols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+.mupv-sw { display: grid; grid-template-columns: 30px minmax(0, 1fr); grid-template-rows: auto auto; column-gap: 10px; align-items: center; padding: 6px; border-radius: 8px; border: 1px solid var(--mu-line); background: transparent; cursor: copy; text-align: left; min-width: 0; }
+.mupv-sw:hover { border-color: var(--mu-sub); }
+.mupv-sw i { grid-row: 1 / 3; width: 30px; height: 30px; border-radius: 5px; }
+.mupv-sw b { font-weight: 500; font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mupv-sw span { font-size: 11px; color: var(--mu-sub); font-variant-numeric: tabular-nums; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mupv-chipc { --c: transparent; background-image: linear-gradient(var(--c), var(--c)), conic-gradient(var(--mu-line) 25%, var(--mu-soft) 0 50%, var(--mu-line) 0 75%, var(--mu-soft) 0); background-size: 100% 100%, 8px 8px; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--mu-txt) 14%, transparent); }
+.mupv-font { display: flex; flex-direction: column; }
+.mupv-font header { display: flex; align-items: flex-end; gap: 14px; padding-bottom: 12px; }
+.mupv-font header q { quotes: none; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 44px; line-height: .9; font-weight: 500; letter-spacing: -0.02em; }
+.mupv-font header div { display: flex; flex-direction: column; min-width: 0; }
+.mupv-font header b { font-weight: 600; }
+.mupv-font header span { color: var(--mu-sub); font-size: 11.5px; }
+.mupv-style { display: grid; grid-template-columns: 124px minmax(0, 1fr); gap: 1px 12px; align-items: baseline; padding: 9px 0; border-top: 1px solid var(--mu-line); min-width: 0; }
+.mupv-style em { font-style: normal; font-size: 12px; white-space: nowrap; }
+.mupv-style small { grid-column: 1; font-size: 11px; color: var(--mu-sub); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.mupv-style q { grid-row: 1 / 3; grid-column: 2; quotes: none; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 19px; line-height: 1.2; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Export panel */
+.mupv-dhead { flex: none; display: flex; align-items: center; gap: 6px; min-height: 44px; padding: 10px 14px 10px 6px; border-bottom: 1px solid var(--mu-line); }
+.mupv-dhead > div { min-width: 0; margin-right: auto; }
+.mupv-dhead h2 { margin: 0; font-size: 15px; font-weight: 600; letter-spacing: -0.012em; outline: none; }
+.mupv-dhead p { margin: 1px 0 0; color: var(--mu-sub); font-size: 12px; line-height: 1.4; text-wrap: pretty; }
+.mupv-dhead kbd { flex: none; align-self: flex-start; margin-top: 7px; }
+.mupv-dbody { position: relative; flex: 1; min-height: 0; overflow: auto; padding: 0 18px 22px; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--mu-line) transparent; }
+.mupv-sec { padding: 16px 0 18px; display: flex; flex-direction: column; gap: 11px; }
+.mupv-sec + .mupv-sec { border-top: 1px solid var(--mu-line); }
+.mupv-fmts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+.mupv-fmts button { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; min-width: 0; padding: 9px 9px 10px; border-radius: 9px; border: 1px solid var(--mu-line); background: transparent;
+  text-align: left; cursor: pointer; transition: border-color .15s, background-color .15s, box-shadow .15s; }
+.mupv-fmts button b { font-weight: 600; font-size: 12.5px; color: var(--mu-txt); white-space: nowrap; }
+.mupv-fmts button span { font-size: 11.5px; line-height: 1.3; color: var(--mu-sub); }
+.mupv-fmts button:hover { border-color: var(--mu-sub); }
+.mupv-fmts button[aria-pressed="true"] { border-color: var(--mu-acc); background: var(--mu-soft); box-shadow: inset 0 0 0 1px var(--mu-acc); }
+.mupv-toggle { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: auto auto; column-gap: 12px; align-items: center; padding: 2px 0; cursor: pointer; }
+.mupv-toggle b { font-weight: 500; }
+.mupv-toggle small { grid-row: 2; color: var(--mu-sub); font-size: 12px; }
+.mupv-toggle input { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+.mupv-toggle u { grid-column: 2; grid-row: 1 / 3; position: relative; width: 34px; height: 20px; border-radius: 999px; background: var(--mu-soft); box-shadow: inset 0 0 0 1px var(--mu-line); transition: background-color .2s; }
+.mupv-toggle u::after { content: ''; position: absolute; left: 3px; top: 3px; width: 14px; height: 14px; border-radius: 50%; background: var(--mu-sub); transition: transform .2s var(--ease), background-color .2s; }
+.mupv-toggle input:checked + u { background: var(--mu-acc); box-shadow: none; }
+.mupv-toggle input:checked + u::after { transform: translateX(14px); background: var(--mu-on-acc); }
+.mupv-toggle input:focus-visible + u { outline: 2px solid var(--mu-acc); outline-offset: 2px; }
+.mupv-opts { display: flex; flex-direction: column; gap: 6px; }
+.mupv-opt { display: grid; grid-template-columns: 16px minmax(0, 1fr); gap: 2px 11px; padding: 10px 12px; border: 1px solid var(--mu-line); border-radius: 9px; cursor: pointer; transition: border-color .15s, background-color .15s, box-shadow .15s; }
+.mupv-opt:hover { border-color: var(--mu-sub); }
+.mupv-opt:has(input:checked) { border-color: var(--mu-acc); background: var(--mu-soft); box-shadow: inset 0 0 0 1px var(--mu-acc); }
+.mupv-opt input { grid-row: 1 / 3; appearance: none; -webkit-appearance: none; display: grid; place-items: center; margin: 1px 0 0; width: 16px; height: 16px;
+  border: 1.5px solid var(--mu-sub); border-radius: 50%; background: transparent; cursor: pointer; transition: border-color .12s; }
+.mupv-opt input:checked { border-color: var(--mu-acc); }
+.mupv-opt input:checked::after { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--mu-acc); }
+.mupv-opt b { font-weight: 500; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.mupv-opt b em { font-style: normal; font-size: 10.5px; font-weight: 600; line-height: 16px; padding: 0 6px; border-radius: 4px; background: var(--mu-acc); color: var(--mu-on-acc); }
+.mupv-opt span { color: var(--mu-sub); font-size: 12px; line-height: 1.4; }
+.mupv-app .mupv-go { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; height: 42px; margin-top: 2px; border: 0; border-radius: 10px; padding: 0 14px;
+  background: var(--mu-acc); color: var(--mu-on-acc); font-size: 13.5px; font-weight: 600; cursor: pointer; transition: filter .15s, transform .15s var(--ease); }
+.mupv-app .mupv-go svg { width: 15px; height: 15px; }
+.mupv-app .mupv-go:hover { filter: brightness(1.06); }
+.mupv-app .mupv-go:active { transform: scale(.985); }
+.mupv-app .mupv-go:disabled { opacity: .6; cursor: progress; filter: none; transform: none; }
+.mupv-status { font-size: 12.5px; line-height: 1.5; color: var(--mu-sub); overflow-wrap: anywhere; }
+.mupv-status .mupv-cmd { margin-top: 8px; }
+.mupv-status:empty { display: none; }
+.mupv-status.is-bad { color: var(--mu-bad); }
+.mupv-status.is-good { color: var(--mu-good); }
+.mupv-status a { color: inherit; }
+.mupv-result:empty { display: none; }
+.mupv-result video { display: block; width: 100%; max-width: 100%; border-radius: 8px; background: var(--mu-field); border: 1px solid var(--mu-line); }
+.mupv-cmd { display: flex; gap: 6px; align-items: stretch; color: var(--mu-txt); }
+.mupv-cmd code { flex: 1; min-width: 0; display: block; background: var(--mu-field); border: 1px solid var(--mu-line); border-radius: 7px; padding: 7px 9px; font: 12px/1.45 Inter, 'Helvetica Neue', system-ui, sans-serif; overflow-wrap: anywhere; user-select: all; -webkit-user-select: all; }
+.mupv-btn { border: 1px solid var(--mu-line); background: var(--mu-soft); border-radius: 7px; padding: 5px 10px; cursor: pointer; font-size: 12px; }
+.mupv-btn:hover { border-color: var(--mu-sub); }
+
+/* full stage: the inspector slides out right, the timeline drops away, the film grows (FLIP, transform only) */
+.mupv-app.is-stage { grid-template-columns: minmax(0, 1fr); }
+.mupv-app.is-stage .mupv-side { position: absolute; grid-column: 1; grid-row: 2; top: 0; right: 0; bottom: 0; width: var(--side-w);
+  transform: translateX(100%); opacity: 0; visibility: hidden; pointer-events: none;
+  transition: transform var(--dur) var(--ease), opacity var(--dur) var(--ease), visibility 0s linear var(--dur); }
+.mupv-app.is-stage .mupv-tlwrap { position: absolute; left: 0; right: 0; bottom: 0; transform: translateY(28px); opacity: 0; visibility: hidden; pointer-events: none;
+  transition: transform var(--dur) var(--ease), opacity calc(var(--dur) * .7) var(--ease), visibility 0s linear var(--dur); }
+.mupv-app.is-stage .mupv-mini { opacity: 1; visibility: visible; transition: opacity var(--dur) var(--ease) 60ms, visibility 0s; }
+
+@media (min-width: 1360px) {
+  .mupv-scene { grid-template-columns: 112px minmax(0, 1fr); }
+  .mupv-sth { width: 112px; }
+}
+@container (max-width: 800px) {
+  .mupv-now { display: none; }
+  .mupv-transport .mupv-tgroup:last-child { margin-left: auto; }
+}
+@media (max-width: 1200px) {
+  .mupv-scene { grid-template-columns: 84px minmax(0, 1fr); gap: 10px; }
+  .mupv-sth { width: 84px; }
+}
+@media (max-width: 860px) {
+  .mupv-app { display: block; overflow: auto; }
+  .mupv-top { position: sticky; top: 0; z-index: 5; background: var(--mu-bg); padding: 8px 16px; flex-wrap: wrap; }
+  .mupv-badge { order: 3; width: 100%; }
+  .mupv-view { flex: none; height: 56vw; min-height: 180px; margin: 14px 16px 0; }
+  .mupv-transport { padding-left: 16px; padding-right: 16px; }
+  .mupv-tlwrap { padding: 0 16px 14px; }
+  .mupv-keys { display: none; }
+  .mupv-side { border-left: 0; border-top: 1px solid var(--mu-line); }
+  .mupv-panel, .mupv-dbody { overflow: visible; }
+  .mupv-side { overflow: visible; }
+  .mupv-track { width: 100%; height: auto; transform: none !important; }
+  .mupv-track > * { width: 100%; height: auto; }
+  .mupv-side.is-deliver .mupv-insp, .mupv-side:not(.is-deliver) .mupv-deliver { display: none; }
+  .mupv-app.is-stage .mupv-side, .mupv-app.is-stage .mupv-tlwrap { display: none; }
+  .mupv-xbtn span, .mupv-show span { display: none; }
+  .mupv-mini { left: 16px; right: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mupv-app *, .mupv-app *::before, .mupv-app *::after { transition-duration: 0s !important; transition-delay: 0s !important; animation-duration: 0s !important; }
+}
+/* edits: the Elements tab, the editable Design tab, the stage selection (the Video Editor's violet), the list of changes,
+   the colour popover — fields follow the HTML editor's inspector: small boxed controls, neutral focus, a grip to scrub */
+.mupv-app { --mupe-sel: #A78BFA; --mupe-sel-strong: #7761F0; }
+
+/* top bar */
+.mupe-chgwrap { position: relative; flex: none; }
+.mupv-app .mupe-chg { display: inline-flex; align-items: center; gap: 7px; height: 26px; padding: 0 11px 0 10px; border: 1px solid var(--mu-line); border-radius: 13px; background: transparent; color: var(--mu-sub); font-size: 12px; cursor: pointer; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.mupv-app .mupe-chg:hover { color: var(--mu-txt); border-color: var(--mu-sub); }
+.mupe-chg i { width: 6px; height: 6px; border-radius: 50%; background: var(--mu-line); }
+.mupv-app .mupe-chg.has { color: var(--mu-txt); }
+.mupe-chg.has i { background: var(--mu-good); box-shadow: 0 0 0 3px color-mix(in srgb, var(--mu-good) 20%, transparent); }
+.mupe-chgpop { position: absolute; right: 0; top: calc(100% + 8px); z-index: 40; width: min(400px, calc(100vw - 32px)); display: flex; flex-direction: column; max-height: min(70vh, 560px);
+  background: var(--mu-panel); border: 1px solid var(--mu-line); border-radius: 12px; box-shadow: 0 24px 60px -16px rgba(0,0,0,.6); overflow: hidden; }
+.mupe-chghead { display: flex; align-items: center; gap: 4px; padding: 10px 10px 10px 14px; border-bottom: 1px solid var(--mu-line); }
+.mupe-chghead b { margin-right: auto; font-weight: 600; font-size: 13px; }
+.mupe-chglist { flex: 1; min-height: 0; overflow: auto; padding: 6px; scrollbar-width: thin; scrollbar-color: var(--mu-line) transparent; }
+.mupe-crow { display: grid; grid-template-columns: 62px minmax(0, 1fr) auto; grid-template-rows: auto auto; column-gap: 10px; align-items: center; padding: 7px 4px 7px 8px; border-radius: 8px; }
+.mupe-crow:hover { background: var(--mu-soft); }
+.mupe-cscope { grid-row: 1 / 3; font-size: 11px; color: var(--mu-sub); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.mupe-crow b { font-weight: 500; font-size: 12.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mupe-cval { grid-column: 2; display: flex; align-items: center; gap: 5px; min-width: 0; font-size: 12px; color: var(--mu-txt); white-space: nowrap; overflow: hidden; }
+.mupe-cval > span { display: inline-flex; align-items: center; gap: 5px; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.mupe-cval svg { width: 11px; height: 11px; color: var(--mu-sub); }
+.mupe-cval i { width: 12px; height: 12px; border-radius: 3px; flex: none; }
+.mupe-was { color: var(--mu-sub); }
+.mupe-none { color: var(--mu-sub); font-style: italic; }
+.mupe-crow .mupe-ibtn { grid-column: 3; grid-row: 1 / 3; opacity: .55; }
+.mupe-crow:hover .mupe-ibtn, .mupe-crow .mupe-ibtn:focus-visible { opacity: 1; }
+.mupe-nochg { padding: 14px 10px; }
+.mupe-chgfoot { display: flex; align-items: center; gap: 6px; padding: 10px; border-top: 1px solid var(--mu-line); }
+.mupe-chgfoot > span { margin-right: auto; font-size: 11.5px; color: var(--mu-sub); }
+
+/* small buttons */
+.mupv-app .mupe-btn { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px; border: 1px solid var(--mu-line); border-radius: 7px; background: var(--mu-soft); color: var(--mu-txt); font-size: 12px; font-weight: 500; cursor: pointer; white-space: nowrap; }
+.mupv-app .mupe-btn:hover { border-color: var(--mu-sub); }
+.mupv-app .mupe-btn:disabled { opacity: .45; cursor: default; border-color: var(--mu-line); }
+.mupv-app .mupe-btn svg { width: 14px; height: 14px; }
+.mupv-app .mupe-btn.is-strong { background: var(--mu-acc); color: var(--mu-on-acc); border-color: transparent; font-weight: 600; }
+.mupv-app .mupe-btn.is-strong:hover { filter: brightness(1.06); }
+.mupv-app .mupe-ibtn { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; flex: none; border: 0; border-radius: 7px; background: transparent; color: var(--mu-sub); cursor: pointer; padding: 0; }
+.mupv-app .mupe-ibtn svg { width: 15px; height: 15px; }
+.mupv-app .mupe-ibtn:hover { color: var(--mu-txt); background: var(--mu-soft); }
+.mupv-app .mupe-ibtn:disabled { opacity: .35; cursor: default; background: transparent; }
+
+/* stage: hover, selection (the Video Editor's violet), the name tag */
+.mupv-frame .uik-n { pointer-events: auto; }
+.mupv-frame .mupe-ghost { pointer-events: none; }
+.mupv-frame .mupe-photo .uik-c, .mupv-frame .mupe-photo .uik-c .uik-n { pointer-events: none; }
+.mupv-frame .uik-cursor { pointer-events: none; }
+.mupe-ov { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 2; }
+.mupe-box { position: absolute; left: 0; top: 0; box-sizing: border-box; border-radius: 2px; }
+.mupe-box.is-hover { box-shadow: 0 0 0 1.5px var(--mupe-sel); }
+.mupe-box.is-sel { box-shadow: 0 0 0 2px var(--mupe-sel), 0 0 0 3px rgba(0,0,0,.18); }
+.mupe-box.is-sel i { position: absolute; width: 7px; height: 7px; background: #fff; border: 1.5px solid var(--mupe-sel-strong); border-radius: 1.5px; }
+.mupe-box.is-sel i:nth-child(1) { left: -4.5px; top: -4.5px; } .mupe-box.is-sel i:nth-child(2) { right: -4.5px; top: -4.5px; }
+.mupe-box.is-sel i:nth-child(3) { left: -4.5px; bottom: -4.5px; } .mupe-box.is-sel i:nth-child(4) { right: -4.5px; bottom: -4.5px; }
+.mupe-tag { position: absolute; left: 0; top: 0; max-width: 60%; padding: 2px 7px; border-radius: 4px; background: color-mix(in srgb, var(--mupe-sel-strong) 88%, transparent); color: #fff; font-size: 11px; line-height: 16px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mupe-tag.is-sel { background: var(--mupe-sel-strong); }
+
+/* Elements tab */
+.mupv-tab svg + span + small:empty { display: none; }
+.mupe-sec { padding: 12px 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+.mupe-sec + .mupe-sec { border-top: 1px solid var(--mu-line); }
+.mupe-sec > .mupv-h { padding: 0 4px; }
+.mupe-sub { margin: -4px 0 2px; padding: 0 4px; font-size: 12px; color: var(--mu-sub); line-height: 1.45; }
+.mupv-dsec .mupe-sub { margin: -6px 0 0; padding: 0; }
+.mupe-hint { display: flex; gap: 10px; align-items: flex-start; margin: 4px 16px 6px; padding: 11px 12px; border: 1px dashed var(--mu-line); border-radius: 9px; color: var(--mu-sub); font-size: 12.5px; line-height: 1.5; }
+.mupe-hint svg { width: 16px; height: 16px; margin-top: 1px; color: var(--mupe-sel); }
+.mupe-empty { padding: 4px 16px 16px; }
+.mupe-card { border: 1px solid var(--mu-line); border-radius: 10px; background: color-mix(in srgb, var(--mu-soft) 38%, transparent); transition: border-color .15s; }
+.mupe-card:hover { border-color: color-mix(in srgb, var(--mupe-sel) 55%, var(--mu-line)); }
+.mupe-card.is-scene:hover { border-color: var(--mu-line); }
+.mupe-chead { display: flex; align-items: center; gap: 9px; min-height: 38px; padding: 5px 6px 3px 9px; }
+.mupe-chead b { font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.mupe-chead small { margin-left: auto; font-size: 11px; color: var(--mu-sub); white-space: nowrap; }
+.mupe-chead .mupe-loc { margin-left: auto; opacity: 0; transition: opacity .15s; }
+.mupe-card:hover .mupe-loc, .mupe-loc:focus-visible { opacity: 1; }
+.mupe-glyph { flex: none; display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 6px; background: var(--mu-soft); color: var(--mu-sub); }
+.mupe-glyph svg { width: 13px; height: 13px; }
+.mupe-glyph.is-sel { background: color-mix(in srgb, var(--mupe-sel) 22%, transparent); color: var(--mupe-sel); }
+.mupe-rows { display: flex; flex-direction: column; gap: 4px; }
+.mupe-card .mupe-rows { padding: 2px 9px 9px; }
+
+/* the selected element */
+.mupe-selsec { gap: 10px; }
+.mupe-selhead { display: flex; align-items: center; gap: 10px; padding: 0 0 0 4px; }
+.mupe-selhead .mupe-glyph { width: 28px; height: 28px; border-radius: 7px; }
+.mupe-selhead .mupe-glyph svg { width: 15px; height: 15px; }
+.mupe-selhead div { display: flex; flex-direction: column; min-width: 0; margin-right: auto; }
+.mupe-selhead b { font-weight: 600; font-size: 13.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mupe-selhead small { font-size: 11.5px; color: var(--mu-sub); }
+.mupe-crumbs { display: flex; align-items: center; flex-wrap: wrap; gap: 2px 3px; padding: 0 4px; font-size: 11.5px; color: var(--mu-sub); }
+.mupe-crumbs svg { width: 10px; height: 10px; opacity: .6; }
+.mupv-app .mupe-crumbs button { border: 0; background: transparent; padding: 1px 4px; margin: 0 -2px; border-radius: 4px; color: var(--mu-sub); cursor: pointer; font-size: 11.5px; }
+.mupv-app .mupe-crumbs button:hover { color: var(--mu-txt); background: var(--mu-soft); }
+.mupe-crumbs span { color: var(--mu-txt); }
+.mupe-off { display: flex; align-items: center; gap: 10px; justify-content: space-between; padding: 8px 8px 8px 12px; border-radius: 9px; background: color-mix(in srgb, var(--mu-warn) 9%, transparent); border: 1px solid color-mix(in srgb, var(--mu-warn) 35%, var(--mu-line)); font-size: 12px; color: var(--mu-txt); }
+.mupe-card.is-own { border-color: color-mix(in srgb, var(--mupe-sel) 45%, var(--mu-line)); }
+.mupe-more { border-top: 1px solid var(--mu-line); padding-top: 4px; }
+.mupe-more summary { display: flex; align-items: center; gap: 6px; list-style: none; padding: 6px 4px; cursor: pointer; font-size: 12px; font-weight: 500; color: var(--mu-sub); border-radius: 6px; }
+.mupe-more summary::-webkit-details-marker { display: none; }
+.mupe-more summary:hover { color: var(--mu-txt); }
+.mupe-more summary svg { width: 12px; height: 12px; transition: transform .15s; }
+.mupe-more[open] summary svg { transform: rotate(90deg); }
+.mupe-more summary small { font-size: 11px; font-variant-numeric: tabular-nums; }
+.mupe-more .mupe-rows { padding: 2px 0 2px; }
+.mupe-selsec > .mupe-rows { padding: 0 2px; }
+
+/* a field row: label (reset dot) · control */
+.mupe-row { display: grid; grid-template-columns: minmax(78px, 34%) minmax(0, 1fr); align-items: center; gap: 10px; min-height: 30px; }
+.mupe-l { display: flex; align-items: center; gap: 6px; min-width: 0; font-size: 12px; color: var(--mu-sub); }
+.mupe-l span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mupe-row.is-changed .mupe-l span { color: var(--mu-txt); }
+.mupv-app .mupe-dot { position: relative; flex: none; width: 7px; height: 7px; padding: 0; border: 0; border-radius: 50%; background: var(--mu-good); cursor: pointer; box-shadow: 0 0 0 3px color-mix(in srgb, var(--mu-good) 18%, transparent); }
+.mupv-app .mupe-dot::before { content: ''; position: absolute; inset: -6px; }
+.mupv-app .mupe-dot:hover { box-shadow: 0 0 0 4px color-mix(in srgb, var(--mu-good) 32%, transparent); }
+.mupv-app .mupe-dot[hidden] { display: none !important; }
+.mupe-c { min-width: 0; display: flex; }
+.mupe-c > * { flex: 1; min-width: 0; }
+
+/* controls */
+.mupv-app .mupe-in, .mupv-app .mupe-select { width: 100%; height: 28px; padding: 0 9px; border: 1px solid var(--mu-line); border-radius: 7px; background: var(--mu-field); color: var(--mu-txt); font: 12.5px/1 Inter, 'Helvetica Neue', system-ui, sans-serif; outline: none; transition: border-color .12s; }
+.mupv-app .mupe-in:hover, .mupv-app .mupe-select:hover { border-color: color-mix(in srgb, var(--mu-sub) 55%, var(--mu-line)); }
+.mupv-app .mupe-in:focus, .mupv-app .mupe-select:focus { border-color: var(--mu-sub); outline: none; }
+.mupv-app .mupe-select { appearance: none; -webkit-appearance: none; padding-right: 26px; cursor: pointer;
+  background: var(--mu-field) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M5 6.5l3 3 3-3' fill='none' stroke='%238F8B84' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 7px center / 14px 14px; }
+.mupv-app .mupe-color { display: flex; align-items: center; gap: 8px; width: 100%; height: 28px; padding: 0 9px 0 4px; border: 1px solid var(--mu-line); border-radius: 7px; background: var(--mu-field); color: var(--mu-txt); cursor: pointer; text-align: left; font-size: 12.5px; min-width: 0; }
+.mupv-app .mupe-color:hover, .mupv-app .mupe-color.is-open { border-color: color-mix(in srgb, var(--mu-sub) 55%, var(--mu-line)); }
+.mupe-color i { flex: none; width: 20px; height: 20px; border-radius: 5px; }
+.mupe-color span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.mupe-color small { margin-left: auto; font-size: 11px; color: var(--mu-sub); font-variant-numeric: tabular-nums; }
+.mupe-num { display: flex; align-items: center; height: 28px; border: 1px solid var(--mu-line); border-radius: 7px; background: var(--mu-field); overflow: hidden; transition: border-color .12s; }
+.mupe-num:hover { border-color: color-mix(in srgb, var(--mu-sub) 55%, var(--mu-line)); }
+.mupe-num:focus-within, .mupe-num.is-drag { border-color: var(--mu-sub); }
+.mupe-grip { flex: none; display: flex; align-items: center; justify-content: center; width: 24px; height: 100%; color: var(--mu-sub); cursor: ew-resize; border-right: 1px solid var(--mu-line); touch-action: none; user-select: none; }
+.mupe-grip svg { width: 13px; height: 13px; }
+.mupe-grip:hover, .mupe-num.is-drag .mupe-grip { color: var(--mu-txt); background: var(--mu-soft); }
+.mupv-app .mupe-nin { flex: 1; min-width: 0; width: 100%; height: 100%; padding: 0 8px; border: 0; background: transparent; color: var(--mu-txt); font: 12.5px/1 Inter, 'Helvetica Neue', system-ui, sans-serif; font-variant-numeric: tabular-nums; outline: none; }
+.mupe-num em { flex: none; padding-right: 8px; font-style: normal; font-size: 11.5px; color: var(--mu-sub); }
+.mupe-num.is-mini { flex: none; width: 66px; }
+.mupe-num.is-mini .mupe-nin { padding: 0 2px 0 8px; text-align: right; }
+.mupe-num.is-mini em { padding: 0 7px 0 3px; }
+body.mupe-scrub, body.mupe-scrub * { cursor: ew-resize !important; user-select: none !important; }
+.mupe-slider { display: flex; align-items: center; gap: 10px; }
+.mupe-range { --p: 50%; flex: 1; min-width: 0; height: 20px; margin: 0; background: transparent; appearance: none; -webkit-appearance: none; cursor: pointer; }
+.mupe-range::-webkit-slider-runnable-track { height: 3px; border-radius: 2px; background: linear-gradient(90deg, var(--mu-txt) var(--p), var(--mu-line) var(--p)); }
+.mupe-range::-moz-range-track { height: 3px; border-radius: 2px; background: linear-gradient(90deg, var(--mu-txt) var(--p), var(--mu-line) var(--p)); }
+.mupe-range::-webkit-slider-thumb { -webkit-appearance: none; width: 13px; height: 13px; margin-top: -5px; border-radius: 50%; background: #fff; border: 0; box-shadow: 0 0 0 1px rgba(0,0,0,.25), 0 1px 3px rgba(0,0,0,.35); }
+.mupe-range::-moz-range-thumb { width: 13px; height: 13px; border-radius: 50%; background: #fff; border: 0; box-shadow: 0 0 0 1px rgba(0,0,0,.25), 0 1px 3px rgba(0,0,0,.35); }
+.mupe-range:focus-visible { outline: none; }
+.mupe-range:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 3px color-mix(in srgb, var(--mu-txt) 30%, transparent); }
+.mupe-seg { display: flex; height: 28px; padding: 2px; gap: 2px; border: 1px solid var(--mu-line); border-radius: 8px; background: var(--mu-field); }
+.mupv-app .mupe-seg button { flex: 1; min-width: 0; border: 0; border-radius: 6px; background: transparent; color: var(--mu-sub); font-size: 12px; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 6px; }
+.mupv-app .mupe-seg button:hover { color: var(--mu-txt); }
+.mupv-app .mupe-seg button[aria-pressed="true"] { background: var(--mu-soft); color: var(--mu-txt); font-weight: 500; box-shadow: 0 1px 2px rgba(0,0,0,.25); }
+.mupv-app .mupe-switch { flex: none !important; position: relative; width: 34px; height: 20px; padding: 0; border: 0; border-radius: 999px; background: var(--mu-soft); box-shadow: inset 0 0 0 1px var(--mu-line); cursor: pointer; transition: background-color .2s; }
+.mupe-switch u { position: absolute; left: 3px; top: 3px; width: 14px; height: 14px; border-radius: 50%; background: var(--mu-sub); transition: transform .2s var(--ease), background-color .2s; }
+.mupv-app .mupe-switch[aria-checked="true"] { background: var(--mu-acc); box-shadow: none; }
+.mupe-switch[aria-checked="true"] u { transform: translateX(14px); background: var(--mu-on-acc); }
+.mupe-img { display: flex; align-items: center; gap: 8px; }
+.mupe-img i { flex: none; width: 40px; height: 28px; border-radius: 5px; background-size: cover; background-position: center; }
+.mupe-img .mupe-btn { flex: none; }
+
+/* Design tab: swatches open the colour popover; a dot marks the changed ones */
+.mupv-app .mupe-sw { position: relative; cursor: pointer; }
+.mupv-app .mupe-sw.is-changed { border-color: color-mix(in srgb, var(--mu-good) 45%, var(--mu-line)); }
+.mupv-app .mupe-sw.is-open { border-color: var(--mu-sub); }
+.mupe-sw .mupe-dot { position: absolute; top: 6px; right: 6px; }
+.mupe-h3 { margin: 4px 0 -2px; font-size: 11px; font-weight: 600; color: var(--mu-sub); display: flex; gap: 8px; align-items: baseline; }
+.mupe-h3 span { font-weight: 400; }
+.mupv-dsec .mupe-rows { gap: 6px; }
+
+/* the colour popover */
+.mupe-pop { position: fixed; z-index: 60; width: 248px; padding: 10px; border-radius: 12px; background: var(--mu-panel); border: 1px solid var(--mu-line); box-shadow: 0 18px 50px -12px rgba(0,0,0,.65); display: flex; flex-direction: column; gap: 9px; }
+.mupe-sv { position: relative; height: 144px; border-radius: 8px; cursor: crosshair; touch-action: none; background-image: linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, transparent); }
+.mupe-sv b { position: absolute; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; box-shadow: 0 0 0 2px #fff, 0 0 0 3px rgba(0,0,0,.3), 0 2px 4px rgba(0,0,0,.35); pointer-events: none; }
+.mupe-hue, .mupe-alpha { position: relative; height: 10px; border-radius: 5px; cursor: pointer; touch-action: none; }
+.mupe-hue { background: linear-gradient(90deg, #f00 0%, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%); }
+.mupe-alpha { background-color: #fff; background-image: conic-gradient(#d4d2cd 25%, #fff 0 50%, #d4d2cd 0 75%, #fff 0); background-size: 8px 8px; }
+.mupe-alpha i { position: absolute; inset: 0; border-radius: inherit; }
+.mupe-hue b, .mupe-alpha b { position: absolute; top: 50%; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%; box-shadow: 0 0 0 2px #fff, 0 0 0 3px rgba(0,0,0,.3); pointer-events: none; }
+.mupe-alpha b { background: transparent; }
+.mupe-prow { display: flex; align-items: center; gap: 6px; }
+.mupe-pcur { flex: none; width: 28px; height: 28px; border-radius: 7px; }
+.mupv-app .mupe-hex { flex: 1; min-width: 0; font-variant-numeric: tabular-nums; }
+.mupe-pa { width: 58px !important; }
+.mupe-ptok { display: flex; flex-direction: column; gap: 6px; padding-top: 2px; border-top: 1px solid var(--mu-line); }
+.mupe-ptok > span { padding-top: 7px; font-size: 10.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--mu-sub); }
+.mupe-ptok > div { display: grid; grid-template-columns: repeat(auto-fill, minmax(22px, 1fr)); gap: 5px; }
+.mupv-app .mupe-ptok button { aspect-ratio: 1; min-width: 0; padding: 0; border: 0; border-radius: 5px; cursor: pointer; }
+.mupv-app .mupe-ptok button:hover, .mupv-app .mupe-ptok button.is-on { outline: 2px solid var(--mu-txt); outline-offset: 1px; }
+@media (max-width: 860px) { .mupe-chg span { display: none; } .mupv-app .mupe-chg { padding: 0 9px; } }
+</style>
+<!--/MU:HEAD-->
+</head>
+<body>
+<!--MU:BODY-->
+<div class="mupv-app" id="mupv">
+  <header class="mupv-top">
+    <h1 id="mupv-name"></h1>
+    <span class="mupv-badge" id="mupv-badge"></span>
+    <span class="mupv-mode" id="mupv-mode"><i></i><span></span></span>
+    <button type="button" class="mupv-xbtn" id="mupv-open-export" aria-controls="mupv-deliver" aria-expanded="false" title="Render a video or export for editing"></button>
+    <button type="button" class="mupv-show" id="mupv-show" aria-controls="mupv-side" aria-expanded="false" title="Show panels · F"></button>
+  </header>
+  <div class="mupv-main" id="mupv-main">
+    <div class="mupv-view" id="mupv-view"><div class="mupv-frame" id="mupv-frame"></div></div>
+    <div class="mupv-transport" id="mupv-transport">
+      <div class="mupv-mini" id="mupv-mini" aria-hidden="true"><i id="mupv-minifill"></i></div>
+      <div class="mupv-tgroup">
+        <button type="button" class="mupv-play" id="mupv-play" aria-keyshortcuts="Space"></button>
+        <button type="button" class="mupv-icon" id="mupv-prev" title="Previous frame (←) · Shift: 1 s back" aria-label="Previous frame"></button>
+        <button type="button" class="mupv-icon" id="mupv-next" title="Next frame (→) · Shift: 1 s on" aria-label="Next frame"></button>
+      </div>
+      <div class="mupv-time" id="mupv-time" aria-live="off"></div>
+      <div class="mupv-now" id="mupv-now"></div>
+      <div class="mupv-tgroup">
+        <div class="mupv-speed" id="mupv-rate" role="group" aria-label="Playback speed">
+          <button type="button" data-r="0.5" aria-pressed="false">0.5×</button><button type="button" data-r="1" aria-pressed="true">1×</button><button type="button" data-r="2" aria-pressed="false">2×</button>
+        </div>
+        <button type="button" class="mupv-icon" id="mupv-loop" aria-pressed="true" title="Loop"></button>
+        <button type="button" class="mupv-icon" id="mupv-sound" aria-pressed="true" title="Voice-over" hidden></button>
+      </div>
+    </div>
+    <div class="mupv-tlwrap" id="mupv-tlwrap">
+      <div class="mupv-bar" id="mupv-bar" role="slider" tabindex="0" aria-label="Timeline" aria-valuemin="0">
+        <div class="mupv-ruler" id="mupv-ruler"></div>
+        <div class="mupv-strip" id="mupv-strip"></div>
+        <div class="mupv-lane" id="mupv-lane"></div>
+        <div class="mupv-ghost" id="mupv-ghost"><span></span></div>
+        <div class="mupv-head" id="mupv-head"></div>
+      </div>
+      <div class="mupv-tlfoot">
+        <div class="mupv-keys"><span><kbd>Space</kbd> play</span><span><kbd>←</kbd><kbd>→</kbd> frame</span><span><kbd>Shift</kbd> 1 s</span><span><kbd>F</kbd> hide panels</span><span>Double-click · scene start</span></div>
+        <div class="mupv-legend" id="mupv-legend"></div>
+      </div>
+    </div>
+  </div>
+  <aside class="mupv-side" id="mupv-side" aria-label="Inspector">
+    <div class="mupv-track" id="mupv-track">
+      <div class="mupv-insp" id="mupv-insp">
+        <div class="mupv-tabs">
+          <div class="mupv-tablist" role="tablist" aria-label="Inspector">
+            <button type="button" class="mupv-tab" role="tab" id="mupv-tab-scenes" data-tab="scenes" aria-controls="mupv-p-scenes" aria-selected="true"><span>Scenes</span> <small id="mupv-scount"></small></button>
+            <button type="button" class="mupv-tab" role="tab" id="mupv-tab-elements" data-tab="elements" aria-controls="mupv-p-elements" aria-selected="false" tabindex="-1"><span>Elements</span> <small id="mupe-ecount"></small></button>
+            <button type="button" class="mupv-tab" role="tab" id="mupv-tab-design" data-tab="design" aria-controls="mupv-p-design" aria-selected="false" tabindex="-1"><span>Design</span></button>
+          </div>
+          <button type="button" class="mupv-icon mupv-hide" id="mupv-hide" aria-controls="mupv-side" aria-expanded="true" aria-label="Hide panels" title="Hide panels · F"></button>
+        </div>
+
+        <section class="mupv-panel" role="tabpanel" id="mupv-p-scenes" aria-labelledby="mupv-tab-scenes">
+          <div class="mupv-phead"><span id="mupv-sdur"></span><span id="mupv-vocount"></span></div>
+          <div class="mupv-scenes" id="mupv-scenes"></div>
+          <p class="mupv-note mupv-vonote" id="mupv-vo" hidden></p>
+        </section>
+
+        <section class="mupv-panel" role="tabpanel" id="mupv-p-elements" aria-labelledby="mupv-tab-elements" hidden></section>
+
+        <section class="mupv-panel" role="tabpanel" id="mupv-p-design" aria-labelledby="mupv-tab-design" hidden></section>
+      </div>
+
+      <section class="mupv-deliver" id="mupv-deliver" aria-labelledby="mupv-h-deliver" inert>
+        <div class="mupv-dhead">
+          <button type="button" class="mupv-icon" id="mupv-back" aria-label="Back to Scenes and Design" title="Back (Esc)"></button>
+          <div><h2 id="mupv-h-deliver" tabindex="-1">Export</h2><p id="mupv-where"></p></div>
+          <kbd>Esc</kbd>
+        </div>
+        <div class="mupv-dbody" id="mupv-dbody">
+          <section class="mupv-sec" aria-labelledby="mupv-h-render">
+            <h3 class="mupv-h" id="mupv-h-render">Render a video <span id="mupv-spec"></span></h3>
+            <div class="mupv-fmts" id="mupv-fmt" role="group" aria-label="Format">
+              <button type="button" data-v="mp4" aria-pressed="true"><b>MP4</b><span>Plays anywhere</span></button>
+              <button type="button" data-v="webm-alpha" aria-pressed="false"><b>WebM alpha</b><span>Transparent, for the web</span></button>
+              <button type="button" data-v="mov" aria-pressed="false"><b>ProRes 4444</b><span>Transparent, for editing</span></button>
+            </div>
+            <label class="mupv-toggle"><b>Motion blur</b><small>Smoother fast moves, slower render</small><input type="checkbox" id="mupv-mb"><u aria-hidden="true"></u></label>
+            <button type="button" class="mupv-go" id="mupv-render"></button>
+            <div class="mupv-status" id="mupv-rstatus" role="status"></div>
+            <div class="mupv-result" id="mupv-rresult"></div>
+          </section>
+          <section class="mupv-sec" aria-labelledby="mupv-h-export">
+            <h3 class="mupv-h" id="mupv-h-export">Export for editing</h3>
+            <div class="mupv-opts" id="mupv-opts" role="radiogroup" aria-labelledby="mupv-h-export">
+              <label class="mupv-opt"><input type="radio" name="mupv-ex" value="glea-layers" checked><b>GLEA with layers <em>Recommended</em></b><span>Every shape, text and keyframe as its own Video Editor layer, ready to edit.</span></label>
+              <label class="mupv-opt"><input type="radio" name="mupv-ex" value="glea-html"><b>GLEA with HTML cards</b><span>Each scene as one HTML clip. Looks exactly like this preview; you edit the HTML.</span></label>
+              <label class="mupv-opt"><input type="radio" name="mupv-ex" value="ae"><b>As After Effects</b><span>A script that builds the comp from native shape and text layers.</span></label>
+            </div>
+            <button type="button" class="mupv-go" id="mupv-export"></button>
+            <div class="mupv-status" id="mupv-estatus" role="status"></div>
+          </section>
+        </div>
+      </section>
+    </div>
+  </aside>
+</div>
+@@SCRIPTS@@
+<script>
+(function () {
+'use strict';
+const DATA = @@DATA@@;
+const K = window.UIK, MU = window.MU, $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+// the film as the agent made it (BASE), the user's edits (scenario.json → edits: { film, scenes: { "<n>": … } }), and the
+// two together (sc) — what plays, and what every button here renders and exports
+const BASE = MU.normalize(DATA.scenario, { edits: false });
+let EDITS = { film: {}, scenes: {} };
+const setEdits = (e) => { EDITS = { film: Object.assign({}, e && e.film), scenes: Object.assign({}, e && e.scenes) }; };
+setEdits(DATA.edits);
+// a page opened as a file (or an artifact) keeps them in the browser — for this very film (its stamp)
+const STORE_KEY = `mu-edits:${BASE.id}`;
+if (!DATA.mode || (DATA.mode.kind !== 'board' && DATA.mode.kind !== 'local')) {
+  try { const st = JSON.parse(localStorage.getItem(STORE_KEY) || 'null'); if (st && st.stamp === DATA.stamp && st.edits) setEdits(st.edits); } catch (e) { /* storage blocked */ }
+}
+const withEdits = () => MU.normalize(Object.assign({}, BASE, { edits: EDITS }));
+let sc = withEdits();
+const W = sc.size.w, H = sc.size.h, FPS = sc.fps;
+const MODE = DATA.mode || { kind: 'static' };
+K.setTheme(sc.theme, sc.accent, sc.colors);
+// a 3D-engine film: its scenes are HTML pages (lib/scene-host.js plays them); otherwise the layers film
+const ENGINE3D = sc.engine === '3d';
+const scriptText = (name) => { const el = document.querySelector(`script[data-mu-src="${name}"]`); return el ? el.textContent : ''; };
+const scenePlan = () => K.scenePlan(sc, DATA.scenes || []);
+let film = ENGINE3D ? null : MU.film(sc);
+const T = ENGINE3D ? scenePlan().T : film.T;
+const FRAMES = Math.round(T * FPS);
+const timing = MU.timing(sc);
+const fmt = (t) => { const m = Math.floor(t / 60), s = t - m * 60; return `${m}:${s.toFixed(2).padStart(5, '0')}`; };
+const secs = (t) => `${(Math.round(t * 10) / 10).toFixed(1)} s`;
+const voice = DATA.voice || [];
+const sfx = DATA.sfx || [];   // sound effects: { url, start, duration, vol, label }
+const specOf = (i) => K.elements.find((e) => e.id === timing[i].item);
+const titleOf = (i) => sc.scenes[i].title || specOf(i)?.name || timing[i].item;
+
+const svg = (body, fill) => `<svg viewBox="0 0 16 16" aria-hidden="true" ${fill ? 'fill="currentColor"' : 'fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"'}>${body}</svg>`;
+const ICON = {
+  play: svg('<path d="M4.5 2.9v10.2c0 .47.51.76.91.51l8.1-5.1a.6.6 0 0 0 0-1.02l-8.1-5.1a.6.6 0 0 0-.91.51z"/>', 1),
+  pause: svg('<rect x="3.5" y="2.5" width="3.2" height="11" rx=".9"/><rect x="9.3" y="2.5" width="3.2" height="11" rx=".9"/>', 1),
+  prev: svg('<path d="M3.2 3v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M12.8 3.7v8.6c0 .42-.48.65-.8.39L6.6 8.39a.5.5 0 0 1 0-.78L12 3.3c.32-.26.8-.03.8.4z"/>', 1),
+  next: svg('<path d="M12.8 3v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M3.2 3.7v8.6c0 .42.48.65.8.39l5.4-4.3a.5.5 0 0 0 0-.78L4 3.3c-.32-.26-.8-.03-.8.4z"/>', 1),
+  loop: svg('<path d="M2.8 7.6V7a3 3 0 0 1 3-3h7.4"/><path d="M11.2 2l2 2-2 2"/><path d="M13.2 8.4V9a3 3 0 0 1-3 3H2.8"/><path d="M4.8 14l-2-2 2-2"/>'),
+  voice: svg('<path d="M2.6 6.1v3.8h2.3L8 12.6V3.4L4.9 6.1z" fill="currentColor"/><path d="M10.6 5.9a3 3 0 0 1 0 4.2M12.5 4.1a5.6 5.6 0 0 1 0 7.8"/>'),
+  mute: svg('<path d="M2.6 6.1v3.8h2.3L8 12.6V3.4L4.9 6.1z" fill="currentColor"/><path d="M10.6 6.2l3.6 3.6M14.2 6.2l-3.6 3.6"/>'),
+  wave: svg('<path d="M2 7v2M5 5v6M8 3v10M11 5.5v5M14 7v2"/>'),
+  render: svg('<path d="M8 2.5v7.8M4.6 7 8 10.4 11.4 7M3 13.5h10"/>'),
+  export: svg('<path d="M8 10V2.6M4.8 5.6 8 2.4l3.2 3.2"/><path d="M3 9.2v3.3a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V9.2"/>'),
+  scenes: svg('<rect x="1.8" y="2.8" width="5" height="4" rx="1"/><rect x="1.8" y="9.2" width="5" height="4" rx="1"/><path d="M9.4 4.8h4.8M9.4 11.2h4.8"/>'),
+  design: svg('<path d="M8 1.9a6.1 6.1 0 1 0 0 12.2c.95 0 1.35-.75 1-1.45-.42-.82-.08-1.75.9-1.75h1.25a2.95 2.95 0 0 0 2.95-2.95C14.1 4.6 11.4 1.9 8 1.9z"/><circle cx="5.1" cy="7.6" r=".8" fill="currentColor" stroke="none"/><circle cx="7.2" cy="4.9" r=".8" fill="currentColor" stroke="none"/><circle cx="10.3" cy="5.3" r=".8" fill="currentColor" stroke="none"/>'),
+  hide: svg('<rect x="1.8" y="2.8" width="12.4" height="10.4" rx="1.8"/><path d="M10.2 2.8v10.4M5 6.2 6.8 8 5 9.8"/>'),
+  show: svg('<rect x="1.8" y="2.8" width="12.4" height="10.4" rx="1.8"/><path d="M10.2 2.8v10.4M6.8 6.2 5 8l1.8 1.8"/>'),
+  back: svg('<path d="M10 3.4 5.4 8l4.6 4.6"/>'),
+};
+const setLabel = (btn, icon, text) => { btn.innerHTML = `${ICON[icon] || ''}<span>${esc(text)}</span>`; };
+
+// ── header ──
+$('mupv-name').textContent = sc.name;
+$('mupv-badge').innerHTML = [`${W}×${H}`, `${FPS} fps`, `${T.toFixed(2)} s`, `${FRAMES} frames`].map((x) => `<span>${x}</span>`).join('');
+// A board card opened from the disk (its file in the board folder, as file://) is not on the board: its requests
+// would go to file:///api/…, and the app never answers a file page (any page could then drive it). The same page
+// served by the app works: <the app><the board's media prefix>/<this file>.
+const ON_DISK = MODE.kind === 'board' && location.protocol === 'file:';
+const SERVED = ON_DISK && MODE.app && MODE.mediaPrefix ? `${MODE.app}${MODE.mediaPrefix}/${location.pathname.split('/').pop()}` : '';
+const modeEl = $('mupv-mode');
+modeEl.querySelector('span').textContent = ON_DISK ? 'Opened from disk' : MODE.kind === 'board' ? `On the board${MODE.boardName ? ' · ' + MODE.boardName : ''}` : MODE.kind === 'local' ? 'Local · render and export on' : 'Preview only';
+modeEl.classList.toggle('is-live', MODE.kind !== 'static' && !ON_DISK);
+modeEl.classList.toggle('is-disk', ON_DISK);
+const openX = $('mupv-open-export');
+openX.innerHTML = `${ICON.export}<span>Export</span><i class="mupv-dot" id="mupv-jobdot"></i>`;
+$('mupv-show').innerHTML = `${ICON.show}<span>Show panels</span><kbd>F</kbd>`;
+openX.setAttribute('aria-label', 'Export'); $('mupv-show').setAttribute('aria-label', 'Show panels');
+// Under a board the agent delivers: after the user approves this preview (the film's pipeline gate), its Render &
+// export step renders the film with the soundtrack and exports it. No Export here, one line saying how it goes on.
+const AGENT_DELIVERS = MODE.kind === 'board';
+if (AGENT_DELIVERS) {
+  openX.hidden = true;
+  const by = document.createElement('span'); by.className = 'mupv-agentline'; by.id = 'mupv-agentline';
+  by.textContent = 'Approve it in the chat, and the agent renders and exports it';
+  openX.after(by);
+}
+
+// ── the stage ──
+const view = $('mupv-view'), frameEl = $('mupv-frame');
+if (sc.background) frameEl.style.background = sc.background; else frameEl.classList.add('is-clear');
+let inst = ENGINE3D ? new K.SceneFilm(scenePlan(), frameEl, { three: scriptText('three.js'), runtime: scriptText('scene.js') }) : new K.Instance(film, frameEl);
+Object.assign(inst.stage.style, { width: W + 'px', height: H + 'px' });
+const fit = () => {
+  const vw = view.clientWidth, vh = view.clientHeight, k = Math.min(vw / W, vh / H);
+  Object.assign(frameEl.style, { width: W * k + 'px', height: H * k + 'px', left: (vw - W * k) / 2 + 'px', top: (vh - H * k) / 2 + 'px' });
+  inst.stage.style.transform = `scale(${k})`;
+};
+new ResizeObserver(fit).observe(view); fit();
+
+// ── timeline: filmstrip segments, voice-over lane, ruler ──
+let cur = 0, playing = false, rate = 1, loop = true, sound = true, last = null;
+const bar = $('mupv-bar'), head = $('mupv-head'), ghost = $('mupv-ghost');
+bar.setAttribute('aria-valuemax', T.toFixed(2));
+const segs = timing.map((tm, i) => {
+  const d = document.createElement('div'); d.className = 'mupv-seg';
+  Object.assign(d.style, { left: (tm.start / T) * 100 + '%', width: `calc(${((tm.end - tm.start) / T) * 100}% - 3px)` });
+  d.innerHTML = `<div class="mupv-seg-th"><em>${secs(tm.duration)}</em></div><div class="mupv-seg-cap"><b>${i + 1}</b><span>${esc(titleOf(i))}</span></div>`;
+  d.title = `${i + 1} · ${titleOf(i)} · ${fmt(tm.start)} – ${fmt(tm.end)}`;
+  $('mupv-strip').appendChild(d);
+  return d;
+});
+const VOICES = MU.sceneVoices(Object.assign({}, sc, { voiceover: { clips: voice.map((v) => ({ scene: v.scene, text: v.text, parts: v.parts })) } }));
+const lineOf = (i) => VOICES[i] || MU.sceneVoices(Object.assign({}, sc, { voiceover: null }))[i] || '';
+const lane = $('mupv-lane');
+const vos = voice.length
+  ? voice.map((v) => { const d = document.createElement('div'); d.className = 'mupv-vo'; Object.assign(d.style, { left: (v.start / T) * 100 + '%', width: `max(3px, ${(v.duration / T) * 100}%)` }); d.title = v.text || 'Voice-over'; lane.appendChild(d); return { d, a: v.start, b: v.start + v.duration }; })
+  : timing.map((tm, i) => { const txt = lineOf(i); if (!txt) return null; const d = document.createElement('div'); d.className = 'mupv-vo is-script'; Object.assign(d.style, { left: `calc(${(tm.start / T) * 100}% + 4px)`, width: `calc(${((tm.end - tm.start) / T) * 100}% - 11px)` }); d.title = `Script: ${txt}`; lane.appendChild(d); return { d, a: tm.start, b: tm.end }; }).filter(Boolean);
+sfx.forEach((v) => { const d = document.createElement('div'); d.className = 'mupv-sfx'; d.style.left = (Math.max(0, v.start) / T) * 100 + '%'; d.title = v.label || 'Sound effect'; lane.appendChild(d); });
+const scriptLines = timing.map((tm, i) => lineOf(i)).filter(Boolean).length;
+$('mupv-legend').innerHTML = (voice.length ? `<i></i>Voice-over · ${voice.length} clip${voice.length > 1 ? 's' : ''}` : scriptLines ? '<i class="is-script"></i>Voice-over script · not recorded' : '')
+  + (sfx.length ? `${voice.length || scriptLines ? ' · ' : ''}Sound effects · ${sfx.length}` : '');
+const ruler = $('mupv-ruler');
+const drawRuler = () => {
+  const w = bar.clientWidth; if (!w) return;
+  const pps = w / T;
+  const major = [1, 2, 5, 10, 15, 30, 60, 120, 300].find((s) => s * pps >= 64) || 600;
+  const minor = [0.5, 1, 2, 5, 10, 30, 60].find((s) => major % s === 0 && s * pps >= 9 && s < major) || major;
+  let html = '';
+  for (let t = 0; t <= T + 1e-6; t += minor) {
+    const isMajor = Math.abs(t / major - Math.round(t / major)) < 1e-6;
+    const lab = isMajor && (T - t) * pps > 34 ? `<span>${Math.floor(t / 60)}:${String(Math.round(t % 60)).padStart(2, '0')}</span>` : '';
+    html += `<div class="mupv-tick${isMajor ? ' is-major' : ''}" style="left:${(t / T) * 100}%">${lab}</div>`;
+  }
+  ruler.innerHTML = html;
+};
+const sceneAt = (t) => { let k = 0; timing.forEach((tm, i) => { if (t >= tm.start - 1e-6) k = i; }); return k; };
+
+// ── scene thumbnails: each scene alone (compose … { scene }), seeked to its settled moment, built once when idle ──
+const thumbBg = (el) => { if (sc.background) el.style.background = sc.background; else el.classList.add('mupv-clear'); };
+const fitThumb = (stage, box, cover) => {
+  const bw = box.clientWidth, bh = box.clientHeight; if (!stage || !bw || !bh) return;
+  const k = cover ? Math.max(bw / W, bh / H) : Math.min(bw / W, bh / H);
+  stage.style.transform = `translate(${((bw - W * k) / 2).toFixed(2)}px, ${((bh - H * k) / 2).toFixed(2)}px) scale(${k.toFixed(5)})`;
+};
+const thumbs = [];
+const fitSegThumbs = () => { if (!ENGINE3D) segs.forEach((s, i) => thumbs[i] && fitThumb(thumbs[i].seg, s.firstChild, true)); };
+const buildThumb = (i) => {
+  const tm = timing[i], box = segs[i].firstChild;
+  let ti;
+  if (ENGINE3D) {
+    // a scene page: a still of its 3D canvas at the settled moment
+    inst.ready.then(() => {
+      const url = inst.capture(i, 0.72 * tm.duration); if (!url) return;
+      if (thumbs[i]) { thumbs[i].seg.remove(); thumbs[i].row.remove(); }
+      const still = (into, fit) => { const im = document.createElement('img'); im.src = url; im.alt = ''; im.style.cssText = `position:absolute;left:0;top:0;width:100%;height:100%;object-fit:${fit};`; into.appendChild(im); return im; };
+      thumbs[i] = { seg: still(box, 'cover'), row: still(sceneRows[i].querySelector('.mupv-sth'), 'contain') };
+    });
+    return;
+  }
+  if (thumbs[i]) { thumbs[i].seg.remove(); thumbs[i].row.remove(); thumbs[i] = null; }
+  try { ti = new K.Instance(K.compose(sc, { scene: i }), box); } catch (e) { return; }
+  Object.assign(ti.stage.style, { width: W + 'px', height: H + 'px' });
+  ti.seek((tm.start - tm.from) + 0.72 * tm.duration);
+  // the list's copy: a clone (canvases copied by hand)
+  const cl = ti.stage.cloneNode(true);
+  const from = ti.stage.querySelectorAll('canvas'), to = cl.querySelectorAll('canvas');
+  from.forEach((c, j) => { try { to[j].getContext('2d').drawImage(c, 0, 0); } catch (e) { /* tainted or empty */ } });
+  const rowBox = sceneRows[i].querySelector('.mupv-sth');
+  rowBox.appendChild(cl);
+  thumbs[i] = { seg: ti.stage, row: cl };
+  fitThumb(ti.stage, box, true);
+  fitThumb(cl, rowBox, false);
+};
+segs.forEach((s) => thumbBg(s.firstChild));
+
+// ── transport ──
+const setPlayLabel = () => { setLabel($('mupv-play'), playing ? 'pause' : 'play', playing ? 'Pause' : 'Play'); $('mupv-play').setAttribute('aria-label', playing ? 'Pause' : 'Play'); };
+$('mupv-prev').innerHTML = ICON.prev; $('mupv-next').innerHTML = ICON.next;
+setLabel($('mupv-loop'), 'loop', 'Loop');
+const setSoundLabel = () => setLabel($('mupv-sound'), sound ? 'voice' : 'mute', sfx.length ? 'Sound' : 'Voice');
+setSoundLabel();
+setPlayLabel();
+
+// voice-over and sound effects: one <audio> per clip (effects at their level), kept in step with the playhead
+const audios = [...voice, ...sfx].map((v) => { const a = new Audio(v.url); a.preload = 'auto'; if (v.vol != null) a.volume = Math.max(0, Math.min(1, v.vol)); return { v, a }; });
+if (audios.length) $('mupv-sound').hidden = false;
+const syncAudio = (force) => {
+  for (const { v, a } of audios) {
+    const local = cur - v.start, on = playing && sound && local >= 0 && local < v.duration;
+    if (on) { if (force || a.paused || Math.abs(a.currentTime - local) > 0.12) { try { a.currentTime = local; } catch (e) { /* not loaded yet */ } } a.playbackRate = rate; if (a.paused) a.play().catch(() => {}); }
+    else if (!a.paused) a.pause();
+  }
+};
+let drawn = -1, onK = -1;
+const timeEl = $('mupv-time'), nowEl = $('mupv-now');
+const draw = () => {
+  if (cur === drawn) return;
+  drawn = cur;
+  inst.seek(Math.min(cur, T));
+  head.style.left = (cur / T) * 100 + '%';
+  miniFill.style.transform = `scaleX(${(cur / T).toFixed(5)})`;
+  bar.setAttribute('aria-valuenow', cur.toFixed(2));
+  bar.setAttribute('aria-valuetext', fmt(cur));
+  timeEl.innerHTML = `<b>${fmt(cur)}</b><span>/ ${fmt(T)}</span><em>f ${Math.min(FRAMES, Math.floor(cur * FPS + 1e-6))}</em>`;
+  const k = sceneAt(cur);
+  if (k !== onK) {
+    onK = k;
+    segs.forEach((s, i) => s.classList.toggle('is-on', i === k));
+    sceneRows.forEach((r, i) => { r.classList.toggle('is-on', i === k); r.setAttribute('aria-current', i === k ? 'true' : 'false'); });
+    nowEl.innerHTML = `<i>${k + 1} / ${timing.length}</i><b>${esc(titleOf(k))}</b>`;
+  }
+  const tm = timing[k];
+  sceneRows[k].querySelector('.mupv-sprog').style.width = Math.max(0, Math.min(1, (cur - tm.start) / tm.duration)) * 100 + '%';
+  for (const v of vos) v.d.classList.toggle('is-on', cur >= v.a && cur < v.b);
+};
+const setPlaying = (on) => {
+  if (on && cur >= T - 1e-3) cur = 0;
+  playing = on; setPlayLabel(); last = null; syncAudio(true);
+};
+const seek = (t) => { cur = Math.max(0, Math.min(T, t)); syncAudio(true); draw(); };
+const step = (dir, big) => seek(cur + dir * (big ? 1 : 1 / FPS));
+$('mupv-play').onclick = () => setPlaying(!playing);
+$('mupv-prev').onclick = (e) => step(-1, e.shiftKey);
+$('mupv-next').onclick = (e) => step(1, e.shiftKey);
+$('mupv-rate').onclick = (e) => {
+  const b = e.target.closest('button[data-r]'); if (!b) return;
+  rate = +b.dataset.r;
+  $('mupv-rate').querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+  syncAudio(true);
+};
+$('mupv-loop').onclick = (e) => { loop = !loop; e.currentTarget.setAttribute('aria-pressed', String(loop)); };
+$('mupv-sound').onclick = (e) => { sound = !sound; e.currentTarget.setAttribute('aria-pressed', String(sound)); setSoundLabel(); syncAudio(true); };
+
+let drag = false;
+const tAt = (e) => { const r = bar.getBoundingClientRect(); return Math.max(0, Math.min(T, ((e.clientX - r.left) / r.width) * T)); };
+const scrub = (e) => seek(tAt(e));
+const hover = (e) => {
+  const t = tAt(e);
+  ghost.style.left = (t / T) * 100 + '%';
+  ghost.firstChild.textContent = fmt(t);
+  // keep the time label inside the bar
+  ghost.firstChild.style.transform = t / T > 0.9 ? 'translateX(calc(-100% - 12px))' : '';
+};
+bar.onpointerdown = (e) => { if (e.button > 0) return; drag = true; bar.classList.add('is-drag'); bar.setPointerCapture(e.pointerId); scrub(e); };
+bar.onpointermove = (e) => { if (e.pointerType === 'mouse') { bar.classList.add('is-hover'); hover(e); } if (drag) scrub(e); };
+bar.onpointerup = bar.onpointercancel = () => { drag = false; bar.classList.remove('is-drag'); };
+bar.onpointerleave = () => bar.classList.remove('is-hover');
+bar.ondblclick = (e) => seek(timing[sceneAt(tAt(e))].start + 0.001);
+new ResizeObserver(() => { drawRuler(); fitSegThumbs(); }).observe(bar);
+
+// ── inspector tabs (Scenes · Design) ──
+const tabs = [...document.querySelectorAll('.mupv-tab')];
+$('mupv-tab-scenes').insertAdjacentHTML('afterbegin', ICON.scenes);
+$('mupv-tab-design').insertAdjacentHTML('afterbegin', ICON.design);
+const showTab = (name) => tabs.forEach((t) => {
+  const on = t.dataset.tab === name;
+  t.setAttribute('aria-selected', String(on)); t.tabIndex = on ? 0 : -1;
+  $(t.getAttribute('aria-controls')).hidden = !on;
+});
+tabs.forEach((t) => { t.onclick = () => showTab(t.dataset.tab); });
+
+// ── the Export panel: the whole inspector slides left to it; back, Esc or the toolbar button slide back ──
+const app = $('mupv'), side = $('mupv-side'), track = $('mupv-track'), insp = $('mupv-insp'), deliver = $('mupv-deliver');
+const hideBtn = $('mupv-hide'), showBtn = $('mupv-show');
+const narrowMq = matchMedia('(max-width: 860px)'), reduceMq = matchMedia('(prefers-reduced-motion: reduce)');
+$('mupv-back').innerHTML = ICON.back;
+hideBtn.innerHTML = ICON.hide;
+let deliverOn = false, stage = false;
+const setDeliver = (on) => {
+  if (on === deliverOn) return;
+  if (on && stage) {
+    // the panels come back already on Export: the track jumps, only the inspector slides in
+    track.style.transition = 'none'; side.classList.add('is-deliver'); void track.offsetWidth; track.style.transition = '';
+    setStage(false);
+  }
+  deliverOn = on;
+  side.classList.toggle('is-deliver', on);
+  deliver.inert = !on; insp.inert = on;
+  openX.setAttribute('aria-expanded', String(on));
+  if (on) {
+    setTimeout(() => $('mupv-h-deliver').focus({ preventScroll: true }), 40);
+    if (narrowMq.matches) side.scrollIntoView({ block: 'start', behavior: reduceMq.matches ? 'auto' : 'smooth' });
+  } else if (deliver.contains(document.activeElement)) openX.focus({ preventScroll: true });
+};
+openX.onclick = () => { if (!AGENT_DELIVERS) setDeliver(!deliverOn); };
+$('mupv-back').onclick = () => setDeliver(false);
+
+// ── full stage: hide the inspector and the timeline, the film grows; F, Esc or "Show panels" bring them back ──
+const transport = $('mupv-transport'), tlwrap = $('mupv-tlwrap');
+const STAGE_KEY = 'mupv-panels-hidden';
+let flipT = 0;
+// FLIP: measure, change the layout, measure, then play the difference back as a transform
+const flip = (change) => {
+  const f0 = frameEl.getBoundingClientRect(), t0 = transport.getBoundingClientRect();
+  change(); fit();
+  if (reduceMq.matches || narrowMq.matches) return;
+  const f1 = frameEl.getBoundingClientRect(), t1 = transport.getBoundingClientRect();
+  if (!f1.width) return;
+  frameEl.style.transition = transport.style.transition = 'none';
+  frameEl.style.transformOrigin = '0 0';
+  frameEl.style.transform = `translate(${(f0.left - f1.left).toFixed(2)}px, ${(f0.top - f1.top).toFixed(2)}px) scale(${(f0.width / f1.width).toFixed(5)})`;
+  transport.style.transform = `translateY(${(t0.top - t1.top).toFixed(2)}px)`;
+  void frameEl.offsetWidth;
+  frameEl.style.transition = transport.style.transition = 'transform var(--dur) var(--ease)';
+  frameEl.style.transform = transport.style.transform = '';
+  clearTimeout(flipT);
+  flipT = setTimeout(() => { frameEl.style.transition = transport.style.transition = frameEl.style.transformOrigin = ''; }, 380);
+};
+const setStage = (on, animate = true) => {
+  if (on === stage) return;
+  if (on && deliverOn) setDeliver(false);
+  const hadFocus = side.contains(document.activeElement) || tlwrap.contains(document.activeElement);
+  const change = () => {
+    stage = on;
+    app.classList.toggle('is-stage', on);
+    side.inert = on; tlwrap.inert = on;
+    hideBtn.setAttribute('aria-expanded', String(!on)); showBtn.setAttribute('aria-expanded', String(!on));
+  };
+  if (animate) flip(change); else { change(); fit(); }
+  if (on && hadFocus) showBtn.focus({ preventScroll: true });
+  else if (!on && document.activeElement === showBtn) hideBtn.focus({ preventScroll: true });
+  try { sessionStorage.setItem(STAGE_KEY, on ? '1' : '0'); } catch (e) { /* storage blocked: the state just isn't remembered */ }
+};
+hideBtn.onclick = () => setStage(true);
+showBtn.onclick = () => setStage(false);
+
+// the stage's hairline scrubber
+const mini = $('mupv-mini'), miniFill = $('mupv-minifill');
+let miniDrag = false;
+const miniAt = (e) => { const r = mini.getBoundingClientRect(); return Math.max(0, Math.min(T, ((e.clientX - r.left) / r.width) * T)); };
+mini.onpointerdown = (e) => { if (e.button > 0) return; miniDrag = true; mini.classList.add('is-drag'); mini.setPointerCapture(e.pointerId); seek(miniAt(e)); };
+mini.onpointermove = (e) => { if (miniDrag) seek(miniAt(e)); };
+mini.onpointerup = mini.onpointercancel = () => { miniDrag = false; mini.classList.remove('is-drag'); };
+
+addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    if (deliverOn) { e.preventDefault(); setDeliver(false); return; }
+    if (stage) { e.preventDefault(); setStage(false); return; }
+  }
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  if (e.target.closest && e.target.closest('input, select, textarea')) return;
+  if (e.code === 'KeyF' && !e.shiftKey) { e.preventDefault(); setStage(!stage); return; }
+  // inside the Export panel keys do their own job (Space presses the focused button)
+  if (e.target.closest && e.target.closest('.mupv-deliver')) return;
+  const tab = e.target.closest && e.target.closest('[role="tab"]');
+  if (tab && (e.code === 'ArrowRight' || e.code === 'ArrowLeft')) {
+    e.preventDefault();
+    const n = tabs[(tabs.indexOf(tab) + (e.code === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length];
+    showTab(n.dataset.tab); n.focus(); return;
+  }
+  if (e.code === 'Space') { e.preventDefault(); setPlaying(!playing); }
+  else if (e.code === 'ArrowRight') { e.preventDefault(); step(1, e.shiftKey); }
+  else if (e.code === 'ArrowLeft') { e.preventDefault(); step(-1, e.shiftKey); }
+  else if (e.code === 'Home') seek(0); else if (e.code === 'End') seek(T);
+});
+
+// ── Scenes: thumbnail, timing, the item, the voice line ──
+$('mupv-scount').textContent = timing.length;
+$('mupv-sdur').innerHTML = `<b>${timing.length} scenes</b> · ${T.toFixed(1)} s`;
+const sceneRows = timing.map((tm, i) => {
+  const s = sc.scenes[i], spec = specOf(i);
+  const b = document.createElement('button'); b.type = 'button'; b.className = 'mupv-scene';
+  const copy = Object.values(s.text || {}).join(' · ');
+  const txt = lineOf(i);
+  b.innerHTML = `<span class="mupv-sth"><span class="mupv-sprog"></span></span><span class="mupv-sbody">`
+    + `<span class="mupv-shead"><i>${i + 1}</i><b>${esc(titleOf(i))}</b><span>${fmt(tm.start)}</span></span>`
+    + `<span class="mupv-smeta">${secs(tm.duration)}${i ? ` · ${s.transition === 'fade' ? 'fade in' : 'cut'}` : ''} · ${esc(spec?.name || tm.item)}${copy ? ' · ' + esc(copy) : ''}</span>`
+    + (txt ? `<span class="mupv-sline" title="${esc(txt)}">${ICON.wave}<span>${esc(txt)}</span></span>` : '')
+    + '</span>';
+  b.setAttribute('aria-label', `Scene ${i + 1}, ${titleOf(i)}, at ${fmt(tm.start)}`);
+  b.onclick = () => seek(tm.start + 0.001);
+  thumbBg(b.querySelector('.mupv-sth'));
+  $('mupv-scenes').appendChild(b);
+  return b;
+});
+// voice-over: clips or the script's lines (shown per scene above)
+const lines = timing.map((tm, i) => lineOf(i)).filter(Boolean);
+$('mupv-vocount').textContent = voice.length ? `Voice-over · ${voice.length} clip${voice.length > 1 ? 's' : ''}` : lines.length ? 'Voice-over · script only' : 'No voice-over';
+const voNote = $('mupv-vo');
+if (!voice.length) {
+  voNote.hidden = false;
+  voNote.textContent = lines.length ? 'The voice-over is a script, not recorded yet. The agent asks about a voice-over once you approve the preview.'
+    : 'No voice-over. The agent asks about one once you approve the preview.';
+}
+
+// ── Export panel: render a video (format cards, motion blur) · export for editing (3 options) ──
+const status = (el, text, cls) => { el.className = 'mupv-status' + (cls ? ' is-' + cls : ''); el.innerHTML = text; };
+const FMT_LABEL = { mp4: 'MP4', 'webm-alpha': 'WebM alpha', mov: 'ProRes 4444' };
+const EXPORT_LABEL = { 'glea-layers': 'GLEA with layers', 'glea-html': 'GLEA with HTML cards', ae: 'After Effects' };
+$('mupv-where').textContent = ON_DISK ? 'Rendering and exporting run in GreenLight Dash.'
+  : MODE.kind === 'board' ? 'Renders land in the pipeline’s Final film. GLEA exports open in the Video Editor.'
+  : MODE.kind === 'local' ? 'Renders and exports are saved in the project folder.'
+    : 'This page is a file: each button gives you the command to run in the project folder.';
+$('mupv-spec').textContent = `${W}×${H} · ${FPS} fps`;
+const fmtSel = $('mupv-fmt'); let outFmt = 'mp4';
+const exportKind = () => document.querySelector('input[name="mupv-ex"]:checked').value;
+const renderBtn = $('mupv-render'), exportBtn = $('mupv-export');
+const DISK_MSG = `Opened from disk, so this page can't reach GreenLight Dash. ${SERVED ? `<a href="${esc(SERVED)}">Open it in GreenLight Dash</a> (the app must be running), or` : 'Use'} the card on the board.`;
+if (ON_DISK) $('mupv-dbody').insertAdjacentHTML('afterbegin', `<div class="mupv-disk" id="mupv-disk"><b>Opened from disk</b><span>This is the card's file. Render and Export work in GreenLight Dash: open this preview there, or use the card on the board.</span>${SERVED ? `<a href="${esc(SERVED)}">Open in GreenLight Dash</a>` : ''}</div>`);
+const labelRender = () => { if (!renderBtn.disabled) setLabel(renderBtn, 'render', `Render ${FMT_LABEL[outFmt]}`); };
+const labelExport = () => { if (!exportBtn.disabled) { const k = exportKind(); setLabel(exportBtn, 'export', k === 'ae' ? 'Export for After Effects' : `Export ${EXPORT_LABEL[k]}`); } };
+fmtSel.onclick = (e) => { const b = e.target.closest('button[data-v]'); if (!b) return; outFmt = b.dataset.v; fmtSel.querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === b))); labelRender(); };
+// a 3D-engine film: its scenes go into the Video Editor as HTML clips, and there is no After Effects export
+if (ENGINE3D) {
+  for (const v of ['glea-layers', 'ae']) { const o = document.querySelector(`input[name="mupv-ex"][value="${v}"]`); if (o) o.closest('label').hidden = true; }
+  const h = document.querySelector('input[name="mupv-ex"][value="glea-html"]'); if (h) { h.checked = true; h.closest('label').querySelector('b').innerHTML = 'GLEA with HTML scenes <em>3D engine</em>'; }
+}
+document.querySelectorAll('input[name="mupv-ex"]').forEach((x) => x.addEventListener('change', labelExport));
+labelRender(); labelExport();
+// a dot on the toolbar's Export button: working, done, failed
+const jobs = { render: '', export: '' };
+const setJob = (which, state) => {
+  jobs[which] = state;
+  const s = jobs.render === 'busy' || jobs.export === 'busy' ? 'busy' : (jobs.render === 'bad' || jobs.export === 'bad') ? 'bad' : jobs.render || jobs.export;
+  $('mupv-jobdot').className = 'mupv-dot' + (s ? ' is-' + s : '');
+};
+
+// the page's own copies of the library: a film or scene page is built from them
+const src = (name) => { const el = document.querySelector(`script[data-mu-src="${name}"]`); return el ? el.textContent : ''; };
+const sources = () => {
+  const files = {};
+  document.querySelectorAll('script[data-mu-src]').forEach((el) => { const n = el.dataset.muSrc; if (!['easings.js', 'engine.js', 'catalog.js', 'film.js', 'converter.js', 'html-export.js', 'ae-export.js', 'motion.js', 'scene.js', 'scene-host.js', 'three.js'].includes(n)) files[n] = el.textContent; });
+  const out = { easings: src('easings.js'), engine: src('engine.js'), film: src('film.js'), files };
+  if (ENGINE3D) Object.assign(out, { scenes: DATA.scenes || [], sceneRuntime: src('scene.js'), sceneHost: src('scene-host.js'), three: src('three.js') });
+  return out;
+};
+const cmdBox = (cmd) => `<div class="mupv-cmd"><code>${esc(cmd)}</code><button type="button" class="mupv-btn" data-copy="${esc(cmd)}">Copy</button></div>`;
+document.addEventListener('click', (e) => { const b = e.target.closest('[data-copy]'); if (!b) return; try { navigator.clipboard.writeText(b.dataset.copy).then(() => { b.textContent = 'Copied'; }, () => {}); } catch (err) { /* select the text instead */ } });
+const busy = (btn, on, icon, label) => { btn.disabled = on; if (on) setLabel(btn, icon, label); else { labelRender(); labelExport(); } };
+const api = async (method, path, body, isForm) => {
+  const init = { method, headers: {} };
+  if (isForm) init.body = body; else if (body !== undefined) { init.body = JSON.stringify(body); init.headers['Content-Type'] = 'application/json'; }
+  const r = await fetch((MODE.api || '') + path, init);
+  const txt = await r.text();
+  if (!r.ok) { let m = txt; try { m = JSON.parse(txt).detail || txt; } catch (e) { /* plain text */ } throw new Error(`${r.status}: ${String(m).slice(0, 240)}`); }
+  try { return JSON.parse(txt); } catch (e) { return txt; }
+};
+const upload = async (name, blob, folder) => {
+  const fd = new FormData(); fd.append('file', blob, name);
+  return api('POST', `/api/upload?board_id=${encodeURIComponent(MODE.boardId)}&defer_derivatives=true&folder=${encodeURIComponent(folder)}`, fd, true);
+};
+// a scene page goes up once per content (uploads never overwrite: a second copy would get a new name)
+const scenePages = new Map();
+const uploadScene = async (i, html) => {
+  const key = `${i}:${html.length}:${html.slice(-400)}`;
+  if (!scenePages.has(key)) scenePages.set(key, (await upload(`scene-${i + 1}.html`, new Blob([html], { type: 'text/html' }), MODE.folder)).url);
+  return scenePages.get(key);
+};
+// board media URLs: the pictures and voice clips are paths relative to the board folder
+const boardUrl = (p) => (/^(https?:|data:|\/)/.test(p) ? p : `${MODE.mediaPrefix}/${p}`);
+const relFrom = (fromDir, p) => { if (/^(https?:|data:|\/)/.test(p)) return p; const a = fromDir.split('/').filter(Boolean), b = p.split('/'); let i = 0; while (i < a.length && i < b.length - 1 && a[i] === b[i]) i++; return '../'.repeat(a.length - i) + b.slice(i).join('/'); };
+const voiceFor = (toUrl) => voice.map((v) => ({ url: toUrl(v.url), start: v.start, duration: v.duration, name: v.name || `Voice ${v.scene || ''}`.trim() }));
+const sfxFor = (toUrl) => sfx.map((v) => ({ url: toUrl(v.url), start: v.start, duration: v.duration, vol: v.vol, name: v.label }));
+const rebased = (dir) => Object.assign({}, sc, { scenes: sc.scenes.map((s) => (s.images ? Object.assign({}, s, { images: Object.fromEntries(Object.entries(s.images).map(([k, v]) => [k, relFrom(dir, v)])) }) : s)) });
+
+renderBtn.onclick = async () => {
+  const btn = renderBtn, st = $('mupv-rstatus'), res = $('mupv-rresult'); res.innerHTML = '';
+  const mb = $('mupv-mb').checked, fmtNow = outFmt;
+  if (ON_DISK) { status(st, DISK_MSG, 'bad'); return; }
+  if (MODE.kind === 'static') {
+    status(st, `<span>Rendering needs the local server or the agent. Run this in the project folder:</span>${cmdBox(`${DATA.cmd.render} --format ${fmtNow}${mb ? ' --motion-blur 4' : ''}`)}${leafCount() ? '<span>Your changes are in this browser: Changes › Copy for the agent first, so the render has them.</span>' : ''}`);
+    return;
+  }
+  busy(btn, true, 'render', 'Rendering…'); setJob('render', 'busy');
+  status(st, `Rendering ${FRAMES} frames${mb ? ' with motion blur' : ''}. This takes about as long as the film, or longer with blur.`);
+  try {
+    if (MODE.kind === 'board') {
+      const html = MU.pageHtml(sc, sources(), {});
+      const out = await api('POST', '/api/html/render', { html, width: W, height: H, fps: FPS, duration: T, format: fmtNow, motion_blur: mb ? 4 : 1, board_id: MODE.boardId, title: sc.name });
+      let placed = false;
+      try { await api('POST', `/api/moodboards/${MODE.boardId}/media/place`, { url: out.url, title: `${sc.name} · render`, x: MODE.place ? MODE.place.x : undefined, y: MODE.place ? MODE.place.y : undefined, width: MODE.place && MODE.place.w ? MODE.place.w : undefined, height: MODE.place && MODE.place.h ? MODE.place.h : undefined }); placed = true; } catch (e) { /* the file is still in the board folder */ }
+      status(st, `Done${placed ? ' and placed on the board' : ''}: <a href="${esc(out.url)}" target="_blank" rel="noopener">${esc(out.filename || out.url)}</a>${voice.length || sfx.length ? '. The soundtrack is not in this file: run render.mjs (it mixes the voice-over and the sound effects), or export GLEA with layers and render the project.' : ''}`, 'good');
+      if (fmtNow !== 'mov') res.innerHTML = `<video src="${esc(out.url)}" controls playsinline></video>`;
+    } else {
+      await flushSave();   // the server renders scenario.json: the edits first
+      const out = await api('POST', '/mu/render', { format: fmtNow, motionBlur: mb });
+      status(st, `Done: <a href="${esc(out.url)}" download>${esc(out.file)}</a>${out.audio ? ' · with sound' : ''}`, 'good');
+      if (fmtNow !== 'mov') res.innerHTML = `<video src="${esc(out.url)}" controls playsinline></video>`;
+    }
+    setJob('render', 'good');
+    // bring the result into view inside the panel (never scroll the page or the sliding track)
+    if (res.firstChild) { const body = $('mupv-dbody'); body.scrollTo({ top: Math.max(0, res.offsetTop + res.offsetHeight + 24 - body.clientHeight), behavior: reduceMq.matches ? 'auto' : 'smooth' }); }
+  } catch (err) { status(st, `Render failed. ${esc(err.message)}`, 'bad'); setJob('render', 'bad'); }
+  busy(btn, false);
+};
+
+exportBtn.onclick = async () => {
+  const btn = exportBtn, st = $('mupv-estatus'), kind = exportKind();
+  if (ON_DISK) { status(st, DISK_MSG, 'bad'); return; }
+  if (MODE.kind === 'static') {
+    status(st, `<span>Exports are written by the agent. Run this in the project folder:</span>${cmdBox(`${DATA.cmd.export} --format ${kind}`)}`);
+    return;
+  }
+  busy(btn, true, 'export', 'Exporting…'); setJob('export', 'busy');
+  status(st, `Building ${EXPORT_LABEL[kind]}…`);
+  try {
+    if (MODE.kind === 'local') {
+      await flushSave();
+      const out = await api('POST', '/mu/export', { format: kind });
+      status(st, `Saved <a href="${esc(out.url)}" download>${esc(out.file)}</a>. ${esc(out.hint || '')}`, 'good');
+    } else if (kind === 'glea-layers') {
+      const sizes = DATA.imageSizes || {};
+      // an HTML-only scene (an item too heavy for editor layers) goes in as its HTML clip
+      const htmlUrls = [];
+      for (const i of MU.htmlOnlyScenes(sc)) {
+        status(st, `Saving scene ${i + 1} as an HTML clip…`);
+        htmlUrls[i] = await uploadScene(i, MU.pageHtml(rebased(MODE.folder), sources(), { scene: i }));
+      }
+      const p = MU.veLayers(sc, { imageSizes: sizes, url: boardUrl, voice: voiceFor(boardUrl), sfx: sfxFor(boardUrl), htmlUrls });
+      const made = await api('POST', `/api/moodboards/${MODE.boardId}/video-projects`, { name: p.name, data: p.data });
+      status(st, `Created “${esc(made.name || p.name)}” in the Video Editor, ${p.data.channels.length} layers. Open the Video Editor to edit it.`, 'good');
+    } else if (kind === 'glea-html') {
+      const folder = MODE.folder;
+      const urls = [];
+      for (let i = 0; i < timing.length; i++) {
+        status(st, `Saving scene ${i + 1} of ${timing.length}…`);
+        urls.push(await uploadScene(i, MU.pageHtml(rebased(folder), sources(), { scene: i })));
+      }
+      const p = MU.veHtmlCards(sc, { htmlUrls: urls, voice: voiceFor(boardUrl), sfx: sfxFor(boardUrl) });
+      const made = await api('POST', `/api/moodboards/${MODE.boardId}/video-projects`, { name: `${p.name} (HTML)`, data: p.data });
+      status(st, `Created “${esc(made.name)}” in the Video Editor: ${timing.length} HTML clips.`, 'good');
+    } else {
+      const ae = MU.aeScript(sc, { imageSizes: DATA.imageSizes || {} });
+      const entries = [{ name: `${sc.id}.jsx`, data: ae.jsx }];
+      for (const [u, rel] of Object.entries(ae.files)) { const r = await fetch(u); if (r.ok) entries.push({ name: rel, data: new Uint8Array(await r.arrayBuffer()) }); }
+      // HTML-only scenes: recorded by the app as ProRes 4444 footage the script places at their time
+      for (const r of ae.renders) {
+        status(st, `Recording scene ${r.scene + 1} as footage…`);
+        const out = await api('POST', '/api/html/render', { html: MU.pageHtml(sc, sources(), { scene: r.scene }), width: W, height: H, fps: FPS,
+          duration: r.duration, format: 'mov', board_id: MODE.boardId, title: `${sc.name} scene ${r.scene + 1}` });
+        const got = await fetch(out.url); if (got.ok) entries.push({ name: r.file, data: new Uint8Array(await got.arrayBuffer()) });
+      }
+      const zip = MU.zip(entries);
+      const up = await upload(`${sc.id}-after-effects.zip`, new Blob([zip], { type: 'application/zip' }), MODE.folder);
+      status(st, `Saved to the board folder: <a href="${esc(up.url)}" target="_blank" rel="noopener">${esc(up.filename || up.url)}</a>. Unzip it and run ${esc(sc.id)}.jsx in After Effects (File › Scripts › Run Script File).`, 'good');
+    }
+    setJob('export', 'good');
+  } catch (err) { status(st, `Export failed. ${esc(err.message)}`, 'bad'); setJob('export', 'bad'); }
+  busy(btn, false);
+};
+
+// ── Edits: the user's changes as data (EDITS → scenario.json → edits) on the film as the agent made it (BASE).
+// Design: the film's tokens. Elements: click anything in the film (it pauses) — the agent's panel for it and every
+// option it has; the agent's panels for what is on screen now; the scene's effects (item params). The list of changes
+// sits in the top bar (revert one, undo / redo, reset, copy for the agent). Saved per mode: scenario.json (serve.mjs),
+// the card (a board), else this browser. Every field shows a green dot off the agent's value; the dot resets it. ──
+const has = (o, k) => !!o && k != null && Object.prototype.hasOwnProperty.call(o, k);
+const div = (cls, html) => { const d = document.createElement('div'); if (cls) d.className = cls; if (html != null) d.innerHTML = html; return d; };
+const capw = (s) => String(s || '').charAt(0).toUpperCase() + String(s || '').slice(1);
+const trunc = (s, n) => (String(s).length > n ? String(s).slice(0, n - 1).trimEnd() + '…' : String(s));
+const eicon = (body) => `<svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">${body}</svg>`;
+const IC = {
+  pick: eicon('<path d="M4.2 3.2l7.6 3.4-3.2 1.1-1.2 3.3z"/><path d="M8.7 8.4l3.3 3.3"/>'),
+  text: eicon('<path d="M3.5 4h9M8 4v8.5"/>'),
+  rect: eicon('<rect x="2.8" y="3.3" width="10.4" height="9.4" rx="2"/>'),
+  ellipse: eicon('<circle cx="8" cy="8" r="5.2"/>'),
+  icon: eicon('<path d="M8 2.8l1.5 3.2 3.4.4-2.5 2.3.7 3.4L8 10.4l-3.1 1.7.7-3.4L3.1 6.4l3.4-.4z"/>'),
+  path: eicon('<path d="M2.8 11.5C5 4 11 12 13.2 4.5"/>'),
+  group: eicon('<rect x="2.5" y="2.5" width="7.5" height="7.5" rx="1.5"/><path d="M6.5 13.5h6a1 1 0 0 0 1-1v-6"/>'),
+  image: eicon('<rect x="2.5" y="3" width="11" height="10" rx="1.6"/><circle cx="6" cy="6.5" r="1.1"/><path d="M13.5 10.5l-3-3-6 5.5"/>'),
+  fx: eicon('<path d="M2.5 5h6.5M11.8 5h1.7M2.5 11h1.7M7 11h6.5"/><circle cx="10.4" cy="5" r="1.4"/><circle cx="5.6" cy="11" r="1.4"/>'),
+  close: eicon('<path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/>'),
+  grip: eicon('<path d="M5.5 5.3 2.8 8l2.7 2.7M10.5 5.3 13.2 8l-2.7 2.7"/>'),
+  eye: eicon('<path d="M10.3 2.8l2.9 2.9-1.5 1.5-2.9-2.9z"/><path d="M9.6 5.7l-6 6-.6 2.3 2.3-.6 6-6"/>'),
+  undo: eicon('<path d="M5.5 4.3 3 6.8l2.5 2.5"/><path d="M3.3 6.8h6.4a3.3 3.3 0 0 1 0 6.6H7.2"/>'),
+  redo: eicon('<path d="M10.5 4.3 13 6.8l-2.5 2.5"/><path d="M12.7 6.8H6.3a3.3 3.3 0 0 0 0 6.6h2.5"/>'),
+  copy: eicon('<rect x="5.5" y="5.5" width="7.5" height="7.5" rx="1.5"/><path d="M10.5 5.5V4a1.5 1.5 0 0 0-1.5-1.5H4A1.5 1.5 0 0 0 2.5 4v5A1.5 1.5 0 0 0 4 10.5h1.5"/>'),
+  locate: eicon('<circle cx="8" cy="8" r="4.3"/><circle cx="8" cy="8" r="1" fill="currentColor"/><path d="M8 1.8v2M8 12.2v2M1.8 8h2M12.2 8h2"/>'),
+  chev: eicon('<path d="M6.3 4l4 4-4 4"/>'),
+  revert: eicon('<path d="M4.4 4.6 2.6 6.4l1.8 1.8"/><path d="M2.8 6.4h7a3.2 3.2 0 0 1 0 6.4H6.5"/>'),
+};
+
+// ── names ──
+const TYPE = { text: 'Text', rect: 'Shape', ellipse: 'Circle', icon: 'Icon', path: 'Line', group: 'Group', canvas: 'Drawing', cursor: 'Cursor' };
+const isPic = (L) => (L.type === 'rect' || L.type === 'ellipse') && (L.media != null || !!L.img);
+const typeName = (L) => (isPic(L) ? 'Picture' : TYPE[L.type] || 'Layer');
+const glyph = (L) => (isPic(L) ? IC.image : IC[L.type] || IC.group);
+const pretty = (key) => {
+  if (!key || key[0] === '~') return '';
+  return capw(String(key).replace(/([a-z])([A-Z])/g, '$1 $2').replace(/([a-zA-Z])(\d)/g, '$1 $2').replace(/[-_]+/g, ' ').toLowerCase());
+};
+const textOf = (L) => String(L.text ?? '').replace(/\{\{\{[^}]*\}\}\}/g, '#').trim();
+const layerLabel = (L) => (L.type === 'text' && textOf(L) ? `“${trunc(textOf(L), 30)}”` : pretty(L._key) || typeName(L));
+const ROLE = { bg: 'Canvas', card: 'Surface', panel: 'Panel', ink: 'Text', inv: 'Text on dark', muted: 'Secondary text', line: 'Hairlines',
+  skel: 'Skeleton', soft: 'Soft fill', dim: 'Dim fill', acc: 'Accent', bad: 'Error', shade: 'Near-black', white: 'White' };
+
+// ── colours ──
+const resolveC = (v) => { try { return K._int.resolve(v); } catch (e) { return null; } };
+const cssOf = (v) => { const c = resolveC(v); return c ? K._int.css(c) : 'transparent'; };
+const hex2 = (n) => Math.round(Math.max(0, Math.min(255, n))).toString(16).padStart(2, '0').toUpperCase();
+const hexOf = (v) => { const c = resolveC(v); return c ? '#' + hex2(c[0]) + hex2(c[1]) + hex2(c[2]) : ''; };
+const alphaOf = (v) => { const c = resolveC(v); return c ? c[3] : 1; };
+const tokenOf = (v) => { if (typeof v !== 'string') return null; const n = v.split('/')[0]; return has(K.THEMES.light, n) && n !== 'shadow' ? n : null; };
+const colorName = (v) => {
+  if (v == null || v === '') return 'None';
+  const t = tokenOf(v); const a = Math.round(alphaOf(v) * 100);
+  return (t ? ROLE[t] || t : hexOf(v)) + (a < 100 ? ` · ${a}%` : '');
+};
+const eq = (a, b) => {
+  if (typeof a === 'number' && typeof b === 'number') return Math.abs(a - b) < 1e-9;
+  if (typeof a === 'string' && typeof b === 'string' && (/^#/.test(a) || /^#/.test(b))) return K.style.sameColor(a, b);
+  return a === b || (a == null && b == null);
+};
+
+// ── the edits, and the film with them ──
+const sceneEdits = (i, make) => { const k = String(i + 1); if (!EDITS.scenes[k] && make) EDITS.scenes[k] = {}; return EDITS.scenes[k] || {}; };
+const prune = () => {
+  const clean = (o) => { for (const k of Object.keys(o)) { const v = o[k]; if (v && typeof v === 'object' && !Array.isArray(v)) { clean(v); if (!Object.keys(v).length) delete o[k]; } else if (v === undefined) delete o[k]; } };
+  clean(EDITS.film); clean(EDITS.scenes);
+};
+const editsOut = () => { prune(); return Object.keys(EDITS.film).length || Object.keys(EDITS.scenes).length ? JSON.parse(JSON.stringify(EDITS)) : null; };
+const paramDefs = (i) => (ENGINE3D ? ((inst.defs && inst.defs(i)) || {}).params || {} : (specOf(i) && specOf(i).params) || {});
+const specParams = (i) => (ENGINE3D ? { params: paramDefs(i) } : specOf(i));
+const paramsNow = (i) => K.paramsOf(specParams(i), sc.scenes[i].params);
+const paramsBase = (i) => K.paramsOf(specParams(i), BASE.scenes[i].params);
+// scene i's layers as the agent made them (with the scene's current params): what a field starts from
+const origCache = new Map();
+const origLayers = (i) => {
+  if (ENGINE3D) return new Map();   // a scene page has no layers: its editable elements come from the page (data-ui)
+  const P = paramsNow(i), ck = i + ':' + JSON.stringify(P);
+  if (origCache.has(ck)) return origCache.get(ck);
+  const b = Object.assign({}, BASE, { scenes: BASE.scenes.map((s, j) => (j === i ? Object.assign({}, s, { params: P }) : s)) });
+  const map = new Map();
+  const walk = (L) => { if (L._scene === i) map.set(L._key, L); (L.ch || []).forEach(walk); };
+  try { K.build(K.compose(b, { scene: i })).forEach(walk); } catch (e) { /* the scene can't build: no fields */ }
+  if (origCache.size > 48) origCache.clear();
+  origCache.set(ck, map);
+  return map;
+};
+// every colour the film uses (its items' own values, before any recolor) and its type
+let PAL = null;
+const palette = () => {
+  if (PAL) return PAL;
+  // a 3D-engine film: the scenes use the theme's tokens (ctx.color, --mu-*) — all of them are the film's colours
+  if (ENGINE3D) return (PAL = { tokens: K.TOKENS.map((name) => ({ name, uses: 1 })), literals: [], type: [] });
+  const tokens = new Map(), lits = new Map(), type = new Map();
+  const note = (v) => {
+    if (typeof v !== 'string' || !v) return;
+    const n = v.split('/')[0];
+    if (has(K.THEMES.light, n) && n !== 'shadow') tokens.set(n, (tokens.get(n) || 0) + 1);
+    else if (/^#[0-9a-f]{3,8}$/i.test(n)) { const h = K.style.normHex(n); lits.set(h, (lits.get(h) || 0) + 1); }
+  };
+  const walk = (L) => {
+    for (const p of K.style.COLORS) { note(L[p]); if (L.k && L.k[p] !== undefined) K.style.mapTrack(L.k[p], (x) => { note(x); return x; }); }
+    if ((L.type === 'text' || L.type === 'icon') && L.color == null && !(L.k && L.k.color)) note('ink');
+    if (L.type === 'text') {
+      const w = L.weight || 400, t = type.get(w) || { weight: w, sizes: new Set(), sample: '' };
+      t.sizes.add(L.size || 40);
+      const s = String(L.text || '').replace(/\{\{\{[^}]*\}\}\}/g, '123').trim();
+      if (!t.sample && s) t.sample = s.slice(0, 40);
+      type.set(w, t);
+    }
+    (L.ch || []).forEach(walk);
+  };
+  try { K.build(K.compose(Object.assign({}, BASE, { recolor: null }))).forEach(walk); } catch (e) { /* nothing to list */ }
+  PAL = {
+    tokens: [...tokens.entries()].sort((a, b) => b[1] - a[1]).map(([name, uses]) => ({ name, uses })),
+    literals: [...lits.entries()].sort((a, b) => b[1] - a[1]).map(([value, uses]) => ({ value, uses })),
+    type: [...type.values()].sort((a, b) => a.weight - b.weight).map((t) => ({ weight: t.weight, sizes: [...t.sizes].sort((a, b) => a - b), sample: t.sample })),
+  };
+  return PAL;
+};
+
+// ── the loop: set (live) → apply → commit (an undo step, saved, thumbnails, the list) ──
+let hist = [JSON.stringify(EDITS)], hpos = 0;
+let rebuildQ = 0, thumbT = 0;
+const fields = new Set();
+const updateFields = () => { for (const f of fields) if (f.el.isConnected) f.update(); else fields.delete(f); };
+const redraw = () => { drawn = -1; draw(); };
+const rebuildFilm = () => {
+  if (ENGINE3D) { inst.update(scenePlan()); redraw(); lastSig = null; return; }
+  film = MU.film(sc);
+  const old = inst; inst = new K.Instance(film, frameEl);
+  Object.assign(inst.stage.style, { width: W + 'px', height: H + 'px' });
+  old.destroy(); fit(); redraw(); index(); lastSig = null;
+};
+const queueRebuild = () => { if (!rebuildQ) rebuildQ = requestAnimationFrame(() => { rebuildQ = 0; rebuildFilm(); }); };
+const rethumb = () => { const running = nextThumb < timing.length; nextThumb = 0; if (!running) idle(buildNext); };
+const paintBackground = () => {
+  const bg = sc.background;
+  frameEl.style.background = bg || ''; frameEl.classList.toggle('is-clear', !bg);
+  document.querySelectorAll('.mupv-seg-th, .mupv-sth').forEach((el) => { el.style.background = bg || ''; el.classList.toggle('mupv-clear', !bg); });
+};
+const apply = (kind) => {
+  prune(); sc = withEdits();
+  if (kind === 'theme' && !ENGINE3D) { K.setTheme(sc.theme, sc.accent, sc.colors); redraw(); }
+  else if (kind === 'bg') paintBackground();
+  else { K.setTheme(sc.theme, sc.accent, sc.colors); queueRebuild(); if (kind === 'font' && $('mupe-spec')) renderSpecimen(); }
+  updateFields(); updateBadge();
+};
+const applyAll = () => { sc = withEdits(); K.setTheme(sc.theme, sc.accent, sc.colors); paintBackground(); rebuildFilm(); updateFields(); updateBadge(); if ($('mupe-spec')) renderSpecimen(); };
+const commit = () => {
+  prune();
+  const s = JSON.stringify(EDITS);
+  if (s === hist[hpos]) return;
+  hist = hist.slice(0, hpos + 1); hist.push(s); hpos = hist.length - 1;
+  if (hist.length > 120) { hist.shift(); hpos--; }
+  persist();
+  clearTimeout(thumbT); thumbT = setTimeout(rethumb, 350);
+  renderChanges();
+};
+const travel = (d) => {
+  const to = hpos + d; if (to < 0 || to >= hist.length) return;
+  hpos = to; setEdits(JSON.parse(hist[hpos])); applyAll();
+  persist(); clearTimeout(thumbT); thumbT = setTimeout(rethumb, 350);
+  renderChanges();
+};
+
+// ── saving: scenario.json (serve.mjs), the card (a board), else this browser ──
+const SAVE_WHERE = MODE.kind === 'local' ? 'scenario.json' : MODE.kind === 'board' && !ON_DISK && MODE.cardId ? 'the film on the board' : 'this browser';
+let saveT = 0, saving = null, saveNote = '';
+const saveOnCard = async (out) => {
+  const base = `/api/moodboards/${encodeURIComponent(MODE.boardId)}/elements/${encodeURIComponent(MODE.cardId)}`;
+  for (let k = 0; k < 3; k++) {
+    const el = await api('GET', base);
+    const data = Object.assign({}, el.data || {});
+    if (out) data.muEdits = { edits: out, at: Date.now() }; else delete data.muEdits;
+    try { await api('PUT', base, { data, expected_version: el.version }); return; } catch (e) { if (!/^409/.test(e.message)) throw e; }
+  }
+  throw new Error('the card kept changing');
+};
+const saveNow = async () => {
+  clearTimeout(saveT); saveT = 0;
+  const out = editsOut();
+  try {
+    if (MODE.kind === 'local') await api('POST', '/mu/edits', { edits: out });
+    else if (SAVE_WHERE === 'the film on the board') await saveOnCard(out);
+    else localStorage.setItem(STORE_KEY, JSON.stringify({ stamp: DATA.stamp, edits: out }));
+    saveNote = `Saved to ${SAVE_WHERE}`;
+  } catch (e) { saveNote = `Not saved: ${String(e.message || e).slice(0, 120)}`; }
+  saving = null; renderChanges();
+};
+const persist = () => { clearTimeout(saveT); saveT = setTimeout(() => { saving = saveNow(); }, 350); };
+const flushSave = async () => { if (saveT) await saveNow(); else if (saving) await saving; };
+// a picture chosen in a field: the board folder, the project's assets/ (serve.mjs), else inline
+const storePicture = async (file) => {
+  if (SAVE_WHERE === 'the film on the board') {
+    const r = await upload(file.name, file, MODE.folder);
+    const u = String(r.url || ''); const k = u.indexOf('/' + MODE.folder + '/');
+    return k >= 0 ? u.slice(k + 1) : u;
+  }
+  if (MODE.kind === 'local') {
+    const r = await fetch('/mu/upload?name=' + encodeURIComponent(file.name), { method: 'POST', body: file });
+    if (!r.ok) throw new Error('upload failed');
+    return (await r.json()).path;
+  }
+  return new Promise((ok, bad) => { const rd = new FileReader(); rd.onload = () => ok(String(rd.result)); rd.onerror = bad; rd.readAsDataURL(file); });
+};
+
+// ── bindings: where a control reads and writes ──
+const layerBinding = (i, keys, prop) => {
+  const origOf = (k) => {
+    const L = origLayers(i).get(k); const s = BASE.scenes[i];
+    if (prop === 'text') return s.text && has(s.text, k) ? String(s.text[k]) : L ? String(L.text ?? '') : '';
+    if (prop === 'image') return s.images && has(s.images, k) ? s.images[k] : (L && L.img) || '';
+    return L ? K.style.restOf(L, prop) : null;
+  };
+  const editOf = (k) => {
+    const e = sceneEdits(i);
+    if (prop === 'text' && k[0] !== '~') return e.text && has(e.text, k) ? { v: e.text[k] } : null;
+    if (prop === 'image') return e.images && has(e.images, k) ? { v: e.images[k] } : null;
+    const st = e.style && e.style[k]; return st && has(st, prop) ? { v: st[prop] } : null;
+  };
+  const write = (k, v, drop) => {
+    const e = sceneEdits(i, true);
+    if (prop === 'text' && k[0] !== '~') { e.text = e.text || {}; if (drop) delete e.text[k]; else e.text[k] = v; return; }
+    if (prop === 'image') { e.images = e.images || {}; if (drop) delete e.images[k]; else e.images[k] = v; return; }
+    e.style = e.style || {}; const st = e.style[k] = e.style[k] || {}; if (drop) delete st[prop]; else st[prop] = v;
+  };
+  return {
+    kind: 'rebuild',
+    get: () => { const ed = editOf(keys[0]); return ed ? ed.v : origOf(keys[0]); },
+    orig: () => origOf(keys[0]),
+    changed: () => keys.some((k) => !!editOf(k)),
+    set: (v) => { for (const k of keys) write(k, v, eq(v, origOf(k))); },
+    reset: () => { for (const k of keys) write(k, null, true); },
+  };
+};
+// a colour that animates (text that turns accent) has one row per colour it shows: each swaps that colour on the
+// layer (style: { color: { acc: '#F00' } })
+const colorsOf = (L, prop) => {
+  const out = []; const add = (v) => { if (typeof v === 'string' && v && !out.some((x) => K.style.sameColor(x, v))) out.push(v); };
+  const tr = L.k && L.k[prop], a = tr === undefined ? [] : Array.isArray(tr) ? tr : [tr];
+  if (L[prop] != null) add(L[prop]); else if (!a.length || Array.isArray(a[0])) add(K.style.restOf(Object.assign({}, L, { k: null }), prop));
+  a.forEach((x) => add(Array.isArray(x) ? (x.length === 2 ? x[1] : x[2]) : x));
+  return out;
+};
+const swapBinding = (i, keys, prop, from) => {
+  const mapOf = (k, make) => {
+    const e = sceneEdits(i, make); if (!make && !e.style) return null;
+    if (make) e.style = e.style || {};
+    const st = e.style[k] || (make ? (e.style[k] = {}) : null); if (!st) return null;
+    if (!(st[prop] && typeof st[prop] === 'object')) { if (!make) return null; st[prop] = {}; }
+    return st[prop];
+  };
+  const cur = (k) => { const m = mapOf(k, false); return m && has(m, from) ? m[from] : null; };
+  const write = (k, v) => { const m = mapOf(k, true); if (v == null || eq(v, from)) delete m[from]; else m[from] = v; };
+  return {
+    kind: 'rebuild',
+    get: () => cur(keys[0]) ?? from, orig: () => from,
+    changed: () => keys.some((k) => cur(k) != null),
+    set: (v) => { for (const k of keys) write(k, v); },
+    reset: () => { for (const k of keys) if (mapOf(k, false)) write(k, null); },
+  };
+};
+// a scene page's element (3D engine): text / images / style by its data-ui-id (a picture by its data-image key)
+const sceneBinding = (i, key, prop, orig) => {
+  const bucket = (e, make) => {
+    const k = prop === 'text' ? 'text' : prop === 'image' ? 'images' : 'style';
+    if (!e[k] && make) e[k] = {};
+    if (k !== 'style') return e[k];
+    if (e.style && !e.style[key] && make) e.style[key] = {};
+    return e.style && e.style[key];
+  };
+  const field = prop === 'text' || prop === 'image' ? key : prop;
+  return {
+    kind: 'rebuild',
+    get: () => { const b = bucket(sceneEdits(i), false); return b && has(b, field) ? b[field] : orig; },
+    orig: () => orig,
+    changed: () => { const b = bucket(sceneEdits(i), false); return !!b && has(b, field); },
+    set: (v) => { const b = bucket(sceneEdits(i, true), true); if (eq(v, orig) || (typeof v === 'string' && typeof orig === 'string' && hexOf(v) && hexOf(v) === hexOf(orig))) delete b[field]; else b[field] = v; },
+    reset: () => { const b = bucket(sceneEdits(i), false); if (b) delete b[field]; },
+  };
+};
+const paramBinding = (i, name) => ({
+  kind: 'rebuild',
+  get: () => paramsNow(i)[name], orig: () => paramsBase(i)[name],
+  changed: () => has(sceneEdits(i).params, name),
+  set: (v) => { const e = sceneEdits(i, true); e.params = e.params || {}; if (eq(v, paramsBase(i)[name])) delete e.params[name]; else e.params[name] = v; },
+  reset: () => { const p = sceneEdits(i).params; if (p) delete p[name]; },
+});
+const FILM_BASE = { theme: () => BASE.theme, accent: () => BASE.accent || K.THEMES[BASE.theme].acc, background: () => BASE.background || null, font: () => BASE.font || K.FONT_DEFAULT };
+const FILM_NOW = { theme: () => sc.theme, accent: () => sc.accent || K.THEMES[sc.theme].acc, background: () => sc.background || null, font: () => sc.font || K.FONT_DEFAULT };
+const filmBinding = (field, kind) => ({
+  kind,
+  get: () => FILM_NOW[field](), orig: () => FILM_BASE[field](),
+  changed: () => has(EDITS.film, field),
+  set: (v) => { if (eq(v, FILM_BASE[field]())) delete EDITS.film[field]; else EDITS.film[field] = v; },
+  reset: () => { delete EDITS.film[field]; },
+});
+const tokenBase = (name) => (BASE.colors && BASE.colors[name]) || K.THEMES[sc.theme][name];
+const tokenBinding = (name) => ({
+  kind: 'theme',
+  get: () => (EDITS.film.colors && EDITS.film.colors[name]) || tokenBase(name), orig: () => tokenBase(name),
+  changed: () => has(EDITS.film.colors, name),
+  set: (v) => { const c = EDITS.film.colors = EDITS.film.colors || {}; if (eq(v, tokenBase(name))) delete c[name]; else c[name] = v; },
+  reset: () => { if (EDITS.film.colors) delete EDITS.film.colors[name]; },
+});
+const recolorBase = (hex) => (BASE.recolor && BASE.recolor[hex]) || hex;
+const recolorBinding = (hex) => ({
+  kind: 'rebuild',
+  get: () => (EDITS.film.recolor && EDITS.film.recolor[hex]) || recolorBase(hex), orig: () => recolorBase(hex),
+  changed: () => has(EDITS.film.recolor, hex),
+  set: (v) => { const r = EDITS.film.recolor = EDITS.film.recolor || {}; if (eq(v, recolorBase(hex))) delete r[hex]; else r[hex] = v; },
+  reset: () => { if (EDITS.film.recolor) delete EDITS.film.recolor[hex]; },
+});
+
+// ── the control set: text, colour, number, slider, select, segmented, switch, picture ──
+const PROPS = {
+  text: { kind: 'text', label: 'Text' },
+  color: { kind: 'color', label: 'Colour' }, fill: { kind: 'color', label: 'Fill' }, stroke: { kind: 'color', label: 'Stroke' },
+  size: { kind: 'number', label: 'Size', unit: 'px', min: 6, max: 400, step: 1 },
+  weight: { kind: 'select', label: 'Weight', options: [[300, 'Light'], [400, 'Regular'], [500, 'Medium'], [600, 'Semibold'], [700, 'Bold'], [800, 'Heavy']] },
+  upper: { kind: 'seg', label: 'Case', options: [[false, 'As typed'], [true, 'UPPER']] },
+  italic: { kind: 'toggle', label: 'Italic' },
+  ls: { kind: 'number', label: 'Tracking', unit: '%', scale: 100, min: -10, max: 40, step: 0.5 },
+  r: { kind: 'number', label: 'Corners', unit: 'px', min: 0, max: 600, step: 1 },
+  sw: { kind: 'number', label: 'Line', unit: 'px', min: 0, max: 40, step: 0.5 },
+  image: { kind: 'image', label: 'Picture' },
+};
+const ALIAS = { colour: 'color', tracking: 'ls', radius: 'r', corners: 'r', case: 'upper', width: 'sw', picture: 'image' };
+const propFor = (p, L) => {
+  p = ALIAS[p] || p;
+  if (p === 'color' && (L.type === 'rect' || L.type === 'ellipse')) return 'fill';
+  if (p === 'color' && L.type === 'path') return 'stroke';
+  return p;
+};
+const decimals = (step) => (step >= 1 ? 0 : step >= 0.1 ? 1 : 2);
+let interacting = 0;
+
+function textField(b, spec) {
+  const inp = document.createElement('input'); inp.type = 'text'; inp.className = 'mupe-in'; inp.spellcheck = false; inp.setAttribute('aria-label', spec.label);
+  let before = '';
+  inp.addEventListener('focus', () => { before = String(b.get() ?? ''); });
+  inp.addEventListener('input', () => { b.set(inp.value); apply(b.kind); });
+  inp.addEventListener('change', commit);
+  inp.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); inp.blur(); }
+    else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); b.set(before); apply(b.kind); inp.value = before; inp.blur(); }
+  });
+  return { el: inp, update: () => { const v = String(b.get() ?? ''); if (inp.value !== v && document.activeElement !== inp) inp.value = v; } };
+}
+function colorField(b, spec) {
+  const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'mupe-color';
+  btn.innerHTML = '<i class="mupv-chipc"></i><span></span><small></small>';
+  btn.setAttribute('aria-label', spec.label);
+  const up = () => {
+    const v = b.get();
+    btn.querySelector('i').style.setProperty('--c', cssOf(v));
+    btn.querySelector('span').textContent = colorName(v);
+    btn.querySelector('small').textContent = tokenOf(v) ? hexOf(v) : '';
+  };
+  btn.onclick = () => picker.open(btn, { value: b.get(), tokens: spec.tokens !== false, onInput: (v) => { b.set(v); apply(b.kind); up(); }, onDone: commit });
+  up();
+  return { el: btn, update: up };
+}
+function numberField(b, spec, mini) {
+  const scl = spec.scale || 1, step = spec.step || 1, dec = decimals(step);
+  const wrap = div('mupe-num' + (mini ? ' is-mini' : ''),
+    `${mini ? '' : `<span class="mupe-grip" title="Drag to change · Shift ×10 · Alt ×0.1">${IC.grip}</span>`}<input class="mupe-nin" inputmode="decimal" spellcheck="false" aria-label="${esc(spec.label)}">${spec.unit ? `<em>${esc(spec.unit)}</em>` : ''}`);
+  const inp = wrap.querySelector('input'), grip = wrap.querySelector('.mupe-grip');
+  const clamp = (d) => Math.min(spec.max ?? Infinity, Math.max(spec.min ?? -Infinity, d));
+  const show = () => String(+((+b.get() || 0) * scl).toFixed(dec));
+  const setD = (d) => { d = clamp(+(+d).toFixed(dec + 1)); b.set(+(d / scl).toFixed(6)); apply(b.kind); if (document.activeElement !== inp) inp.value = show(); };
+  let kt = 0;
+  inp.addEventListener('change', () => { const d = parseFloat(inp.value.replace(',', '.')); if (Number.isFinite(d)) setD(d); inp.value = show(); commit(); });
+  inp.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); inp.blur(); return; }
+    if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return;
+    e.preventDefault();
+    const m = e.shiftKey ? 10 : e.altKey ? 0.1 : 1;
+    setD((+b.get() || 0) * scl + (e.key === 'ArrowUp' ? 1 : -1) * step * m); inp.value = show();
+    clearTimeout(kt); kt = setTimeout(commit, 450);
+  });
+  if (grip) {
+    grip.addEventListener('pointerdown', (e) => {
+      if (e.button > 0) return;
+      e.preventDefault(); grip.setPointerCapture(e.pointerId);
+      const x0 = e.clientX, y0 = e.clientY, d0 = (+b.get() || 0) * scl;
+      const per = Math.max(step, ((spec.max ?? 100) - (spec.min ?? 0)) / 400);   // ~400 px of drag cover the range
+      document.body.classList.add('mupe-scrub'); wrap.classList.add('is-drag'); interacting++;
+      grip.onpointermove = (ev) => { const m = ev.shiftKey ? 10 : ev.altKey ? 0.1 : 1; setD(d0 + ((ev.clientX - x0) - (ev.clientY - y0)) * per * m); };
+      grip.onpointerup = grip.onpointercancel = () => { grip.onpointermove = grip.onpointerup = grip.onpointercancel = null; document.body.classList.remove('mupe-scrub'); wrap.classList.remove('is-drag'); interacting--; commit(); };
+    });
+  }
+  return { el: wrap, update: () => { if (document.activeElement !== inp) inp.value = show(); } };
+}
+function sliderField(b, spec) {
+  const scl = spec.scale || 1;
+  const wrap = div('mupe-slider');
+  const range = document.createElement('input'); range.type = 'range'; range.className = 'mupe-range';
+  range.min = spec.min ?? 0; range.max = spec.max ?? 100; range.step = spec.step ?? 1; range.setAttribute('aria-label', spec.label);
+  const num = numberField(b, spec, true);
+  wrap.append(range, num.el);
+  const paint = () => { const p = (range.value - range.min) / ((range.max - range.min) || 1); range.style.setProperty('--p', (p * 100).toFixed(2) + '%'); };
+  range.addEventListener('pointerdown', () => { interacting++; const up = () => { interacting--; removeEventListener('pointerup', up); }; addEventListener('pointerup', up); });
+  range.addEventListener('input', () => { b.set(+range.value / scl); apply(b.kind); num.update(); paint(); });
+  range.addEventListener('change', commit);
+  return { el: wrap, update: () => { range.value = (+b.get() || 0) * scl; paint(); num.update(); } };
+}
+function selectField(b, spec) {
+  const sel = document.createElement('select'); sel.className = 'mupe-select'; sel.setAttribute('aria-label', spec.label);
+  const opts = spec.options.map((o) => (Array.isArray(o) ? o : [o, String(o)]));
+  sel.innerHTML = opts.map(([, l], j) => `<option value="${j}">${esc(l)}</option>`).join('');
+  sel.addEventListener('change', () => { b.set(opts[+sel.value][0]); apply(b.kind); commit(); });
+  return { el: sel, update: () => { const j = opts.findIndex(([v]) => eq(v, b.get())); sel.value = String(j < 0 ? 0 : j); } };
+}
+function segField(b, spec) {
+  const opts = spec.options;
+  const wrap = div('mupe-seg'); wrap.setAttribute('role', 'group'); wrap.setAttribute('aria-label', spec.label);
+  wrap.innerHTML = opts.map(([, l], j) => `<button type="button" data-j="${j}" aria-pressed="false">${esc(l)}</button>`).join('');
+  const update = () => wrap.querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(eq(opts[+x.dataset.j][0], b.get()))));
+  wrap.onclick = (e) => { const t = e.target.closest('button'); if (!t) return; b.set(opts[+t.dataset.j][0]); apply(b.kind); commit(); update(); };
+  return { el: wrap, update };
+}
+function switchField(b, spec) {
+  const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'mupe-switch'; btn.setAttribute('role', 'switch'); btn.setAttribute('aria-label', spec.label);
+  btn.innerHTML = '<u></u>';
+  const update = () => btn.setAttribute('aria-checked', String(!!b.get()));
+  btn.onclick = () => { b.set(!b.get()); apply(b.kind); commit(); update(); };
+  return { el: btn, update };
+}
+function imageField(b, spec) {
+  const wrap = div('mupe-img', '<i class="mupv-chipc"></i><button type="button" class="mupe-btn">Replace…</button><input type="file" accept="image/*" hidden>');
+  const file = wrap.querySelector('input'), thumb = wrap.querySelector('i'), btn = wrap.querySelector('button');
+  btn.onclick = () => file.click();
+  file.onchange = async () => {
+    const f = file.files && file.files[0]; if (!f) return;
+    btn.disabled = true; btn.textContent = 'Saving…';
+    try { b.set(await storePicture(f)); apply(b.kind); commit(); } catch (e) { saveNote = `Picture not saved: ${e.message}`; }
+    btn.disabled = false; btn.textContent = 'Replace…'; file.value = ''; update();
+  };
+  const update = () => { const v = b.get(); thumb.style.backgroundImage = v ? `url("${String(v).replace(/"/g, '%22')}")` : ''; };
+  return { el: wrap, update };
+}
+const MAKE = { text: textField, color: colorField, number: numberField, slider: sliderField, select: selectField, seg: segField, toggle: switchField, image: imageField };
+// a row: label (with the reset dot) · control
+function row(b, spec) {
+  const make = MAKE[spec.kind]; if (!make) return null;
+  const f = make(b, spec);
+  const r = div('mupe-row');
+  r.innerHTML = `<div class="mupe-l"><button type="button" class="mupe-dot" title="Back to the agent’s value" aria-label="Reset ${esc(spec.label)}" hidden></button><span title="${esc(spec.label)}">${esc(spec.label)}</span></div><div class="mupe-c"></div>`;
+  r.lastChild.appendChild(f.el);
+  const dot = r.querySelector('.mupe-dot');
+  const update = () => { f.update(); const ch = b.changed(); dot.hidden = !ch; r.classList.toggle('is-changed', ch); };
+  dot.onclick = () => { b.reset(); apply(b.kind); commit(); update(); };
+  update();
+  const field = { el: r, update };
+  fields.add(field);
+  return field;
+}
+// a control entry (the agent's, or one of a layer's own options) → a row in scene i
+function control(i, c, anchorKey) {
+  if (c.param) {
+    const d = paramDefs(i)[c.param]; if (!d) return null;
+    const kind = d.type === 'toggle' ? 'toggle' : d.type === 'select' ? 'select' : d.type === 'color' ? 'color' : d.type === 'number' ? 'number' : 'slider';
+    return row(paramBinding(i, c.param), { kind, label: c.label || d.label || pretty(c.param), min: d.min, max: d.max, step: d.step, unit: d.unit, options: d.options, tokens: true });
+  }
+  if (ENGINE3D) {
+    const el = (((inst.defs && inst.defs(i)) || {}).elements || []).find((e) => e.id === String(c.layer || anchorKey)); if (!el) return null;
+    const prop = ALIAS[c.prop] || c.prop, base = PROPS[prop === 'fill' ? 'color' : prop]; if (!base) return null;
+    const orig = prop === 'text' ? el.text : prop === 'image' ? ((BASE.scenes[i].images || {})[el.image] || '') : prop === 'size' ? el.size : el.color;
+    return row(sceneBinding(i, prop === 'image' ? el.image : el.id, prop === 'fill' ? 'color' : prop, orig), Object.assign({}, base, { label: c.label || base.label }));
+  }
+  const keys = [].concat(c.layer || anchorKey).map(String);
+  const L = origLayers(i).get(keys[0]); if (!L) return null;
+  const prop = propFor(c.prop, L), base = PROPS[prop]; if (!base) return null;
+  const spec = Object.assign({}, base, { label: c.label || base.label });
+  for (const k of ['min', 'max', 'step', 'unit']) if (c[k] != null) spec[k] = c[k];
+  if (base.kind === 'color') {
+    const cols = colorsOf(L, prop);
+    if (cols.length > 1) return cols.map((from, n) => row(swapBinding(i, keys, prop, from), Object.assign({}, spec, { label: n ? 'Then' : spec.label })));
+  }
+  return row(layerBinding(i, keys, prop), spec);
+}
+// every option a layer has: what a click on it offers
+const autoControls = (L) => {
+  if (L.type === 'text') return (L.num || /\{\{\{/.test(String(L.text || '')) ? [] : ['text']).concat(['color', 'size', 'weight', 'upper', 'ls']);
+  if (L.type === 'rect' || L.type === 'ellipse') {
+    const out = ['fill'];
+    if (L.stroke != null || L.sw) out.push('stroke', 'sw');
+    if (L.type === 'rect') out.push('r');
+    if (isPic(L) && L.id != null) out.push('image');
+    return out;
+  }
+  if (L.type === 'icon') return ['color', 'size'];
+  if (L.type === 'path') return ['stroke', 'sw'];
+  return [];
+};
+
+// ── the colour popover: saturation × value, hue, opacity, hex, eyedropper, the film's colours (a token stays a token) ──
+const picker = (() => {
+  const el = div('mupe-pop'); el.hidden = true; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', 'Colour');
+  el.innerHTML = `<div class="mupe-sv"><b></b></div><div class="mupe-hue"><b></b></div><div class="mupe-alpha"><i></i><b></b></div>
+    <div class="mupe-prow"><i class="mupv-chipc mupe-pcur"></i><input class="mupe-in mupe-hex" spellcheck="false" autocomplete="off" aria-label="Hex colour"><span class="mupe-num is-mini mupe-pa"><input class="mupe-nin" inputmode="numeric" aria-label="Opacity"><em>%</em></span><button type="button" class="mupe-ibtn" title="Pick from the screen" aria-label="Pick from the screen">${IC.eye}</button></div>
+    <div class="mupe-ptok"><span>Film colours</span><div></div></div>`;
+  app.appendChild(el);
+  const svA = el.querySelector('.mupe-sv'), svk = svA.firstChild, hue = el.querySelector('.mupe-hue'), huek = hue.firstChild;
+  const al = el.querySelector('.mupe-alpha'), alfill = al.firstChild, alk = al.lastChild;
+  const hexIn = el.querySelector('.mupe-hex'), aIn = el.querySelector('.mupe-pa input'), curSw = el.querySelector('.mupe-pcur');
+  const eyeBtn = el.querySelector('.mupe-ibtn'), tokWrap = el.querySelector('.mupe-ptok'), tokList = tokWrap.lastChild;
+  if (!window.EyeDropper) eyeBtn.hidden = true;
+  let h = 0, s = 0, v = 0, a = 1, token = null, opts = null, anchor = null, opened = null;
+  const hsv2rgb = (Hh, S, V) => { const f = (n) => { const k = (n + Hh / 60) % 6; return V - V * S * Math.max(0, Math.min(k, 4 - k, 1)); }; return [f(5) * 255, f(3) * 255, f(1) * 255]; };
+  const rgb2hsv = (r, g, bb) => { r /= 255; g /= 255; bb /= 255; const mx = Math.max(r, g, bb), mn = Math.min(r, g, bb), d = mx - mn; let Hh = 0;
+    if (d) Hh = mx === r ? ((g - bb) / d) % 6 : mx === g ? (bb - r) / d + 2 : (r - g) / d + 4; Hh = (Hh * 60 + 360) % 360; return [Hh, mx ? d / mx : 0, mx]; };
+  const out = () => {
+    if (token) return token + (a < 0.995 ? '/' + Math.round(a * 100) : '');
+    const [r, g, bb] = hsv2rgb(h, s, v);
+    return '#' + hex2(r) + hex2(g) + hex2(bb) + (a < 0.995 ? hex2(a * 255) : '');
+  };
+  const paint = () => {
+    const [r, g, bb] = token ? (resolveC(token) || [0, 0, 0]) : hsv2rgb(h, s, v);
+    const solid = `rgb(${Math.round(r)},${Math.round(g)},${Math.round(bb)})`;
+    svA.style.backgroundColor = `hsl(${h},100%,50%)`;
+    svk.style.left = s * 100 + '%'; svk.style.top = (1 - v) * 100 + '%'; svk.style.background = solid;
+    huek.style.left = (h / 360) * 100 + '%'; huek.style.background = `hsl(${h},100%,50%)`;
+    alfill.style.background = `linear-gradient(90deg, transparent, ${solid})`;
+    alk.style.left = a * 100 + '%';
+    curSw.style.setProperty('--c', cssOf(out()));
+    if (document.activeElement !== hexIn) hexIn.value = token ? (ROLE[token] || token) : '#' + hex2(r) + hex2(g) + hex2(bb);
+    if (document.activeElement !== aIn) aIn.value = String(Math.round(a * 100));
+    tokList.querySelectorAll('button').forEach((x) => x.classList.toggle('is-on', !!token && x.dataset.v === token));
+  };
+  const load = (val) => { const c = resolveC(val) || [0, 0, 0, 1]; token = opts && opts.tokens ? tokenOf(val) : null; [h, s, v] = rgb2hsv(c[0], c[1], c[2]); a = c[3]; };
+  const emit = () => { paint(); if (opts) opts.onInput(out()); };
+  const untoken = () => { if (token) { const c = resolveC(token); [h, s, v] = rgb2hsv(c[0], c[1], c[2]); token = null; } };
+  const drag = (area, fn) => area.addEventListener('pointerdown', (e) => {
+    if (e.button > 0) return; e.preventDefault(); area.setPointerCapture(e.pointerId);
+    const at = (ev) => { const r = area.getBoundingClientRect(); fn(Math.max(0, Math.min(1, (ev.clientX - r.left) / r.width)), Math.max(0, Math.min(1, (ev.clientY - r.top) / r.height))); emit(); };
+    at(e); area.onpointermove = at;
+    area.onpointerup = area.onpointercancel = () => { area.onpointermove = area.onpointerup = area.onpointercancel = null; if (opts) opts.onDone(); };
+  });
+  drag(svA, (x, y) => { untoken(); s = x; v = 1 - y; });
+  drag(hue, (x) => { untoken(); h = x * 360; if (s === 0) s = 0.001; });
+  drag(al, (x) => { a = Math.round(x * 100) / 100; });
+  hexIn.addEventListener('input', () => {
+    const m = /^#?([0-9a-f]{6}|[0-9a-f]{3})$/i.exec(hexIn.value.trim()); if (!m) return;
+    const c = resolveC('#' + m[1]); token = null; [h, s, v] = rgb2hsv(c[0], c[1], c[2]); emit();
+  });
+  hexIn.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); close(true); } });
+  aIn.addEventListener('change', () => { const n = parseFloat(aIn.value); if (Number.isFinite(n)) { a = Math.max(0, Math.min(100, n)) / 100; emit(); if (opts) opts.onDone(); } });
+  eyeBtn.onclick = async () => { try { const r = await new window.EyeDropper().open(); if (r && r.sRGBHex) { const c = resolveC(r.sRGBHex); token = null; [h, s, v] = rgb2hsv(c[0], c[1], c[2]); emit(); if (opts) opts.onDone(); } } catch (e) { /* cancelled */ } };
+  tokList.addEventListener('click', (e) => {
+    const t = e.target.closest('button'); if (!t || !opts) return;
+    const val = t.dataset.v;
+    if (opts.tokens && tokenOf(val)) token = val; else { const c = resolveC(val); token = null; [h, s, v] = rgb2hsv(c[0], c[1], c[2]); }
+    emit(); opts.onDone();
+  });
+  const place = () => {
+    const r = anchor.getBoundingClientRect(), Wp = el.offsetWidth, Hp = el.offsetHeight;
+    const left = Math.max(8, Math.min(r.right - Wp, innerWidth - Wp - 8));
+    let top = r.bottom + 6; if (top + Hp > innerHeight - 8) top = Math.max(8, r.top - Hp - 6);
+    el.style.left = left + 'px'; el.style.top = top + 'px';
+  };
+  const onDown = (e) => { if (!el.contains(e.target) && !(anchor && anchor.contains(e.target))) close(true); };
+  function close(keep) {
+    if (el.hidden) return;
+    if (!keep && opts && opened != null) opts.onInput(opened);
+    const o = opts; el.hidden = true; removeEventListener('pointerdown', onDown, true); if (anchor) anchor.classList.remove('is-open');
+    opts = null; if (o) o.onDone();
+  }
+  return {
+    get isOpen() { return !el.hidden; },
+    open(anc, o) {
+      if (!el.hidden && anchor === anc) { close(true); return; }
+      close(true);
+      anchor = anc; opts = o; opened = o.value; anc.classList.add('is-open');
+      const pal = paletteNow();
+      tokList.innerHTML = pal.map((c) => `<button type="button" class="mupv-chipc" data-v="${esc(c.v)}" style="--c:${esc(cssOf(c.v))}" title="${esc(c.name)}" aria-label="${esc(c.name)}"></button>`).join('');
+      tokWrap.hidden = !pal.length;
+      load(o.value); el.hidden = false; paint(); place();
+      addEventListener('pointerdown', onDown, true);
+    },
+    close,
+  };
+})();
+const paletteNow = () => palette().tokens.filter((t) => t.name !== 'bg').map((t) => ({ v: t.name, name: ROLE[t.name] || t.name }))
+  .concat(palette().literals.map((l) => { const v = recolorBinding(l.value).get(); return { v, name: hexOf(v) }; }));
+
+// ── the film's layers: which one a pointer is on, which are on screen, the agent's panels ──
+let byNode = new WeakMap(), byKey = new Map(), CARDS = [], SCENECARDS = [];
+const painted = (L) => !!(L.fill || L.stroke || L.img || L.media != null || L.shadow || (L.k && (L.k.fill || L.k.stroke)));
+const cardsOf = (L) => {
+  const list = [];
+  if (L.ui) list.push(...(Array.isArray(L.ui) && L.ui.length && typeof L.ui[0] === 'object' && L.ui[0].controls ? L.ui : [L.ui]));
+  for (const c of L._ui || []) list.push(c);
+  return list.map((u, n) => {
+    const o = typeof u === 'string' ? { controls: [u] } : Array.isArray(u) ? { controls: u } : u;
+    return { id: `${L._scene}:${L._key}:${n}`, scene: L._scene, anchor: L._key, label: o.label || layerLabel(L), glyph: glyph(L),
+      controls: (o.controls || []).map((c) => (typeof c === 'string' ? { prop: c } : c)) };
+  });
+};
+function index() {
+  byNode = new WeakMap(); byKey = new Map(); CARDS = [];
+  if (ENGINE3D) {
+    // a scene page's panels: its data-ui elements (the page names them), and its params under Effects
+    timing.forEach((tm, i) => {
+      const d = inst.defs(i); if (!d) return;
+      for (const el of d.elements || []) CARDS.push({ id: `${i}:${el.id}:0`, scene: i, anchor: el.id, label: el.label || pretty(el.id), glyph: el.image ? IC.image : IC.text, page: el,
+        controls: el.controls.map((c) => ({ prop: c })) });
+    });
+    SCENECARDS = timing.map((tm, i) => {
+      const rest = Object.keys(paramDefs(i));
+      return rest.length ? { id: `${i}:__scene`, scene: i, label: titleOf(i), glyph: IC.fx, controls: rest.map((n) => ({ param: n })), sceneLevel: true } : null;
+    });
+    return;
+  }
+  for (const r of inst.recs) { byNode.set(r.n, r); r._kids = []; }
+  for (const r of inst.recs) {
+    const p = r.n.parentElement && r.n.parentElement.closest('.uik-n');
+    r._p = p ? byNode.get(p) : null;
+    if (r._p) r._p._kids.push(r);
+    const L = r.L; if (L._scene == null) continue;
+    byKey.set(L._scene + ':' + L._key, r);
+    if (r.box && !painted(L)) r.box.classList.add('mupe-ghost');
+    if (r.box && isPic(L)) r.box.classList.add('mupe-photo');
+    for (const c of cardsOf(L)) CARDS.push(c);
+  }
+  // each scene's effects that no panel shows
+  SCENECARDS = timing.map((tm, i) => {
+    const used = new Set(CARDS.filter((c) => c.scene === i).flatMap((c) => c.controls.filter((x) => x.param).map((x) => x.param)));
+    const rest = Object.keys(paramDefs(i)).filter((n) => !used.has(n));
+    return rest.length ? { id: `${i}:__scene`, scene: i, label: titleOf(i), glyph: IC.fx, controls: rest.map((n) => ({ param: n })), sceneLevel: true } : null;
+  });
+}
+const visible = (r) => { for (let x = r; x; x = x._p) if (x.n.style.display === 'none') return false; return true; };
+const recOf = (scene, key) => byKey.get(scene + ':' + key) || null;
+const union = (rs) => {
+  const ok = rs.filter((r) => r && r.right - r.left + r.bottom - r.top > 0); if (!ok.length) return null;
+  return { left: Math.min(...ok.map((r) => r.left)), top: Math.min(...ok.map((r) => r.top)), right: Math.max(...ok.map((r) => r.right)), bottom: Math.max(...ok.map((r) => r.bottom)) };
+};
+const rectOf = (r, depth = 0) => {
+  if (r.L.type === 'icon' && r.svg) return r.svg.getBoundingClientRect();
+  if (r.paths) return union(r.paths.map((p) => p.getBoundingClientRect()));
+  const el = r.txt || r.box || r.cv || r.cur;
+  if (el) return el.getBoundingClientRect();
+  return depth > 8 ? null : union(r._kids.filter(visible).map((k) => rectOf(k, depth + 1)));
+};
+// what really shows: cut by every clipping ancestor (masks, pills) and the frame
+const clipTo = (rect, r) => {
+  if (!rect) return null;
+  const cut = (c) => { rect = { left: Math.max(rect.left, c.left), top: Math.max(rect.top, c.top), right: Math.min(rect.right, c.right), bottom: Math.min(rect.bottom, c.bottom) }; };
+  for (let x = r._p; x; x = x._p) if (x.L.clip && x.box) cut(x.box.getBoundingClientRect());
+  cut(frameEl.getBoundingClientRect());
+  return rect.right - rect.left > 0.5 && rect.bottom - rect.top > 0.5 ? rect : null;
+};
+// the name a person knows a layer by: its words, else the agent's name for it, else its id
+const GENERIC = /^(colou?r|fill|stroke|text|size|label|line|picture|image|weight|case|tracking|corners)$/i;
+const nameOf = (L) => {
+  if (L.type === 'text' && textOf(L)) return `“${trunc(textOf(L), 30)}”`;
+  for (const c of CARDS) if (c.scene === L._scene && c.anchor === L._key && c.label) return c.label;
+  for (const c of CARDS) {
+    if (c.scene !== L._scene) continue;
+    for (const x of c.controls) {
+      const keys = x.param ? [] : [].concat(x.layer || c.anchor).map(String);
+      if (keys.length === 1 && keys[0] === L._key && x.label && !GENERIC.test(x.label)) return x.label;
+    }
+  }
+  return pretty(L._key) || typeName(L);
+};
+const sceneOn = (i, t) => t >= timing[i].from - 1e-6 && t < timing[i].to + 1e-6;
+
+// ── the stage: hover names an element, a click selects it (the film pauses), the selection follows it ──
+let sel = null, stageHover = null, cardHover = null;
+const selRec = () => (sel ? recOf(sel.scene, sel.key) : null);
+const ov = div('mupe-ov', '<div class="mupe-box is-hover" hidden></div><div class="mupe-box is-sel" hidden><i></i><i></i><i></i><i></i></div><div class="mupe-tag" hidden></div>');
+view.appendChild(ov);
+const [hovBox, selBox, tag] = ov.children;
+const placeBox = (box, r, vr) => {
+  if (!r) { box.hidden = true; return null; }
+  box.hidden = false;
+  const x = r.left - vr.left, y = r.top - vr.top, w = r.right - r.left, h = r.bottom - r.top;
+  box.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`; box.style.width = Math.max(2, w).toFixed(1) + 'px'; box.style.height = Math.max(2, h).toFixed(1) + 'px';
+  return { x, y, w, h };
+};
+function drawOverlay() {
+  const s = selRec(), hr = cardHover || stageHover, h = hr && hr !== s && visible(hr) ? hr : null;
+  if (!s && !h) { if (!selBox.hidden || !hovBox.hidden || !tag.hidden) { selBox.hidden = hovBox.hidden = tag.hidden = true; } return; }
+  const vr = view.getBoundingClientRect();
+  const sb = placeBox(selBox, s && visible(s) ? clipTo(rectOf(s), s) : null, vr);
+  const hb = placeBox(hovBox, h ? clipTo(rectOf(h), h) : null, vr);
+  const t = h && hb ? { r: h, b: hb } : s && sb ? { r: s, b: sb } : null;
+  if (!t) { tag.hidden = true; return; }
+  tag.hidden = false;
+  const txt = `${typeName(t.r.L)} · ${nameOf(t.r.L)}`;
+  if (tag._t !== txt) { tag._t = txt; tag.textContent = txt; }
+  tag.style.transform = `translate(${Math.max(0, t.b.x).toFixed(1)}px, ${(t.b.y > 24 ? t.b.y - 22 : t.b.y + t.b.h + 4).toFixed(1)}px)`;
+  tag.classList.toggle('is-sel', t.r === s);
+}
+frameEl.addEventListener('pointermove', (e) => {
+  if (e.pointerType !== 'mouse') return;
+  const n = e.target.closest && e.target.closest('.uik-n'); const r = n ? byNode.get(n) : null;
+  stageHover = r && r.L._scene != null ? r : null;
+});
+frameEl.addEventListener('pointerleave', () => { stageHover = null; });
+frameEl.addEventListener('click', (e) => {
+  const n = e.target.closest && e.target.closest('.uik-n'); const r = n ? byNode.get(n) : null;
+  if (r && r.L._scene != null) select(r.L._scene, r.L._key); else select(null);
+});
+function select(scene, key) {
+  if (scene == null) { if (sel) { sel = null; lastSig = null; } return; }
+  sel = { scene, key };
+  if (playing) setPlaying(false);
+  setStage(false); showTab('elements');
+  moreOpen = null; lastSig = null;
+}
+
+// ── the Elements tab ──
+const epanel = $('mupv-p-elements');
+epanel.innerHTML = '<div class="mupv-phead"><span id="mupe-where"></span><span id="mupe-when" class="mupv-num"></span></div><div id="mupe-body"></div>';
+$('mupv-tab-elements').insertAdjacentHTML('afterbegin', IC.pick);
+const ebody = $('mupe-body'), whereEl = $('mupe-where'), whenEl = $('mupe-when'), ecount = $('mupe-ecount');
+let lastSig = null, moreOpen = null, lastCount = -1, lastWhere = '';
+// the agent's panel for a layer: its own or an ancestor's, else one in its scene that reaches it
+const cardFor = (r) => {
+  for (let x = r; x && x.L._scene != null; x = x._p) { const c = CARDS.find((k) => k.scene === x.L._scene && k.anchor === x.L._key); if (c) return c; }
+  return CARDS.find((c) => c.scene === r.L._scene && c.controls.some((x) => [].concat(x.layer || []).map(String).includes(r.L._key))) || null;
+};
+const cardEl = (c, opt = {}) => {
+  const el = div('mupe-card' + (c.sceneLevel ? ' is-scene' : ''));
+  el.dataset.card = c.id;
+  el.innerHTML = `<div class="mupe-chead"><span class="mupe-glyph">${c.glyph}</span><b>${esc(c.label)}</b>${c.sceneLevel ? '<small>Scene effects</small>' : ''}${!c.sceneLevel && !opt.noLocate && !ENGINE3D ? `<button type="button" class="mupe-ibtn mupe-loc" title="Select it in the film" aria-label="Select ${esc(c.label)} in the film">${IC.locate}</button>` : ''}</div><div class="mupe-rows"></div>`;
+  const rows = el.lastChild;
+  for (const x of c.controls) [].concat(control(c.scene, x, c.anchor) || []).forEach((f) => rows.appendChild(f.el));
+  if (!c.sceneLevel) {
+    el.addEventListener('pointerenter', () => { cardHover = recOf(c.scene, c.anchor); });
+    el.addEventListener('pointerleave', () => { cardHover = null; });
+    const loc = el.querySelector('.mupe-loc'); if (loc) loc.onclick = () => select(c.scene, c.anchor);
+  }
+  return el;
+};
+function selectedSection(r) {
+  const L = r.L, i = L._scene, on = visible(r);
+  const sec = div('mupe-sec mupe-selsec');
+  const crumbs = []; for (let x = r._p; x && x.L._scene != null; x = x._p) crumbs.unshift(x);
+  sec.innerHTML = `<div class="mupe-selhead"><span class="mupe-glyph is-sel">${glyph(L)}</span><div><b>${esc(nameOf(L))}</b><small>${esc(typeName(L))} · Scene ${i + 1}</small></div><button type="button" class="mupv-icon mupe-x" title="Deselect (Esc)" aria-label="Deselect">${IC.close}</button></div>`
+    + `<nav class="mupe-crumbs" aria-label="Where it sits"><button type="button" data-scene="${i}">Scene ${i + 1}</button>${crumbs.map((x) => `${IC.chev}<button type="button" data-key="${esc(x.L._key)}">${esc(trunc(nameOf(x.L), 18))}</button>`).join('')}${IC.chev}<span>${esc(trunc(nameOf(L), 22))}</span></nav>`
+    + (on ? '' : `<div class="mupe-off"><span>Not on screen at ${fmt(cur)}.</span><button type="button" class="mupe-btn">Show it</button></div>`);
+  sec.querySelector('.mupe-x').onclick = () => select(null);
+  sec.querySelector('.mupe-crumbs').onclick = (e) => {
+    const b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.key) select(i, b.dataset.key); else seek(timing[i].start + 0.72 * timing[i].duration);
+  };
+  const off = sec.querySelector('.mupe-off button'); if (off) off.onclick = () => showLayer(r);
+  const card = cardFor(r);
+  if (card) { const ce = cardEl(card, { noLocate: card.anchor === L._key }); ce.classList.add('is-own'); sec.appendChild(ce); }
+  const shown = new Set(card ? card.controls.filter((x) => !x.param && [].concat(x.layer || card.anchor).map(String).includes(L._key)).map((x) => propFor(x.prop, L)) : []);
+  const auto = autoControls(L).filter((p) => !shown.has(propFor(p, L)));
+  if (auto.length) {
+    const rows = div('mupe-rows');
+    for (const p of auto) [].concat(control(i, { prop: p }, L._key) || []).forEach((f) => rows.appendChild(f.el));
+    if (card) {
+      const d = document.createElement('details'); d.className = 'mupe-more';
+      d.open = !!moreOpen;
+      d.innerHTML = `<summary>${IC.chev}<span>All options</span><small>${auto.length}</small></summary>`;
+      d.addEventListener('toggle', () => { moreOpen = d.open; });
+      d.appendChild(rows); sec.appendChild(d);
+    } else sec.appendChild(rows);
+  } else if (!card) sec.insertAdjacentHTML('beforeend', `<p class="mupv-note">${L.type === 'group' ? 'A group: pick an element inside it.' : 'Nothing to change on this one.'}</p>`);
+  return { sec, card };
+}
+// the first moment the layer shows (its scene, sampled)
+function showLayer(r) {
+  const i = r.L._scene, tm = timing[i];
+  for (let t = tm.from; t <= tm.to; t += 1 / 30) {
+    inst.seek(t);
+    const x = recOf(i, r.L._key);
+    if (x && visible(x)) { seek(Math.min(tm.to, t + 0.2)); return; }
+  }
+  redraw();
+}
+function renderElements() {
+  const k = sceneAt(cur);
+  const vis = CARDS.filter((c) => { if (ENGINE3D) return sceneOn(c.scene, cur); const r = recOf(c.scene, c.anchor); return r && visible(r); });
+  const scs = SCENECARDS.filter((c, i) => c && sceneOn(i, cur));
+  const count = vis.length + scs.length;
+  if (count !== lastCount) { lastCount = count; ecount.textContent = count ? String(count) : ''; }
+  const where = `Scene ${k + 1} · ${titleOf(k)}`;
+  if (where !== lastWhere) { lastWhere = where; whereEl.innerHTML = `<b>${esc(where)}</b>`; }
+  if (epanel.hidden) return;
+  whenEl.textContent = fmt(cur);
+  const s = selRec();
+  const sig = [sel ? `${sel.scene}:${sel.key}:${s && visible(s) ? 1 : 0}` : '', vis.map((c) => c.id).join(','), scs.map((c) => c.id).join(',')].join('|');
+  if (sig === lastSig) return;
+  if (interacting > 0 || (epanel.contains(document.activeElement) && document.activeElement.matches('input, select, textarea')) || picker.isOpen) return;
+  lastSig = sig;
+  fields.forEach((f) => { if (epanel.contains(f.el)) fields.delete(f); });
+  ebody.innerHTML = '';
+  let selCard = null;
+  if (s) { const r = selectedSection(s); selCard = r.card; ebody.appendChild(r.sec); }
+  else if (!ENGINE3D) ebody.insertAdjacentHTML('beforeend', `<p class="mupe-hint">${IC.pick}<span>Click anything in the film to change it. The film pauses; <kbd>Space</kbd> plays on.</span></p>`);
+  const list = vis.filter((c) => !(selCard && c.id === selCard.id));
+  if (list.length) {
+    const sec = div('mupe-sec', `<h3 class="mupv-h">On screen now <span>${list.length}</span></h3><p class="mupe-sub">Controls the agent set up for this film.</p>`);
+    list.forEach((c) => sec.appendChild(cardEl(c)));
+    ebody.appendChild(sec);
+  }
+  if (scs.length) {
+    const sec = div('mupe-sec', `<h3 class="mupv-h">Effects <span>${scs.length > 1 ? 'two scenes' : 'this scene'}</span></h3>`);
+    scs.forEach((c) => sec.appendChild(cardEl(c)));
+    ebody.appendChild(sec);
+  }
+  if (!s && !list.length && !scs.length) ebody.insertAdjacentHTML('beforeend', '<p class="mupv-note mupe-empty">The agent set up no controls for what is on screen now. Click an element to change it anyway.</p>');
+}
+
+// ── the Design tab: the film's tokens, editable ──
+const design = $('mupv-p-design');
+function swatch(b, label, sub) {
+  const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'mupv-sw mupe-sw';
+  btn.innerHTML = `<i class="mupv-chipc"></i><b>${esc(label)}</b><span></span><em class="mupe-dot" role="button" title="Back to the agent’s value" aria-label="Reset ${esc(label)}" hidden></em>`;
+  const dot = btn.querySelector('.mupe-dot');
+  const update = () => {
+    const v = b.get();
+    btn.querySelector('i').style.setProperty('--c', cssOf(v));
+    btn.querySelector('span').textContent = sub(v);
+    const ch = b.changed(); dot.hidden = !ch; btn.classList.toggle('is-changed', ch);
+    btn.title = ch ? `${label}: was ${hexOf(b.orig())}` : `${label}: click to change`;
+  };
+  btn.onclick = (e) => {
+    if (e.target === dot) { b.reset(); apply(b.kind); commit(); update(); return; }
+    picker.open(btn, { value: b.get(), tokens: false, onInput: (v) => { b.set(v); apply(b.kind); update(); }, onDone: commit });
+  };
+  update();
+  const f = { el: btn, update }; fields.add(f); return f;
+}
+const hexSub = (v) => hexOf(v) + (alphaOf(v) < 0.995 ? ` · ${Math.round(alphaOf(v) * 100)}%` : '');
+function renderDesign() {
+  const P = palette();
+  fields.forEach((f) => { if (design.contains(f.el)) fields.delete(f); });
+  design.innerHTML = `<div class="mupv-dsec"><h2 class="mupv-h">Film</h2><div class="mupe-rows" id="mupe-film"></div><div class="mupv-keycols" id="mupe-key"></div></div>
+    <div class="mupv-dsec"><h2 class="mupv-h">Colours <span>${P.tokens.length + P.literals.length} in the film</span></h2>
+      <p class="mupe-sub">Change one and every layer that uses it follows.</p>
+      <div class="mupv-keycols" id="mupe-named"></div>
+      <h3 class="mupe-h3"${P.literals.length ? '' : ' hidden'}>Item colours <span>set in the items</span></h3><div class="mupv-keycols" id="mupe-lits"></div></div>
+    <div class="mupv-dsec"><h2 class="mupv-h">Type</h2><div class="mupe-rows" id="mupe-fontrow"></div><p class="mupe-sub" id="mupe-fontnote" hidden></p><div id="mupe-spec"></div></div>`;
+  $('mupe-film').appendChild(row(filmBinding('theme', 'theme'), { kind: 'seg', label: 'Theme', options: [['light', 'Light'], ['dark', 'Dark']] }).el);
+  if (BASE.background) $('mupe-key').appendChild(swatch(filmBinding('background', 'bg'), 'Background', hexSub).el);
+  $('mupe-key').appendChild(swatch(filmBinding('accent', 'theme'), 'Accent', hexSub).el);
+  for (const t of P.tokens) if (t.name !== 'acc' && t.name !== 'bg') $('mupe-named').appendChild(swatch(tokenBinding(t.name), ROLE[t.name] || t.name, (v) => `${t.name} · ${hexOf(v)}`).el);
+  for (const l of P.literals) $('mupe-lits').appendChild(swatch(recolorBinding(l.value), hexOf(l.value), (v) => (K.style.sameColor(v, l.value) ? `${l.uses} use${l.uses > 1 ? 's' : ''}` : `now ${hexSub(v)}`)).el);
+  $('mupe-fontrow').appendChild(row(filmBinding('font', 'font'), { kind: 'select', label: 'Font', options: Object.keys(K.FONTS).map((n) => [n, n]) }).el);
+  renderSpecimen();
+}
+function renderSpecimen() {
+  const P = palette(), name = sc.font || K.FONT_DEFAULT, f = K.fontOf(name);
+  if (sc.font) K.useFont(sc.font);
+  const WN = { 300: 'Light', 400: 'Regular', 500: 'Medium', 600: 'Semibold', 700: 'Bold', 800: 'Heavy' };
+  const range = (a) => (a.length > 1 ? `${a[0]}–${a[a.length - 1]} px · ${a.length} sizes` : `${a[0]} px`);
+  $('mupe-spec').innerHTML = `<div class="mupv-font"><header><q style="font-family:${esc(f.stack)}">Aa</q><div><b>${esc(name)}</b><span>${esc(capw(f.note || 'Google Fonts'))}</span></div></header>`
+    + P.type.map((s) => `<div class="mupv-style" title="${esc(s.sizes.join(', '))} px"><em>${WN[s.weight] || s.weight} ${s.weight}</em><small>${range(s.sizes)}</small><q style="font-weight:${s.weight};font-family:${esc(f.stack)}">${esc(s.sample || 'Aa 0123')}</q></div>`).join('') + '</div>';
+  const note = $('mupe-fontnote');
+  note.hidden = (sc.font || K.FONT_DEFAULT) === (BASE.font || K.FONT_DEFAULT);
+  note.textContent = 'Some items measure their words (pills, masks). The agent checks and re-fits them for this font before it renders.';
+}
+
+// ── the top bar: the list of changes ──
+const chgWrap = div('mupe-chgwrap', `<button type="button" class="mupe-chg" id="mupe-chg" aria-expanded="false" aria-controls="mupe-chgpop"><i></i><span></span></button>
+  <div class="mupe-chgpop" id="mupe-chgpop" role="dialog" aria-label="Your changes" hidden>
+    <div class="mupe-chghead"><b>Your changes</b><button type="button" class="mupe-ibtn" id="mupe-undo" title="Undo (⌘Z)" aria-label="Undo">${IC.undo}</button><button type="button" class="mupe-ibtn" id="mupe-redo" title="Redo (⇧⌘Z)" aria-label="Redo">${IC.redo}</button></div>
+    <div class="mupe-chglist" id="mupe-chglist"></div>
+    <div class="mupe-chgfoot"><span id="mupe-saved"></span><button type="button" class="mupe-btn" id="mupe-reset">Reset all</button><button type="button" class="mupe-btn is-strong" id="mupe-copy">${IC.copy}<span>Copy for the agent</span></button></div>
+  </div>`);
+$('mupv-mode').after(chgWrap);
+const chgBtn = $('mupe-chg'), chgPop = $('mupe-chgpop'), chgList = $('mupe-chglist');
+const agentLine = $('mupv-agentline');
+const leafCount = () => {
+  let n = 0; const f = EDITS.film;
+  for (const k of ['theme', 'accent', 'background', 'font']) if (has(f, k)) n++;
+  n += Object.keys(f.colors || {}).length + Object.keys(f.recolor || {}).length;
+  for (const s of Object.values(EDITS.scenes)) {
+    n += Object.keys(s.text || {}).length + Object.keys(s.images || {}).length + Object.keys(s.params || {}).length;
+    for (const st of Object.values(s.style || {})) for (const v of Object.values(st)) n += v && typeof v === 'object' ? Object.keys(v).length : 1;
+  }
+  return n;
+};
+function updateBadge() {
+  const n = leafCount();
+  chgBtn.classList.toggle('has', n > 0);
+  chgBtn.querySelector('span').textContent = n ? `${n} change${n > 1 ? 's' : ''}` : 'No changes';
+  $('mupe-undo').disabled = hpos <= 0; $('mupe-redo').disabled = hpos >= hist.length - 1;
+  if (agentLine) agentLine.textContent = n ? `Your ${n} change${n > 1 ? 's are' : ' is'} saved. Approve it in the chat, and the agent renders with ${n > 1 ? 'them' : 'it'}`
+    : 'Approve it in the chat, and the agent renders and exports it';
+}
+// every edit as a row a person reads: where · what · before → now · revert
+const labelFor = (i, key, prop) => {
+  const L = origLayers(i).get(key);
+  for (const c of CARDS.filter((x) => x.scene === i)) for (const x of c.controls) {
+    if (x.param) continue;
+    if ([].concat(x.layer || c.anchor).map(String).includes(key) && L && propFor(x.prop, L) === prop) return x.label || c.label;
+  }
+  const P = PROPS[prop];
+  return `${L ? nameOf(L) : pretty(key)} · ${P ? P.label.toLowerCase() : prop}`;
+};
+const valHtml = (prop, v) => {
+  if (v == null || v === '') return '<span class="mupe-none">none</span>';
+  if (['fill', 'stroke', 'color', 'colors', 'accent', 'background', 'recolor'].includes(prop) || (typeof v === 'string' && (/^#[0-9a-f]{3,8}$/i.test(v) || tokenOf(v)))) return `<i class="mupv-chipc" style="--c:${esc(cssOf(v))}"></i>${esc(colorName(v))}`;
+  if (prop === 'image') return 'a new picture';
+  if (typeof v === 'boolean') return v ? 'On' : 'Off';
+  if (prop === 'upper') return v ? 'UPPER' : 'As typed';
+  if (prop === 'text') return `“${esc(trunc(v, 26))}”`;
+  if (prop === 'ls') return `${+(v * 100).toFixed(1)}%`;
+  if (typeof v === 'number') return String(+v.toFixed(3));
+  return esc(capw(v));
+};
+function changeRows() {
+  const f = EDITS.film, rows = [];
+  const add = (scope, label, prop, from, to, revert) => rows.push({ scope, label, prop, from, to, revert });
+  if (has(f, 'theme')) add('Film', 'Theme', 'theme', FILM_BASE.theme(), f.theme, () => { delete f.theme; });
+  if (has(f, 'background')) add('Film', 'Background', 'background', FILM_BASE.background(), f.background, () => { delete f.background; });
+  if (has(f, 'accent')) add('Film', 'Accent', 'accent', FILM_BASE.accent(), f.accent, () => { delete f.accent; });
+  for (const [n, v] of Object.entries(f.colors || {})) add('Film', ROLE[n] || n, 'colors', tokenBase(n), v, () => { delete f.colors[n]; });
+  for (const [h, v] of Object.entries(f.recolor || {})) add('Film', 'Item colour', 'recolor', recolorBase(h), v, () => { delete f.recolor[h]; });
+  if (has(f, 'font')) add('Film', 'Font', 'font', FILM_BASE.font(), f.font, () => { delete f.font; });
+  for (const [sn, s] of Object.entries(EDITS.scenes).sort((a, b) => a[0] - b[0])) {
+    const i = +sn - 1, scope = `Scene ${sn}`;
+    if (!BASE.scenes[i]) continue;
+    for (const [k, v] of Object.entries(s.text || {})) add(scope, labelFor(i, k, 'text'), 'text', layerBinding(i, [k], 'text').orig(), v, () => { delete s.text[k]; });
+    for (const [k, v] of Object.entries(s.images || {})) add(scope, labelFor(i, k, 'image'), 'image', null, v, () => { delete s.images[k]; });
+    for (const [k, st] of Object.entries(s.style || {})) for (const [p, v] of Object.entries(st)) {
+      if (v && typeof v === 'object') for (const [from, to] of Object.entries(v)) add(scope, labelFor(i, k, p), p, from, to, () => { delete v[from]; });
+      else add(scope, labelFor(i, k, p), p, layerBinding(i, [k], p).orig(), v, () => { delete st[p]; });
+    }
+    for (const [n, v] of Object.entries(s.params || {})) add(scope, (paramDefs(i)[n] || {}).label || pretty(n), 'param', paramsBase(i)[n], v, () => { delete s.params[n]; });
+  }
+  return rows;
+}
+let rowsNow = [];
+function renderChanges() {
+  updateBadge();
+  if (chgPop.hidden) return;
+  rowsNow = changeRows();
+  chgList.innerHTML = rowsNow.length ? rowsNow.map((r, j) => `<div class="mupe-crow"><span class="mupe-cscope">${esc(r.scope)}</span><b title="${esc(r.label)}">${esc(r.label)}</b>`
+    + `<span class="mupe-cval">${r.prop === 'image' ? '' : `<span class="mupe-was">${valHtml(r.prop, r.from)}</span>${IC.chev}`}<span>${valHtml(r.prop, r.to)}</span></span>`
+    + `<button type="button" class="mupe-ibtn" data-j="${j}" title="Revert" aria-label="Revert ${esc(r.label)}">${IC.revert}</button></div>`).join('')
+    : '<p class="mupv-note mupe-nochg">Nothing changed yet. Change a colour on the Design tab, or click anything in the film.</p>';
+  $('mupe-saved').textContent = saveNote || (rowsNow.length ? `Saved to ${SAVE_WHERE}` : '');
+  $('mupe-reset').disabled = !rowsNow.length; $('mupe-copy').disabled = !rowsNow.length;
+}
+chgList.onclick = (e) => {
+  const b = e.target.closest('button[data-j]'); if (!b) return;
+  rowsNow[+b.dataset.j].revert(); prune(); applyAll(); commit();
+};
+let resetArm = false;
+const closeChanges = () => { chgPop.hidden = true; chgBtn.setAttribute('aria-expanded', 'false'); resetArm = false; $('mupe-reset').textContent = 'Reset all'; };
+chgBtn.onclick = () => { if (chgPop.hidden) { chgPop.hidden = false; chgBtn.setAttribute('aria-expanded', 'true'); renderChanges(); } else closeChanges(); };
+addEventListener('pointerdown', (e) => { if (!chgPop.hidden && !chgWrap.contains(e.target)) closeChanges(); }, true);
+$('mupe-undo').onclick = () => travel(-1);
+$('mupe-redo').onclick = () => travel(1);
+$('mupe-reset').onclick = (e) => {
+  if (!resetArm) { resetArm = true; e.currentTarget.textContent = 'Reset every change?'; return; }
+  resetArm = false; e.currentTarget.textContent = 'Reset all';
+  setEdits(null); applyAll(); commit();
+};
+// what the agent gets: the edits for scenario.json (a picture chosen here is named, not inlined)
+const forAgent = () => {
+  const out = editsOut() || { film: {}, scenes: {} };
+  for (const s of Object.values(out.scenes)) if (s.images) for (const k of Object.keys(s.images)) if (/^data:/.test(s.images[k])) s.images[k] = '(a picture I chose in the preview: ask me for the file)';
+  return `My changes in the preview of “${BASE.name}” — put them in scenario.json as "edits" (node tools/edits.mjs lists them):\n`
+    + JSON.stringify({ edits: out }, null, 2);
+};
+$('mupe-copy').onclick = (e) => {
+  const sp = e.currentTarget.querySelector('span');
+  const done = (ok) => { sp.textContent = ok ? 'Copied' : 'Copy failed'; setTimeout(() => { sp.textContent = 'Copy for the agent'; }, 1400); };
+  try { navigator.clipboard.writeText(forAgent()).then(() => done(true), () => done(false)); } catch (err) { done(false); }
+};
+
+// ── keys: Esc closes / deselects; ⌘Z / ⇧⌘Z undo and redo ──
+addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    if (picker.isOpen) { e.preventDefault(); e.stopImmediatePropagation(); picker.close(false); return; }
+    if (!chgPop.hidden) { e.preventDefault(); e.stopImmediatePropagation(); closeChanges(); chgBtn.focus(); return; }
+    if (sel && !(e.target.closest && e.target.closest('input, textarea, select'))) { e.preventDefault(); e.stopImmediatePropagation(); select(null); return; }
+  }
+  if ((e.metaKey || e.ctrlKey) && e.code === 'KeyZ' && !(e.target.closest && e.target.closest('input, textarea'))) { e.preventDefault(); travel(e.shiftKey ? 1 : -1); }
+}, true);
+
+// ── start: the page's edits; a board card reads the ones saved on it (the page itself never changes) ──
+index(); renderDesign(); updateBadge();
+if (ENGINE3D) inst.ready.then(() => { index(); lastSig = null; });
+if (SAVE_WHERE === 'the film on the board') {
+  api('GET', `/api/moodboards/${encodeURIComponent(MODE.boardId)}/elements/${encodeURIComponent(MODE.cardId)}`).then((el) => {
+    const saved = el && el.data && el.data.muEdits && el.data.muEdits.edits;
+    if (saved && JSON.stringify(saved) !== JSON.stringify(editsOut())) { setEdits(saved); hist = [JSON.stringify(EDITS)]; hpos = 0; applyAll(); lastSig = null; }
+  }).catch(() => { /* offline: the page's own edits */ });
+}
+const editLoop = () => { renderElements(); drawOverlay(); requestAnimationFrame(editLoop); };
+requestAnimationFrame(editLoop);
+
+// ── clock ──
+const tick = (now) => {
+  if (playing) {
+    if (last != null) {
+      cur += ((now - last) / 1000) * rate;
+      if (cur >= T) { if (loop) { cur = 0; syncAudio(true); } else { cur = T; setPlaying(false); } }
+    }
+    last = now; syncAudio(false);
+  }
+  draw();
+  requestAnimationFrame(tick);
+};
+const q = new URLSearchParams(location.search);
+if (q.has('t')) cur = Math.max(0, Math.min(T, +q.get('t') || 0));
+drawRuler();
+draw();
+requestAnimationFrame(tick);
+// thumbnails: one scene per idle slice, after the first frame is up
+const idle = window.requestIdleCallback ? (f) => requestIdleCallback(f, { timeout: 120 }) : (f) => setTimeout(f, 16);
+let nextThumb = 0;
+const buildNext = () => { if (nextThumb >= timing.length) return; buildThumb(nextThumb++); idle(buildNext); };
+requestAnimationFrame(() => idle(buildNext));
+let remembered = false;
+try { remembered = sessionStorage.getItem(STAGE_KEY) === '1'; } catch (e) { /* no storage */ }
+if (remembered) { app.classList.add('is-instant'); setStage(true, false); requestAnimationFrame(() => requestAnimationFrame(() => app.classList.remove('is-instant'))); }
+window.__mu = { seek, T, get t() { return cur; }, get film() { return film; }, get inst() { return inst; }, get playing() { return playing; }, setPlaying,
+  get sc() { return sc; }, get edits() { return editsOut(); }, flushSave };
+window.__muEdit = { select, get sel() { return sel; }, cards: () => CARDS, visibleCards: () => CARDS.filter((c) => { const r = recOf(c.scene, c.anchor); return r && visible(r); }),
+  recOf, travel, forAgent, changeRows, set: (e) => { setEdits(e); applyAll(); commit(); } };
+window.__muReady = true;
+})();
+</script>
+<!--/MU:BODY-->
+</body>
+</html>

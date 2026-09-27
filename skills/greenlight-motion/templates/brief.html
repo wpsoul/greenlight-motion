@@ -1,0 +1,1254 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!--MU:HEAD-->
+<title>@@TITLE@@</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style id="mu-tokens">@@TOKENS@@</style>
+<style>
+/* the kit's stage (items are laid out 1:1 around the film's centre) — as in gallery.html */
+.uik-stage { position: absolute; left: 0; top: 0; overflow: hidden; transform-origin: 0 0; background: transparent;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #0B0B0B; -webkit-font-smoothing: antialiased; pointer-events: none; }
+.uik-root { position: absolute; left: 50%; top: 50%; width: 0; height: 0; }
+.uik-n { position: absolute; left: 0; top: 0; width: 0; height: 0; }
+.uik-b { position: absolute; box-sizing: border-box; }
+.uik-c { position: absolute; width: 0; height: 0; }
+.uik-t { position: absolute; left: 0; top: 0; white-space: nowrap; line-height: 1.15; }
+.uik-svg { position: absolute; left: 0; top: 0; width: 1px; height: 1px; overflow: visible; }
+.uik-dw { display: inline-grid; position: relative; justify-items: center; vertical-align: top; clip-path: inset(calc((1lh - 1.1em) / 2) -0.5em); }
+.uik-dz { grid-area: 1 / 1; visibility: hidden; height: 1lh; overflow: hidden; }
+.uik-ds { grid-area: 1 / 1; position: relative; }
+.uik-d1 { position: absolute; left: 0; right: 0; top: 1.1em; text-align: center; }
+.uik-caret { display: inline-block; width: .085em; height: 1.02em; vertical-align: -0.15em; margin: 0 .03em; border-radius: 2px; }
+.uik-cursor svg { filter: drop-shadow(0 2px 3px rgba(0,0,0,.28)); }
+
+/* ── the brief: every colour is a token (mu-tokens) ── */
+body { margin: 0; }
+.mubf { --ring: color-mix(in srgb, var(--mu-acc) 30%, transparent); --tint: color-mix(in srgb, var(--mu-acc) 8%, var(--mu-panel));
+  --hair: color-mix(in srgb, var(--mu-txt) 18%, var(--mu-line)); --stage: #E9E7E2; --ease: cubic-bezier(0.28, 0.35, 0.137, 1);
+  --pad: clamp(24px, 5vw, 80px);
+  min-height: 100vh; min-height: 100dvh; display: grid; grid-template-columns: 296px minmax(0, 1fr);
+  background: var(--mu-bg); color: var(--mu-txt); font: 15px/1.55 Inter, 'Helvetica Neue', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased; font-feature-settings: 'cv11', 'ss01'; }
+.mubf *, .mubf *::before, .mubf *::after { box-sizing: border-box; }
+.mubf [hidden] { display: none !important; }
+.mubf button, .mubf input, .mubf select, .mubf textarea { font: inherit; color: inherit; }
+.mubf-i { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.mubf-sr { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* rail */
+.mubf-rail { position: sticky; top: 0; height: 100vh; height: 100dvh; overflow-y: auto; display: flex; flex-direction: column; gap: 44px;
+  padding: 34px 22px 28px 30px; border-right: 1px solid var(--mu-line); }
+.mubf-brand { display: flex; align-items: center; gap: 11px; }
+.mubf-mark { position: relative; width: 32px; height: 20px; border-radius: 10px; background: var(--mu-acc); flex: none; }
+.mubf-mark::after { content: ''; position: absolute; right: 3px; top: 3px; width: 14px; height: 14px; border-radius: 50%; background: var(--mu-on-acc); }
+.mubf-brand b { display: block; font-weight: 600; letter-spacing: -0.01em; line-height: 1.2; }
+.mubf-brand span { display: block; font-size: 12.5px; color: var(--mu-sub); line-height: 1.3; }
+.mubf-nav ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.mubf-nav li { position: relative; }
+.mubf-nav li:not(:last-child)::after { content: ''; position: absolute; left: 21px; top: 42px; bottom: -4px; width: 1px; background: var(--mu-line); }
+.mubf-nav button { width: 100%; display: grid; grid-template-columns: 28px minmax(0, 1fr); column-gap: 14px; align-items: center; text-align: left;
+  padding: 9px 10px 9px 8px; border: 0; border-radius: 10px; background: transparent; cursor: pointer; }
+.mubf-nav button:hover { background: var(--mu-soft); }
+.mubf-nav button:focus-visible { outline: 2px solid var(--mu-txt); outline-offset: -2px; }
+.mubf-nav .n { grid-row: span 2; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 600;
+  color: var(--mu-sub); box-shadow: inset 0 0 0 1px var(--hair); background: var(--mu-bg); font-variant-numeric: tabular-nums; position: relative; z-index: 1;
+  transition: background-color .2s, color .2s, box-shadow .2s; }
+.mubf-nav .n .mubf-i { width: 14px; height: 14px; stroke-width: 2.6; }
+.mubf-nav .l { font-weight: 500; color: var(--mu-sub); line-height: 1.3; }
+.mubf-nav .s { font-size: 12.5px; color: var(--mu-sub); line-height: 1.35; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: .85; }
+.mubf-nav .s:empty { display: none; }
+.mubf-nav .is-done .n { background: var(--mu-acc); color: var(--mu-on-acc); box-shadow: none; }
+.mubf-nav .is-done .l { color: var(--mu-txt); }
+.mubf-nav [aria-current="step"] .n { background: var(--mu-txt); color: var(--mu-bg); box-shadow: none; }
+.mubf-nav [aria-current="step"] .l { color: var(--mu-txt); font-weight: 600; }
+.mubf-rail-foot { margin-top: auto; display: flex; flex-direction: column; gap: 10px; font-size: 12.5px; color: var(--mu-sub); line-height: 1.5; }
+.mubf-rail-foot p { margin: 0; }
+.mubf-proj { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.mubf-proj b { font-weight: 500; color: var(--mu-txt); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0;
+  background: var(--mu-soft); border-radius: 6px; padding: 2px 8px; }
+
+/* main column */
+.mubf-main { min-width: 0; display: flex; flex-direction: column; }
+.mubf-top { display: none; }
+.mubf-body { flex: 1; padding: clamp(32px, 7vh, 72px) var(--pad) 56px; }
+.mubf-step { max-width: 760px; }
+.mubf-step.is-wide { max-width: 1240px; }
+.mubf-step.is-in { animation: mubf-in .5s var(--ease) both; }
+@keyframes mubf-in { from { opacity: 0; transform: translateY(10px); } }
+.mubf-sh { margin-bottom: 40px; max-width: 760px; }
+.mubf-eyebrow { font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--mu-sub); }
+.mubf-sh h1 { margin: 10px 0 0; font-size: clamp(30px, 3.3vw, 42px); line-height: 1.06; letter-spacing: -0.032em; font-weight: 600; text-wrap: balance; outline: none; }
+.mubf-sh p { margin: 14px 0 0; color: var(--mu-sub); font-size: 16.5px; line-height: 1.55; max-width: 60ch; text-wrap: pretty; }
+
+/* fields */
+.mubf-group { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.mubf-group + .mubf-group, .mubf-2col + .mubf-group, .mubf-group + .mubf-2col, .mubf-row + .mubf-group, .mubf-group + .mubf-row { margin-top: 36px; }
+.mubf-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.mubf-2col .mubf-group + .mubf-group { margin-top: 0; }
+.mubf-row { display: flex; flex-wrap: wrap; gap: 36px 64px; }
+.mubf-row > .mubf-group { margin-top: 0 !important; }
+.mubf-label { font-size: 14px; font-weight: 600; letter-spacing: -0.005em; display: flex; align-items: baseline; gap: 8px; }
+.mubf-label small { font-size: 12.5px; font-weight: 400; color: var(--mu-sub); }
+.mubf-hint { margin: -4px 0 0; font-size: 13.5px; color: var(--mu-sub); line-height: 1.5; text-wrap: pretty; }
+.mubf-input, .mubf-textarea, .mubf-select { width: 100%; background: var(--mu-field); border: 1px solid var(--mu-line); border-radius: 10px;
+  padding: 11px 14px; font-size: 15px; line-height: 1.45; transition: border-color .15s, box-shadow .15s; -webkit-appearance: none; appearance: none; }
+.mubf-input { height: 46px; }
+.mubf-input:hover, .mubf-textarea:hover, .mubf-select:hover { border-color: var(--hair); }
+.mubf-input:focus, .mubf-textarea:focus, .mubf-select:focus { outline: none; border-color: color-mix(in srgb, var(--mu-acc) 75%, var(--mu-txt)); box-shadow: 0 0 0 4px var(--ring); }
+.mubf-input::placeholder, .mubf-textarea::placeholder { color: color-mix(in srgb, var(--mu-sub) 72%, transparent); }
+.mubf-textarea { min-height: 176px; resize: vertical; }
+.mubf-select { height: 46px; padding-right: 40px; cursor: pointer; background-image: linear-gradient(45deg, transparent 50%, var(--mu-sub) 50%), linear-gradient(-45deg, transparent 50%, var(--mu-sub) 50%);
+  background-position: calc(100% - 20px) 50%, calc(100% - 15px) 50%; background-size: 5px 5px; background-repeat: no-repeat; }
+.mubf-input.is-bad { border-color: var(--mu-bad); }
+.mubf-input.is-bad:focus { box-shadow: 0 0 0 4px color-mix(in srgb, var(--mu-bad) 22%, transparent); }
+.mubf-err { font-size: 13px; color: var(--mu-bad); margin: -2px 0 0; }
+
+/* buttons */
+.mubf-btn { height: 44px; padding: 0 18px; border-radius: 11px; border: 1px solid var(--mu-line); background: var(--mu-panel); cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-size: 14.5px; font-weight: 600; white-space: nowrap;
+  transition: background-color .15s, border-color .15s, transform .15s var(--ease), opacity .15s; }
+.mubf-btn:hover { border-color: var(--hair); }
+.mubf-btn:active { transform: scale(.98); }
+.mubf-btn:focus-visible { outline: 2px solid var(--mu-txt); outline-offset: 2px; }
+.mubf-btn.is-primary { background: var(--mu-acc); color: var(--mu-on-acc); border-color: transparent; padding: 0 20px 0 22px; }
+.mubf-btn.is-primary:hover { background: color-mix(in srgb, var(--mu-acc) 88%, var(--mu-txt)); }
+.mubf-btn.is-ghost { background: transparent; border-color: transparent; color: var(--mu-sub); padding: 0 14px; }
+.mubf-btn.is-ghost:hover { color: var(--mu-txt); background: var(--mu-soft); }
+.mubf-btn[disabled] { opacity: .55; cursor: default; transform: none; }
+.mubf-btn .mubf-i { width: 17px; height: 17px; }
+.mubf-link { border: 0; background: none; padding: 2px 0; cursor: pointer; color: var(--mu-txt); font-size: 13.5px; font-weight: 500; text-decoration: underline; text-decoration-color: var(--hair); text-underline-offset: 3px; }
+.mubf-link:hover { text-decoration-color: currentColor; }
+.mubf-link:focus-visible { outline: 2px solid var(--mu-txt); outline-offset: 2px; border-radius: 3px; }
+
+/* option cards (radio / checkbox inside a label) */
+.mubf-opts { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+.mubf-opts.is-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.mubf-opts.is-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.mubf-opt { position: relative; display: block; cursor: pointer; min-width: 0; }
+.mubf-opt > input { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+.mubf-card { height: 100%; display: flex; flex-direction: column; gap: 4px; padding: 16px 16px 17px; border-radius: 13px; border: 1px solid var(--mu-line);
+  background: var(--mu-panel); transition: border-color .15s, box-shadow .15s, background-color .15s; position: relative; }
+.mubf-opt:hover .mubf-card { border-color: var(--hair); }
+.mubf-opt > input:checked + .mubf-card { border-color: var(--mu-acc); box-shadow: inset 0 0 0 1px var(--mu-acc); background: var(--tint); }
+.mubf-opt > input:focus-visible + .mubf-card { outline: 2px solid var(--mu-txt); outline-offset: 2px; }
+.mubf-opt.is-off { cursor: not-allowed; }
+.mubf-opt.is-off .mubf-card { opacity: 0.45; }
+.mubf-opt.is-off:hover .mubf-card { border-color: var(--mu-line); }
+.mubf-card b { font-weight: 600; font-size: 15px; letter-spacing: -0.01em; line-height: 1.3; }
+.mubf-card-txt { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+/* a row card: icon | text | indicator (the goal list, and every list on a phone) */
+.mubf-opts.is-row .mubf-card { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; column-gap: 14px; align-items: start; padding: 15px 15px 16px; }
+.mubf-opts.is-row .mubf-card-top { display: contents; }
+.mubf-opts.is-row .mubf-card-txt { order: 1; padding-top: 1px; }
+.mubf-opts.is-row .mubf-card-top .mubf-dot { order: 2; margin-top: 1px; }
+.mubf-opts.is-row .mubf-glyph { margin: 0; height: 36px; min-width: 36px; justify-content: center; }
+.mubf-opts.is-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.mubf-glyph .mubf-ic { background: none; width: auto; }
+.mubf-card-d { font-size: 13.5px; color: var(--mu-sub); line-height: 1.45; text-wrap: pretty; }
+.mubf-card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
+.mubf-ic { width: 36px; height: 36px; border-radius: 10px; background: var(--mu-soft); display: grid; place-items: center; color: var(--mu-txt); }
+.mubf-opt > input:checked + .mubf-card .mubf-ic { background: var(--mu-panel); box-shadow: 0 0 0 1px color-mix(in srgb, var(--mu-acc) 60%, var(--mu-line)); }
+.mubf-dot { width: 20px; height: 20px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--hair); display: grid; place-items: center; color: var(--mu-on-acc); transition: background-color .15s, box-shadow .15s; flex: none; }
+.mubf-dot.is-box { border-radius: 6px; }
+.mubf-dot .mubf-i { width: 13px; height: 13px; stroke-width: 3; opacity: 0; transform: scale(.6); transition: opacity .15s, transform .3s var(--ease); }
+.mubf-opt > input:checked + .mubf-card .mubf-dot { background: var(--mu-acc); box-shadow: none; }
+.mubf-opt > input:checked + .mubf-card .mubf-dot .mubf-i { opacity: 1; transform: none; }
+.mubf-tag { display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: .02em; padding: 2px 7px; border-radius: 999px; background: var(--mu-soft); color: var(--mu-sub); vertical-align: 2px; margin-left: 6px; }
+.mubf-opt > input:checked + .mubf-card .mubf-tag { background: var(--mu-panel); color: var(--mu-txt); }
+
+/* segmented control */
+.mubf-seg { display: inline-flex; align-self: flex-start; gap: 2px; padding: 4px; border-radius: 12px; background: var(--mu-soft); max-width: 100%; }
+.mubf-seg label { position: relative; min-width: 0; }
+.mubf-seg input { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+.mubf-seg span { display: inline-flex; align-items: center; gap: 8px; height: 38px; padding: 0 16px; border-radius: 9px; font-size: 14px; font-weight: 500; color: var(--mu-sub); cursor: pointer; white-space: nowrap; transition: background-color .15s, color .15s, box-shadow .15s; }
+.mubf-seg span .mubf-i { width: 16px; height: 16px; }
+.mubf-seg label:hover span { color: var(--mu-txt); }
+.mubf-seg input:checked + span { background: var(--mu-panel); color: var(--mu-txt); font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,.08), 0 0 0 1px var(--mu-line); }
+.mubf-seg input:focus-visible + span { outline: 2px solid var(--mu-txt); outline-offset: 1px; }
+
+/* uploads */
+.mubf-drop { display: flex; align-items: center; gap: 18px; padding: 22px 22px; border-radius: 14px; border: 1.5px dashed var(--hair);
+  background: color-mix(in srgb, var(--mu-panel) 55%, transparent); transition: border-color .15s, background-color .15s; }
+.mubf-drop.is-over { border-color: var(--mu-acc); background: var(--tint); }
+.mubf-drop .mubf-ic { width: 44px; height: 44px; border-radius: 12px; }
+.mubf-drop-t { min-width: 0; flex: 1; }
+.mubf-drop-t b { display: block; font-weight: 600; font-size: 14.5px; }
+.mubf-drop-t span { display: block; font-size: 13px; color: var(--mu-sub); }
+.mubf-files { display: grid; grid-template-columns: repeat(auto-fill, minmax(136px, 1fr)); gap: 14px 12px; margin-top: 4px; }
+.mubf-file { position: relative; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.mubf-thumb { position: relative; aspect-ratio: 4 / 3; border-radius: 10px; overflow: hidden; background: var(--mu-soft); box-shadow: inset 0 0 0 1px var(--mu-line); display: grid; place-items: center; color: var(--mu-sub); }
+.mubf-thumb img, .mubf-thumb video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.mubf-thumb .mubf-kind { position: absolute; left: 6px; bottom: 6px; height: 20px; padding: 0 6px; border-radius: 6px; background: var(--mu-chip); color: var(--mu-chip-txt); font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+.mubf-thumb .mubf-kind .mubf-i { width: 12px; height: 12px; }
+.mubf-bar-p { position: absolute; left: 8px; right: 8px; bottom: 8px; height: 4px; border-radius: 2px; background: color-mix(in srgb, var(--mu-bg) 70%, transparent); overflow: hidden; }
+.mubf-bar-p i { display: block; height: 100%; width: 0; background: var(--mu-acc); transition: width .2s; }
+.mubf-file-n { font-size: 12.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mubf-file-n.is-err { color: var(--mu-bad); white-space: normal; }
+.mubf-x { position: absolute; top: 6px; right: 6px; width: 26px; height: 26px; border-radius: 50%; border: 0; background: var(--mu-chip); color: var(--mu-chip-txt);
+  display: grid; place-items: center; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,.15); opacity: .92; }
+.mubf-x:hover { opacity: 1; }
+.mubf-x .mubf-i { width: 14px; height: 14px; stroke-width: 2.2; }
+.mubf-x:focus-visible { outline: 2px solid var(--mu-txt); outline-offset: 1px; }
+.mubf-note { display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 12px; background: var(--mu-soft); font-size: 13.5px; color: var(--mu-sub); line-height: 1.5; }
+.mubf-note .mubf-i { margin-top: 1px; color: var(--mu-txt); }
+
+/* length */
+.mubf-len { display: flex; align-items: baseline; gap: 14px; }
+.mubf-len output { font-size: 34px; font-weight: 600; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; line-height: 1; }
+.mubf-len output small { font-size: 18px; font-weight: 500; color: var(--mu-sub); margin-left: 3px; letter-spacing: 0; }
+.mubf-len span { font-size: 13.5px; color: var(--mu-sub); }
+.mubf-range { --p: 20%; -webkit-appearance: none; appearance: none; width: 100%; height: 28px; background: transparent; cursor: pointer; margin: 2px 0 0; }
+.mubf-range:focus { outline: none; }
+.mubf-range::-webkit-slider-runnable-track { height: 6px; border-radius: 3px; background: linear-gradient(to right, var(--mu-acc) var(--p), var(--mu-line) var(--p)); }
+.mubf-range::-moz-range-track { height: 6px; border-radius: 3px; background: var(--mu-line); }
+.mubf-range::-moz-range-progress { height: 6px; border-radius: 3px; background: var(--mu-acc); }
+.mubf-range::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px; margin-top: -9px; border-radius: 50%; background: #FFFFFF; border: 0;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.1), 0 2px 6px rgba(0,0,0,.2); transition: box-shadow .15s, transform .2s var(--ease); }
+.mubf-range::-moz-range-thumb { width: 24px; height: 24px; border-radius: 50%; background: #FFFFFF; border: 0; box-shadow: 0 0 0 1px rgba(0,0,0,.1), 0 2px 6px rgba(0,0,0,.2); }
+.mubf-range:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 1px rgba(0,0,0,.1), 0 0 0 6px var(--ring); }
+.mubf-range:active::-webkit-slider-thumb { transform: scale(1.08); }
+.mubf-ticks { display: flex; justify-content: space-between; padding: 0 5px; font-size: 12px; color: var(--mu-sub); font-variant-numeric: tabular-nums; margin-top: -2px; }
+
+/* format + storyboard glyphs */
+.mubf-glyph { height: 38px; display: flex; align-items: center; gap: 5px; color: var(--mu-txt); }
+.mubf-frame { display: block; border: 1.75px solid currentColor; border-radius: 4px; }
+.mubf-frame.r169 { width: 44px; height: 25px; } .mubf-frame.r916 { width: 20px; height: 34px; } .mubf-frame.r11 { width: 30px; height: 30px; }
+.mubf-frame.sm { width: 22px; height: 15px; border-radius: 3px; border-width: 1.5px; }
+.mubf-fmt-d { font-size: 13px; color: var(--mu-sub); font-variant-numeric: tabular-nums; }
+
+/* accent swatches */
+.mubf-swatches { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; min-height: 46px; }
+.mubf-sw { position: relative; display: block; cursor: pointer; }
+.mubf-sw input { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+.mubf-sw > span { display: block; width: 34px; height: 34px; border-radius: 50%; background: var(--c); box-shadow: inset 0 0 0 1px rgba(0,0,0,.08); transition: box-shadow .15s, transform .25s var(--ease); }
+.mubf-sw:hover > span { transform: scale(1.06); }
+.mubf-sw input:checked + span, .mubf-sw.is-on > span { box-shadow: 0 0 0 2px var(--mu-bg), 0 0 0 4px var(--mu-txt); }
+.mubf-sw input:focus-visible + span { outline: 2px solid var(--mu-txt); outline-offset: 5px; }
+.mubf-sw.is-custom > span { background: conic-gradient(from 90deg, #FF5A1F, #F5C518, #12A594, #3E63DD, #8E4EC6, #E5484D, #FF5A1F); display: grid; place-items: center; }
+.mubf-sw.is-custom > span::after { content: ''; width: 20px; height: 20px; border-radius: 50%; background: var(--mu-bg); }
+.mubf-sw.is-custom.is-on > span { background: var(--c); }
+.mubf-sw.is-custom.is-on > span::after { display: none; }
+.mubf-sw.is-custom input[type="color"] { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; pointer-events: auto; border: 0; padding: 0; }
+.mubf-sw.is-custom:focus-within > span { outline: 2px solid var(--mu-txt); outline-offset: 5px; }
+.mubf-hex { font-size: 13px; color: var(--mu-sub); font-variant-numeric: tabular-nums; min-width: 64px; }
+.mubf-divider { width: 1px; height: 24px; background: var(--mu-line); margin: 0 4px; }
+.mubf-pill { position: relative; }
+.mubf-pill input { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+.mubf-pill span { display: inline-flex; align-items: center; gap: 7px; height: 36px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--mu-line); font-size: 13.5px; font-weight: 500; color: var(--mu-sub); cursor: pointer; transition: .15s; white-space: nowrap; }
+.mubf-pill span .mubf-i { width: 15px; height: 15px; }
+.mubf-pill:hover span { color: var(--mu-txt); border-color: var(--hair); }
+.mubf-pill input:checked + span { color: var(--mu-txt); border-color: var(--mu-acc); box-shadow: inset 0 0 0 1px var(--mu-acc); background: var(--tint); font-weight: 600; }
+.mubf-pill input:focus-visible + span { outline: 2px solid var(--mu-txt); outline-offset: 2px; }
+
+/* the library gallery */
+.mubf-lib { margin-top: 44px; padding-top: 36px; border-top: 1px solid var(--mu-line); }
+.mubf-lib-head { display: flex; align-items: flex-end; flex-wrap: wrap; gap: 12px 24px; }
+.mubf-lib-head > div:first-child { flex: 1 1 360px; min-width: 0; }
+.mubf-lib-head h2 { margin: 0; font-size: 20px; font-weight: 600; letter-spacing: -0.02em; }
+.mubf-lib-head p { margin: 6px 0 0; font-size: 14px; color: var(--mu-sub); }
+.mubf-count { display: inline-flex; align-items: center; gap: 10px; height: 36px; padding: 0 6px 0 14px; border-radius: 999px; background: var(--mu-soft); font-size: 13.5px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.mubf-count b { font-weight: 600; }
+.mubf-count.is-on { background: var(--mu-txt); color: var(--mu-bg); }
+.mubf-count .mubf-link { color: inherit; font-size: 13px; padding: 4px 8px; }
+.mubf-count:not(.is-on) .mubf-link { display: none; }
+.mubf-count:not(.is-on) { padding-right: 14px; }
+.mubf-tools { display: flex; align-items: center; gap: 14px; margin: 22px 0 22px; }
+.mubf-search { position: relative; flex: 0 0 280px; }
+.mubf-search .mubf-i { position: absolute; left: 13px; top: 50%; margin-top: -8px; width: 16px; height: 16px; color: var(--mu-sub); pointer-events: none; }
+.mubf-search .mubf-input { height: 40px; padding-left: 38px; font-size: 14px; border-radius: 999px; }
+.mubf-chips { flex: 1; min-width: 0; display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; scroll-behavior: smooth; padding: 3px 2px; }
+.mubf-chips::-webkit-scrollbar { display: none; }
+.mubf-chips.is-l { -webkit-mask-image: linear-gradient(to right, transparent, #000 36px); mask-image: linear-gradient(to right, transparent, #000 36px); }
+.mubf-chips.is-r { -webkit-mask-image: linear-gradient(to left, transparent, #000 48px); mask-image: linear-gradient(to left, transparent, #000 48px); }
+.mubf-chips.is-l.is-r { -webkit-mask-image: linear-gradient(to right, transparent, #000 36px, #000 calc(100% - 48px), transparent); mask-image: linear-gradient(to right, transparent, #000 36px, #000 calc(100% - 48px), transparent); }
+.mubf-chip { flex: none; height: 34px; padding: 0 13px; border-radius: 999px; border: 1px solid var(--mu-line); background: transparent; cursor: pointer; font-size: 13.5px; font-weight: 500; color: var(--mu-sub); white-space: nowrap; display: inline-flex; align-items: center; gap: 7px; transition: .15s; }
+.mubf-chip span { font-size: 12px; opacity: .7; font-variant-numeric: tabular-nums; }
+.mubf-chip:hover { color: var(--mu-txt); border-color: var(--hair); }
+.mubf-chip[aria-pressed="true"] { background: var(--mu-txt); color: var(--mu-bg); border-color: var(--mu-txt); }
+.mubf-chip:focus-visible { outline: 2px solid var(--mu-txt); outline-offset: 2px; }
+.mubf-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(212px, 1fr)); gap: 22px 16px; }
+.mubf-tile { display: flex; flex-direction: column; gap: 9px; min-width: 0; padding: 0; border: 0; background: none; text-align: left; cursor: pointer; }
+.mubf-scr { position: relative; display: block; width: 100%; aspect-ratio: 16 / 9; border-radius: 11px; overflow: hidden; background: var(--stage);
+  box-shadow: 0 0 0 1px var(--mu-line); transition: box-shadow .2s, transform .35s var(--ease); isolation: isolate; }
+.mubf-tile:hover .mubf-scr { box-shadow: 0 0 0 1px var(--hair), 0 10px 24px -14px rgba(0,0,0,.45); transform: translateY(-2px); }
+.mubf-tile[aria-pressed="true"] .mubf-scr { box-shadow: 0 0 0 2px var(--mu-acc), 0 0 0 6px var(--ring); }
+.mubf-tile:focus-visible { outline: none; }
+.mubf-tile:focus-visible .mubf-scr { box-shadow: 0 0 0 2px var(--mu-txt), 0 0 0 5px var(--mu-bg); }
+.mubf-tile[aria-pressed="true"]:focus-visible .mubf-scr { box-shadow: 0 0 0 2px var(--mu-acc), 0 0 0 5px var(--mu-txt); }
+.mubf-check { position: absolute; z-index: 3; top: 8px; right: 8px; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--mu-chip); color: var(--mu-chip-txt); box-shadow: 0 1px 4px rgba(0,0,0,.18); opacity: 0; transform: scale(.7); transition: opacity .15s, transform .35s var(--ease), background-color .15s; }
+.mubf-check .mubf-i { width: 14px; height: 14px; stroke-width: 2.6; }
+.mubf-tile:hover .mubf-check, .mubf-tile:focus-visible .mubf-check { opacity: 1; transform: none; }
+.mubf-tile[aria-pressed="true"] .mubf-check { opacity: 1; transform: none; background: var(--mu-acc); color: var(--mu-on-acc); }
+.mubf-tile .mubf-check .i-plus { display: block; } .mubf-tile .mubf-check .i-check { display: none; }
+.mubf-tile[aria-pressed="true"] .mubf-check .i-plus { display: none; } .mubf-tile[aria-pressed="true"] .mubf-check .i-check { display: block; }
+.mubf-tile-meta { display: flex; align-items: baseline; gap: 8px; min-width: 0; padding: 0 2px; }
+.mubf-tile-nm { font-size: 13.5px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.mubf-tile[aria-pressed="true"] .mubf-tile-nm { font-weight: 600; }
+.mubf-tile-du { margin-left: auto; font-size: 12px; color: var(--mu-sub); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.mubf-tile-ct { font-size: 12px; color: var(--mu-sub); margin-top: -6px; padding: 0 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mubf-empty { padding: 48px 0; text-align: center; color: var(--mu-sub); }
+
+/* motion presets */
+.mubf-motion { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.mubf-motion .mubf-card { padding: 8px 8px 16px; gap: 0; }
+.mubf-motion .mubf-scr { border-radius: 8px; box-shadow: 0 0 0 1px var(--mu-line); }
+.mubf-motion .mubf-opt:hover .mubf-scr { transform: none; }
+.mubf-mhead { display: flex; align-items: center; gap: 10px; padding: 14px 8px 4px; min-height: 44px; }
+.mubf-mhead b { flex: 1; min-width: 0; }
+.mubf-motion .mubf-card-d { padding: 0 8px; }
+.mubf-curve { width: 46px; height: 26px; flex: none; overflow: visible; }
+.mubf-curve path.c { fill: none; stroke: var(--mu-txt); stroke-width: 1.8; stroke-linecap: round; }
+.mubf-curve path.g { fill: none; stroke: var(--mu-line); stroke-width: 1; stroke-dasharray: 2 2.5; }
+.mubf-agentviz { position: absolute; inset: 0; display: grid; place-items: center; background: var(--mu-soft); }
+.mubf-agentviz svg { width: 62%; height: auto; overflow: visible; }
+.mubf-agentviz path.c { fill: none; stroke: var(--mu-sub); stroke-width: 1.4; stroke-linecap: round; opacity: .55; }
+.mubf-agentviz path.g { fill: none; stroke: var(--mu-line); stroke-width: 1; stroke-dasharray: 3 3; }
+.mubf-agentviz .mubf-i { position: absolute; width: 22px; height: 22px; color: var(--mu-txt); top: 14px; right: 14px; }
+.mubf-play { margin-top: 14px; }
+
+/* review */
+.mubf-step.is-review { max-width: 1080px; }
+.mubf-sum { display: grid; gap: 14px; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+.mubf-sum > section:first-child { grid-column: 1 / -1; }
+.mubf-sum > section { background: var(--mu-panel); border: 1px solid var(--mu-line); border-radius: 16px; padding: 20px 22px 22px; }
+.mubf-sum header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.mubf-sum header .n { width: 24px; height: 24px; border-radius: 50%; background: var(--mu-soft); display: grid; place-items: center; font-size: 12px; font-weight: 600; color: var(--mu-sub); }
+.mubf-sum h2 { margin: 0; font-size: 16px; font-weight: 600; letter-spacing: -0.01em; flex: 1; }
+.mubf-dl { display: grid; grid-template-columns: 128px minmax(0, 1fr); gap: 10px 18px; margin: 0; font-size: 14.5px; }
+.mubf-dl dt { color: var(--mu-sub); }
+.mubf-dl dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+.mubf-about { white-space: pre-wrap; display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.55; }
+.mubf-ag { display: inline-flex; align-items: center; gap: 6px; color: var(--mu-sub); }
+.mubf-ag .mubf-i { width: 15px; height: 15px; color: var(--mu-txt); }
+.mubf-none { color: var(--mu-sub); }
+.mubf-sw-sm { display: inline-block; width: 14px; height: 14px; border-radius: 50%; vertical-align: -2px; margin-right: 8px; box-shadow: inset 0 0 0 1px rgba(0,0,0,.1); }
+.mubf-minis { display: flex; flex-wrap: wrap; gap: 10px; }
+.mubf-mini { width: 108px; display: flex; flex-direction: column; gap: 5px; font-size: 12px; color: var(--mu-sub); min-width: 0; }
+.mubf-mini .mubf-scr { border-radius: 7px; }
+.mubf-mini > span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mubf-mini .mubf-thumb { border-radius: 7px; }
+.mubf-inline { display: inline-flex; align-items: center; gap: 8px; }
+.mubf-inline .mubf-curve { width: 34px; height: 20px; }
+.mubf-problems { margin-top: 16px; padding: 14px 16px; border-radius: 12px; border: 1px solid color-mix(in srgb, var(--mu-bad) 40%, var(--mu-line)); background: color-mix(in srgb, var(--mu-bad) 7%, var(--mu-panel)); font-size: 13.5px; }
+.mubf-problems b { color: var(--mu-bad); }
+.mubf-problems ul { margin: 6px 0 0; padding-left: 18px; }
+
+/* the brief as JSON (artifact, and the fallback when the local server is gone) */
+.mubf-json { margin-top: 22px; border-radius: 16px; border: 1px solid var(--mu-line); background: var(--mu-panel); overflow: hidden; }
+.mubf-json header { display: flex; align-items: center; gap: 16px; padding: 18px 20px; border-bottom: 1px solid var(--mu-line); flex-wrap: wrap; }
+.mubf-json header div { flex: 1 1 260px; min-width: 0; }
+.mubf-json h2 { margin: 0; font-size: 16px; font-weight: 600; }
+.mubf-json p { margin: 4px 0 0; font-size: 13.5px; color: var(--mu-sub); }
+.mubf-json pre { margin: 0; padding: 18px 20px; max-height: 420px; overflow: auto; font: 13px/1.6 Inter, 'Helvetica Neue', system-ui, sans-serif; font-variant-numeric: tabular-nums; white-space: pre-wrap; overflow-wrap: anywhere; tab-size: 2; background: var(--mu-field); user-select: all; }
+.mubf-done .mubf-json { margin-top: 28px; }
+
+/* done */
+.mubf-done { max-width: 620px; padding-top: clamp(8px, 6vh, 64px); }
+.mubf-done-mark { width: 64px; height: 64px; margin-bottom: 28px; }
+.mubf-done-mark circle { fill: var(--mu-acc); transform-origin: 50% 50%; animation: mubf-pop .6s var(--ease) both; }
+.mubf-done-mark path { fill: none; stroke: var(--mu-on-acc); stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 30; stroke-dashoffset: 30; animation: mubf-draw .5s .25s var(--ease) forwards; }
+@keyframes mubf-pop { from { transform: scale(.4); opacity: 0; } }
+@keyframes mubf-draw { to { stroke-dashoffset: 0; } }
+.mubf-done h1 { margin: 0; font-size: clamp(30px, 3.3vw, 42px); line-height: 1.06; letter-spacing: -0.032em; font-weight: 600; outline: none; }
+.mubf-done > p { margin: 14px 0 0; font-size: 16.5px; color: var(--mu-sub); line-height: 1.55; text-wrap: pretty; }
+.mubf-facts { margin-top: 28px; display: grid; gap: 1px; border-radius: 14px; overflow: hidden; border: 1px solid var(--mu-line); background: var(--mu-line); }
+.mubf-facts > div { display: flex; gap: 16px; padding: 14px 18px; background: var(--mu-panel); font-size: 14px; }
+.mubf-facts dt { color: var(--mu-sub); width: 128px; flex: none; }
+.mubf-facts dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+.mubf-done .mubf-actions { margin-top: 28px; display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* the bottom bar */
+.mubf-bar { position: sticky; bottom: 0; z-index: 10; padding: 14px var(--pad); padding-bottom: max(14px, env(safe-area-inset-bottom));
+  background: color-mix(in srgb, var(--mu-bg) 86%, transparent); -webkit-backdrop-filter: saturate(1.3) blur(16px); backdrop-filter: saturate(1.3) blur(16px); border-top: 1px solid var(--mu-line); }
+.mubf-bar-in { display: flex; align-items: center; gap: 12px; max-width: 760px; }
+.mubf-bar-in.is-wide { max-width: 1240px; }
+.mubf-bar-in.is-review { max-width: 1080px; }
+.mubf-bar .grow { flex: 1; }
+.mubf-kbd { font-size: 12.5px; color: var(--mu-sub); display: inline-flex; align-items: center; gap: 6px; }
+.mubf-kbd kbd { font: 600 11.5px/1 Inter, system-ui, sans-serif; padding: 4px 6px; border-radius: 5px; background: var(--mu-soft); box-shadow: inset 0 -1px 0 var(--mu-line); color: var(--mu-txt); }
+.mubf-status { font-size: 13px; color: var(--mu-sub); }
+.mubf-status.is-bad { color: var(--mu-bad); }
+
+/* narrower screens */
+@media (max-width: 1180px) {
+  .mubf { grid-template-columns: 248px minmax(0, 1fr); }
+  .mubf-rail { padding-left: 22px; padding-right: 16px; }
+  .mubf-opts.is-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .mubf-motion { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 880px) {
+  .mubf { grid-template-columns: minmax(0, 1fr); --pad: 16px; }
+  .mubf-rail { display: none; }
+  .mubf-top { display: flex; flex-direction: column; gap: 11px; position: sticky; top: 0; z-index: 10; padding: 13px 16px 12px;
+    background: color-mix(in srgb, var(--mu-bg) 88%, transparent); -webkit-backdrop-filter: saturate(1.3) blur(16px); backdrop-filter: saturate(1.3) blur(16px); border-bottom: 1px solid var(--mu-line); }
+  .mubf-top-row { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+  .mubf-top-row .mubf-mark { width: 26px; height: 16px; } .mubf-top-row .mubf-mark::after { width: 10px; height: 10px; }
+  .mubf-top-row b { font-weight: 600; } #mubf-top-n { color: var(--mu-sub); margin-left: auto; font-variant-numeric: tabular-nums; font-size: 13px; }
+  .mubf-prog { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; }
+  .mubf-prog button { height: 4px; border-radius: 2px; border: 0; padding: 0; background: var(--mu-line); cursor: pointer; transition: background-color .2s; }
+  .mubf-prog button.is-done { background: var(--mu-acc); } .mubf-prog button.is-on { background: var(--mu-txt); }
+  .mubf-body { padding: 28px 16px 40px; }
+  .mubf-sh { margin-bottom: 30px; }
+  .mubf-sh h1, .mubf-done h1 { font-size: 30px; }
+  .mubf-sh p { font-size: 15.5px; }
+  .mubf-2col { grid-template-columns: minmax(0, 1fr); }
+  .mubf-2col { gap: 28px; }
+  .mubf-group + .mubf-group, .mubf-2col + .mubf-group, .mubf-group + .mubf-2col, .mubf-row + .mubf-group, .mubf-group + .mubf-row { margin-top: 30px; }
+  .mubf-row { gap: 30px; }
+  .mubf-opts, .mubf-opts.is-2, .mubf-opts.is-3, .mubf-opts.is-4 { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .mubf-opts .mubf-card { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; column-gap: 14px; align-items: start; padding: 14px; }
+  .mubf-opts .mubf-card-top { display: contents; }
+  .mubf-opts .mubf-card-txt { order: 1; padding-top: 1px; }
+  .mubf-opts .mubf-card-top .mubf-dot { order: 2; margin-top: 1px; }
+  .mubf-opts .mubf-glyph { margin: 0; height: 36px; min-width: 36px; justify-content: center; }
+  .mubf-opts.is-fmt { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .mubf-opts.is-fmt .mubf-card { display: flex; padding: 12px; }
+  .mubf-opts.is-fmt .mubf-card-top { display: flex; }
+  .mubf-opts.is-fmt .mubf-glyph { justify-content: flex-start; margin-bottom: 8px; }
+  .mubf-opts.is-fmt .mubf-dot { display: none; }
+  .mubf-drop { flex-wrap: wrap; padding: 18px; }
+  .mubf-drop .mubf-btn { width: 100%; }
+  .mubf-files { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .mubf-seg { display: flex; width: 100%; align-self: stretch; } .mubf-seg label { flex: 1 1 auto; } .mubf-seg span { width: 100%; justify-content: center; padding: 0 10px; gap: 6px; }
+  .mubf-lib { margin-top: 34px; padding-top: 28px; }
+  .mubf-tools { flex-direction: column; align-items: stretch; gap: 12px; }
+  .mubf-search { flex: none; }
+  .mubf-chips { margin: 0 -16px; padding: 3px 16px; }
+  .mubf-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 10px; }
+  .mubf-tile-du { display: none; }
+  .mubf-motion { grid-template-columns: minmax(0, 1fr); }
+  .mubf-sum { grid-template-columns: minmax(0, 1fr); }
+  .mubf-dl { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  .mubf-dl dd { margin-bottom: 12px; }
+  .mubf-sum > section { padding: 16px 16px 6px; }
+  .mubf-kbd { display: none; }
+  .mubf-bar { padding: 12px 16px; padding-bottom: max(12px, env(safe-area-inset-bottom)); }
+  .mubf-bar .grow { display: none; }
+  .mubf-bar .mubf-btn.is-primary { flex: 1; }
+  .mubf-divider { display: none; }
+  .mubf-motion { gap: 10px; }
+  .mubf-motion .mubf-card { display: grid; grid-template-columns: minmax(0, 46%) minmax(0, 1fr); grid-template-rows: auto 1fr; column-gap: 12px; padding: 8px; }
+  .mubf-motion .mubf-scr { grid-row: 1 / 3; align-self: start; }
+  .mubf-motion .mubf-mhead { padding: 4px 0 4px; min-height: 0; gap: 8px; }
+  .mubf-motion .mubf-mhead .mubf-curve { width: 34px; height: 20px; }
+  .mubf-motion .mubf-card-d { padding: 0 0 4px; font-size: 12.5px; line-height: 1.4; }
+  .mubf-motion .mubf-tag { display: none; }
+  .mubf-facts > div { flex-direction: column; gap: 2px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mubf *, .mubf *::before, .mubf *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  .mubf-done-mark path { stroke-dashoffset: 0; }
+}
+</style>
+<!--/MU:HEAD-->
+</head>
+<body>
+<!--MU:BODY-->
+<div class="mubf" id="mubf">
+  <aside class="mubf-rail" aria-label="Brief">
+    <div class="mubf-brand"><span class="mubf-mark" aria-hidden="true"></span><div><b>GL Motion</b><span>New film brief</span></div></div>
+    <nav class="mubf-nav" aria-label="Steps"><ol id="mubf-nav"></ol></nav>
+    <div class="mubf-rail-foot" id="mubf-foot"></div>
+  </aside>
+
+  <div class="mubf-main">
+    <div class="mubf-top" id="mubf-top">
+      <div class="mubf-top-row"><span class="mubf-mark" aria-hidden="true"></span><b id="mubf-top-name">Product</b><span id="mubf-top-n">1 of 6</span></div>
+      <div class="mubf-prog" id="mubf-prog" role="group" aria-label="Steps"></div>
+    </div>
+
+    <form class="mubf-body" id="mubf-form" novalidate autocomplete="off">
+      <!-- 1 Product -->
+      <section class="mubf-step" data-i="0" aria-labelledby="mubf-h0" hidden>
+        <header class="mubf-sh"><div class="mubf-eyebrow">Step 1 of 6</div><h1 id="mubf-h0" tabindex="-1">Your product</h1>
+          <p>What the film is about. Your agent writes every line from this, so be as exact as you like.</p></header>
+        <div class="mubf-2col">
+          <div class="mubf-group"><label class="mubf-label" for="f-name">Product name</label>
+            <input class="mubf-input" id="f-name" name="name" type="text" placeholder="Acme Boards" maxlength="120" spellcheck="false"></div>
+          <div class="mubf-group"><label class="mubf-label" for="f-url">Website <small>optional</small></label>
+            <input class="mubf-input" id="f-url" name="url" type="url" inputmode="url" placeholder="acme.com" maxlength="500" spellcheck="false" aria-describedby="f-url-hint f-url-err">
+            <p class="mubf-err" id="f-url-err" hidden></p>
+            <p class="mubf-hint" id="f-url-hint">Your agent captures its screenshots, colours and logo first.</p></div>
+        </div>
+        <div class="mubf-group"><label class="mubf-label" for="f-about">What it is, and what to say</label>
+          <textarea class="mubf-textarea" id="f-about" name="about" rows="7" maxlength="8000" placeholder="What it is and who it’s for.&#10;The one message the film should land.&#10;The features to show, in order.&#10;Exact copy: names, prices, codes, dates."></textarea></div>
+        <div class="mubf-group" id="g-files">
+          <div class="mubf-label">Screenshots, logo and clips <small>optional</small></div>
+          <div id="g-files-body"></div>
+        </div>
+      </section>
+
+      <!-- 2 Film -->
+      <section class="mubf-step" data-i="1" aria-labelledby="mubf-h1" hidden>
+        <header class="mubf-sh"><div class="mubf-eyebrow">Step 2 of 6</div><h1 id="mubf-h1" tabindex="-1">The film</h1>
+          <p>What it is for, how long it runs and where it plays.</p></header>
+        <div class="mubf-group" role="radiogroup" aria-labelledby="l-goal"><div class="mubf-label" id="l-goal">Goal</div><div class="mubf-opts is-2 is-row" id="g-goal"></div></div>
+        <div class="mubf-group"><label class="mubf-label" for="f-cta">Call to action <small>optional</small></label>
+          <input class="mubf-input" id="f-cta" name="cta" type="text" placeholder="Try it free" maxlength="120" style="max-width: 420px">
+          <p class="mubf-hint">The last scene’s button or line. Leave it empty and your agent writes one.</p></div>
+        <div class="mubf-group"><label class="mubf-label" for="f-dur">Length</label>
+          <div class="mubf-len"><output id="f-dur-out" for="f-dur">20<small>s</small></output><span id="f-dur-hint"></span></div>
+          <input class="mubf-range" id="f-dur" name="duration" type="range" min="10" max="60" step="1" value="20" aria-describedby="f-dur-hint">
+          <div class="mubf-ticks" aria-hidden="true"><span>10</span><span>20</span><span>30</span><span>40</span><span>50</span><span>60 s</span></div></div>
+        <div class="mubf-group" role="radiogroup" aria-labelledby="l-format"><div class="mubf-label" id="l-format">Format</div><div class="mubf-opts is-3 is-fmt" id="g-format"></div></div>
+        <div class="mubf-group" style="max-width: 360px"><label class="mubf-label" for="f-lang">Language</label><select class="mubf-select" id="f-lang" name="language"></select>
+          <p class="mubf-hint">Of every line on screen, and of the voice-over.</p></div>
+      </section>
+
+      <!-- 3 Look -->
+      <section class="mubf-step is-wide" data-i="2" aria-labelledby="mubf-h2" hidden>
+        <header class="mubf-sh"><div class="mubf-eyebrow">Step 3 of 6</div><h1 id="mubf-h2" tabindex="-1">The look</h1>
+          <p>How the film is built, where its scenes come from, and the colours they wear.</p></header>
+        <div class="mubf-group" role="radiogroup" aria-labelledby="l-engine"><div class="mubf-label" id="l-engine">Engine</div><div class="mubf-opts is-3" id="g-engine"></div></div>
+        <div class="mubf-group" role="radiogroup" aria-labelledby="l-source" id="g-source-group"><div class="mubf-label" id="l-source">Scenes</div><div class="mubf-opts is-4" id="g-source"></div></div>
+        <div class="mubf-row">
+          <div class="mubf-group" role="radiogroup" aria-labelledby="l-theme"><div class="mubf-label" id="l-theme">Theme</div><div class="mubf-seg" id="g-theme"></div></div>
+          <div class="mubf-group" role="radiogroup" aria-labelledby="l-accent"><div class="mubf-label" id="l-accent">Accent colour</div><div class="mubf-swatches" id="g-accent"></div></div>
+        </div>
+        <div class="mubf-lib" id="g-lib">
+          <div class="mubf-lib-head">
+            <div><h2>Pick the items you like</h2><p id="g-lib-sub">Optional. Hover to play, click to pick — your agent uses them where they fit the story.</p></div>
+            <div class="mubf-count" id="g-count" aria-live="polite"><span><b id="g-count-n">0</b> picked</span><button type="button" class="mubf-link" id="g-clear">Clear</button></div>
+          </div>
+          <div class="mubf-tools">
+            <div class="mubf-search"><svg class="mubf-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z"/><path d="m21 21-4.3-4.3"/></svg>
+              <input class="mubf-input" id="g-q" type="search" placeholder="Search items" aria-label="Search the library" spellcheck="false"></div>
+            <div class="mubf-chips" id="g-chips" role="group" aria-label="Categories"></div>
+          </div>
+          <div class="mubf-grid" id="g-grid"></div>
+          <div class="mubf-empty" id="g-empty" hidden></div>
+        </div>
+      </section>
+
+      <!-- 4 Motion -->
+      <section class="mubf-step is-wide" data-i="3" aria-labelledby="mubf-h3" hidden>
+        <header class="mubf-sh"><div class="mubf-eyebrow">Step 4 of 6</div><h1 id="mubf-h3" tabindex="-1">The motion</h1>
+          <p>How everything moves. Each preset keeps the timing and changes the easing. Here is the same toggle in each.</p>
+          <button type="button" class="mubf-btn mubf-play" id="g-play" hidden><svg class="mubf-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3l14 9-14 9V3z"/></svg>Play the previews</button></header>
+        <div class="mubf-motion" id="g-motion" role="radiogroup" aria-label="Motion preset"></div>
+      </section>
+
+      <!-- 5 Workflow -->
+      <section class="mubf-step" data-i="4" aria-labelledby="mubf-h4" hidden>
+        <header class="mubf-sh"><div class="mubf-eyebrow">Step 5 of 6</div><h1 id="mubf-h4" tabindex="-1">How we work</h1>
+          <p>What you see before the render, and what you get at the end.</p></header>
+        <div class="mubf-group" role="radiogroup" aria-labelledby="l-story"><div class="mubf-label" id="l-story">Storyboard</div>
+          <p class="mubf-hint">Variants are different takes on the scenario, to choose from before the full preview.</p><div class="mubf-opts is-3" id="g-story"></div></div>
+        <div class="mubf-group" role="radiogroup" aria-labelledby="l-voice"><div class="mubf-label" id="l-voice">Voice-over</div>
+          <p class="mubf-hint">A spoken line per scene, recorded after you approve the preview.</p><div class="mubf-seg" id="g-voice"></div></div>
+        <div class="mubf-group" role="group" aria-labelledby="l-output"><div class="mubf-label" id="l-output">Deliver</div>
+          <p class="mubf-hint">Pick any.</p><div class="mubf-opts is-3" id="g-output"></div></div>
+      </section>
+
+      <!-- 6 Review -->
+      <section class="mubf-step is-review" data-i="5" aria-labelledby="mubf-h5" hidden>
+        <header class="mubf-sh"><div class="mubf-eyebrow">Step 6 of 6</div><h1 id="mubf-h5" tabindex="-1">Ready to start</h1>
+          <p id="mubf-review-sub"></p></header>
+        <div class="mubf-sum" id="g-sum"></div>
+        <div class="mubf-problems" id="g-problems" role="alert" hidden></div>
+        <section class="mubf-json" id="g-json" hidden aria-labelledby="g-json-h">
+          <header><div><h2 id="g-json-h">For your agent</h2><p id="g-json-p">Copy it, then paste it into your agent.</p></div>
+            <button type="button" class="mubf-btn" id="g-copy"><svg class="mubf-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 8h11a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V8Z"/><path d="M16 8V5a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h4"/></svg><span>Copy</span></button></header>
+          <pre id="g-json-pre" tabindex="0" aria-label="The prompt for your agent, with the brief"></pre>
+        </section>
+      </section>
+
+      <!-- done (local) -->
+      <section class="mubf-done" id="mubf-done" aria-labelledby="mubf-hd" hidden>
+        <svg class="mubf-done-mark" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="32"/><path d="M20 33l8 8 16-17"/></svg>
+        <h1 id="mubf-hd" tabindex="-1">Your brief is in</h1>
+        <p id="g-done-p">Your agent is picking it up now. Head back to it: the next thing you see is a scenario to approve, before anything is built.</p>
+        <section class="mubf-json" id="g-hand" hidden aria-labelledby="g-hand-h">
+          <header><div><h2 id="g-hand-h">For your agent</h2><p>Claude Code, Codex, Gemini or any agent that reads skills.</p></div>
+            <button type="button" class="mubf-btn is-primary" id="g-hand-copy"><svg class="mubf-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 8h11a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V8Z"/><path d="M16 8V5a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h4"/></svg><span>Copy</span></button></header>
+          <pre id="g-hand-pre" tabindex="0" aria-label="The prompt for your agent"></pre>
+        </section>
+        <dl class="mubf-facts" id="g-facts"></dl>
+        <div class="mubf-actions"><button type="button" class="mubf-btn" id="g-edit">Edit answers</button></div>
+      </section>
+    </form>
+
+    <div class="mubf-bar" id="mubf-bar">
+      <div class="mubf-bar-in" id="mubf-bar-in">
+        <button type="button" class="mubf-btn is-ghost" id="b-back"><svg class="mubf-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>Back</button>
+        <span class="grow"></span>
+        <span class="mubf-status" id="b-status" aria-live="polite"></span>
+        <span class="mubf-kbd" id="b-kbd"><kbd>Enter</kbd> to continue</span>
+        <button type="button" class="mubf-btn is-primary" id="b-next"><span id="b-next-t">Next</span><svg class="mubf-i" id="b-next-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button>
+      </div>
+    </div>
+  </div>
+</div>
+@@SCRIPTS@@
+<script>
+(function () {
+'use strict';
+const DATA = @@DATA@@;
+const K = window.UIK;
+const LOCAL = DATA.target === 'local';
+// no agent is waiting for this page (the user started it, or it is an artifact): it ends by copying a
+// prompt with every path, for whichever agent the user runs
+const HANDOFF = !DATA.agent;
+const V = DATA.values;
+const $ = (id) => document.getElementById(id);
+const app = $('mubf'); const form = $('mubf-form');
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const ico = (name, cls) => `<svg class="mubf-i${cls ? ' ' + cls : ''}" viewBox="0 0 24 24" aria-hidden="true">${(K.ICONS[name] || K.ICONS.dot).map((d) => `<path d="${d}"/>`).join('')}</svg>`;
+const W = 1920; const HOLD = 0.9;
+
+// ── the answers ──
+const STEPS = [['Product', 'product'], ['Film', 'film'], ['Look', 'look'], ['Motion', 'motion'], ['Workflow', 'workflow'], ['Review', 'review']];
+const GOALS = [
+  ['promo', 'Product promo', 'What it is and why it matters, in one sweep.', 'zap', 'Promo'],
+  ['explainer', 'Feature explainer', 'One feature, shown step by step.', 'layers', 'Explainer'],
+  ['tutorial', 'Tutorial', 'How to do something, in order.', 'list', 'Tutorial'],
+  ['launch', 'Launch teaser', 'A hook, a reveal and a date.', 'flag', 'Launch'],
+  ['social', 'Social clip', 'Short and punchy, made for the feed.', 'heart', 'Social'],
+  ['agent', 'Let the agent decide', 'It reads your brief and picks the shape.', 'sparkle', 'Any goal'],
+];
+const FORMATS = [['16:9', 'Landscape', '1920 × 1080', 'r169'], ['9:16', 'Vertical', '1080 × 1920', 'r916'], ['1:1', 'Square', '1080 × 1080', 'r11']];
+const LANGS = [['en', 'English'], ['es', 'Español', 'Spanish'], ['de', 'Deutsch', 'German'], ['fr', 'Français', 'French'], ['pt', 'Português', 'Portuguese'],
+  ['pt-BR', 'Português do Brasil', 'Portuguese, Brazil'], ['it', 'Italiano', 'Italian'], ['nl', 'Nederlands', 'Dutch'], ['pl', 'Polski', 'Polish'],
+  ['uk', 'Українська', 'Ukrainian'], ['cs', 'Čeština', 'Czech'], ['sv', 'Svenska', 'Swedish'], ['da', 'Dansk', 'Danish'], ['tr', 'Türkçe', 'Turkish'],
+  ['ru', 'Русский', 'Russian'], ['ar', 'العربية', 'Arabic'], ['he', 'עברית', 'Hebrew'], ['hi', 'हिन्दी', 'Hindi'], ['id', 'Bahasa Indonesia', 'Indonesian'],
+  ['vi', 'Tiếng Việt', 'Vietnamese'], ['th', 'ไทย', 'Thai'], ['ja', '日本語', 'Japanese'], ['ko', '한국어', 'Korean'], ['zh', '简体中文', 'Chinese, Simplified'], ['zh-TW', '繁體中文', 'Chinese, Traditional']];
+const SOURCES = [
+  ['library', 'From the library', `Ready-made items, re-worded with your copy and pictures. Fast, and one consistent look.`, 'grid', 'Library', 'Fastest'],
+  ['new', 'Brand-new motion graphics', 'Every scene designed from scratch for your brand. Slower, and unique.', 'pencil', 'Brand-new'],
+  ['mix', 'Mix', 'Library items, plus new ones wherever nothing fits.', 'layers', 'Mix'],
+  ['agent', 'Let the agent decide', 'It chooses scene by scene, from your story.', 'sparkle', 'Any source'],
+];
+const THEMES = [['light', 'Light', 'sun'], ['dark', 'Dark', 'moon'], ['agent', 'Agent decides', 'sparkle']];
+const ENGINES = [
+  ['default', 'Default', 'Animated UI as layers, with 3D space: cards that turn, depth, camera moves. Every layer editable in the Video Editor and After Effects.', 'layers', 'Default', 'Editable'],
+  ['3d', '3D engine', 'Real 3D: objects, lights, glow and particles. Each scene is its own HTML page: the Video Editor gets it as an HTML scene, and there is no After Effects export.', 'cube', '3D engine'],
+  ['agent', 'Let the agent decide', 'Default, unless your story needs real 3D objects.', 'sparkle', 'Agent decides'],
+];
+const PRESETS = [
+  ['spring', 'Spring', 'Calm and premium. Moves leave softly and arrive with a long settle; nothing bounces.', 'Spring Out', 'Default'],
+  ['snappy', 'Snappy', 'Fast, decisive arrivals for energetic promos and quick social cuts.', 'Expo Out'],
+  ['gentle', 'Gentle', 'Slow, soft and cinematic, with no overshoot at all.', 'Sine Out'],
+  ['playful', 'Playful', 'A friendly overshoot for consumer apps and kids’ brands.', 'Overshoot'],
+  ['elastic', 'Elastic', 'Bouncy, elastic pops, for when the brand wants a wobble.', 'Elastic'],
+  ['agent', 'Let the agent decide', 'Your agent picks the feel from your brief: spring, unless it calls for another.', null],
+];
+const STORY = [[2, 'Show 2 variants', 'Two takes on the scenario to choose from.', 2], [3, 'Show 3 variants', 'Three directions, side by side.', 3], [0, 'Skip — do it in one go', 'Straight from the scenario to the preview.', 0]];
+const VOICE = [['yes', 'Yes', 'mic'], ['no', 'No', 'x'], ['agent', 'Agent decides', 'sparkle']];
+const OUTPUTS = [['render', 'Rendered video', 'MP4, WebM with alpha or ProRes 4444.', 'play'], ['video-editor', 'Video Editor project', 'Every layer editable in GreenLight Dash.', 'sliders'], ['after-effects', 'After Effects', 'A script that builds the comp, keyframes and all.', 'layers']];
+const label = (list, v) => { const r = list.find((x) => String(x[0]) === String(v)); return r ? r[1] : v; };
+
+const ORDER = Object.keys(K.CATS);
+const ITEMS = K.elements.filter((e) => ORDER.includes(e.cat)).sort((a, b) => (ORDER.indexOf(a.cat) - ORDER.indexOf(b.cat)) || (K.elements.indexOf(a) - K.elements.indexOf(b)));
+const byId = new Map(ITEMS.map((e) => [e.id, e]));
+const normHex = (h) => { h = String(h).trim(); if (/^#[0-9a-f]{3}$/i.test(h)) h = '#' + h.slice(1).split('').map((c) => c + c).join(''); return h.toUpperCase(); };
+function normUrl(raw) {
+  let s = String(raw || '').trim(); if (!s) return '';
+  if (!/^[a-z][a-z0-9+.-]*:/i.test(s)) s = 'https://' + s.replace(/^\/+/, '');
+  try {
+    const u = new URL(s); if (!/^https?:$/.test(u.protocol) || !u.hostname || (!u.hostname.includes('.') && u.hostname !== 'localhost')) return null;
+    return u.pathname === '/' && !u.search && !u.hash ? u.href.slice(0, -1) : u.href;
+  } catch (e) { return null; }
+}
+
+const fresh = () => ({ product: { name: '', url: '', about: '' }, film: { goal: 'agent', cta: '', duration: 20, format: '16:9', language: 'en' },
+  look: { engine: 'default', source: 'library', picks: [], theme: 'agent', accent: 'agent' }, motion: { preset: 'spring' }, workflow: { storyboard: 2, voiceover: 'agent' }, output: ['render'] });
+let S = fresh();
+let finished = false; let stepEls = [];
+const MAC = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
+let files = [];   // { key, url, name, type, status: 'ok' | 'up' | 'error', progress, thumb, error, xhr }
+let fileKey = 0;
+const thumbOf = (url) => (/^(https?:|data:|blob:)/i.test(url) ? url : /^assets\//.test(url) && LOCAL ? url : '');
+function adopt(b) {
+  if (!b || typeof b !== 'object') return;
+  const obj = (v) => (v && typeof v === 'object' && !Array.isArray(v) ? v : {});
+  const p = obj(b.product), f = obj(b.film), l = obj(b.look), m = obj(b.motion), w = obj(b.workflow);
+  const str = (v) => (typeof v === 'string' && v !== 'agent' ? v : '');
+  const one = (v, list, d) => (list.includes(v) ? v : d);
+  S.product = { name: str(p.name), url: str(p.url), about: str(p.about) };
+  S.film = { goal: one(f.goal, V.goal, 'agent'), cta: str(f.cta), duration: typeof f.duration === 'number' ? Math.max(10, Math.min(90, Math.round(f.duration))) : 20,
+    format: one(f.format, V.format, '16:9'), language: str(f.language) || 'en' };
+  S.look = { engine: one(l.engine, V.engine, 'default'), source: one(l.source, V.source, 'library'), picks: Array.isArray(l.picks) ? l.picks.filter((id) => byId.has(id)) : [],
+    theme: one(l.theme, V.theme, 'agent'), accent: typeof l.accent === 'string' && /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(l.accent) ? normHex(l.accent) : 'agent' };
+  S.motion = { preset: one(m.preset, V.preset, 'spring') };
+  S.workflow = { storyboard: one(w.storyboard, V.storyboard, 2), voiceover: one(w.voiceover, V.voiceover, 'agent') };
+  S.output = Array.isArray(b.output) ? b.output.filter((o) => V.output.includes(o)) : ['render'];
+  files = (Array.isArray(p.assets) ? p.assets : []).filter((a) => a && typeof a.url === 'string')
+    .map((a) => ({ key: ++fileKey, url: a.url, name: a.name || a.url.split('/').pop(), type: a.type === 'video' ? 'video' : 'image', status: 'ok', thumb: thumbOf(a.url) }));
+}
+adopt(DATA.brief);
+
+// a draft survives a reload (per viewer; the brief file itself stays the truth: a newer one wins)
+const DKEY = 'mubf:' + DATA.project;
+let step = 0; let reached = 0;
+function saveDraft() {
+  try { localStorage.setItem(DKEY, JSON.stringify({ stamp: DATA.stamp, S, step, reached, files: files.filter((f) => f.status === 'ok').map(({ url, name, type }) => ({ url, name, type })) })); } catch (e) { /* storage off */ }
+}
+try {
+  const d = JSON.parse(localStorage.getItem(DKEY) || 'null');
+  if (d && d.stamp === DATA.stamp && d.S) {
+    adopt(Object.assign({}, d.S, { product: Object.assign({}, d.S.product, { assets: d.files || [] }) }));
+    step = Math.max(0, Math.min(5, d.step | 0)); reached = Math.max(step, Math.min(5, d.reached | 0));
+  }
+} catch (e) { /* no draft */ }
+
+// ── the players: one per preview host, fitted to its width; one rAF clock plays what is live ──
+const players = new Set();
+const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+const ro = new ResizeObserver((ents) => { for (const en of ents) if (en.target.__P) en.target.__P.fit(); });
+function mount(host, spec, at, zoom = 1) {
+  const inst = new K.Instance(spec, host);
+  Object.assign(inst.stage.style, { width: W + 'px', height: '1080px' });
+  const t = at == null ? spec.T * 0.7 : at;
+  const P = { host, spec, inst, T: spec.T, t, poster: t };
+  // the frame fills the host's width; zoom > 1 crops in around the centre
+  P.fit = () => { const w = host.clientWidth, h = host.clientHeight; if (!w) return; const k = (w / W) * zoom;
+    inst.stage.style.transform = `translate(${((w - W * k) / 2).toFixed(2)}px, ${((h - 1080 * k) / 2).toFixed(2)}px) scale(${k})`; };
+  host.__P = P; ro.observe(host); P.fit(); inst.seek(t); players.add(P);
+  return P;
+}
+function unmount(P) { ro.unobserve(P.host); P.inst.destroy(); players.delete(P); P.host.__P = null; }
+
+const queue = []; const motion = []; let hover = null; let once = false;
+let raf = 0; let last = 0; let mt = 0;
+const SAMPLE = byId.get('toggle') || ITEMS[0];
+const still = () => reduced.matches && !once;
+function wake() { if (!raf) { last = performance.now(); raf = requestAnimationFrame(frame); } }
+function frame(now) {
+  raf = 0;
+  const dt = Math.min(0.1, Math.max(0, (now - last) / 1000)); last = now;
+  let busy = false;
+  // tiles that scrolled into view, a few milliseconds' worth per frame
+  const t0 = performance.now();
+  while (queue.length && performance.now() - t0 < 8) {
+    const T = queue.shift(); T.q = false;
+    if (!T.P && T.vis && !T.el.hidden) T.P = mount(T.host, T.spec);
+  }
+  if (queue.length) busy = true;
+  if (!document.hidden && !still()) {
+    // the motion presets share one clock, so the same moment shows side by side
+    const live = motion.filter((M) => M.vis && M.P);
+    if (live.length) {
+      mt += dt;
+      if (mt > SAMPLE.T + HOLD) { mt = 0; if (once) { once = false; } }
+      const t = Math.min(mt, SAMPLE.T);
+      for (const M of live) { M.P.t = t; M.P.inst.seek(t); }
+      busy = busy || live.length > 0;
+    }
+    if (hover && hover.P) {
+      const P = hover.P; P.t += dt; if (P.t > P.T + HOLD) P.t = 0;
+      P.inst.seek(Math.min(P.t, P.T)); busy = true;
+    }
+  }
+  if (busy) raf = requestAnimationFrame(frame);
+}
+document.addEventListener('visibilitychange', wake);
+const io = new IntersectionObserver((ents) => {
+  for (const en of ents) {
+    const o = en.target.__T || en.target.__M; if (!o) continue;
+    o.vis = en.isIntersecting;
+    if (o.vis && en.target.__T && !o.P && !o.q) { o.q = true; queue.push(o); }
+  }
+  wake();
+}, { rootMargin: '300px 0px' });
+
+// the film's theme + accent on every preview ('agent' follows this page's scheme, and the kit's accent)
+const scheme = matchMedia('(prefers-color-scheme: dark)');
+const pageDark = () => { const t = document.documentElement.getAttribute('data-theme'); return t ? t === 'dark' : scheme.matches; };
+function kitTheme() {
+  const th = S.look.theme === 'agent' ? (pageDark() ? 'dark' : 'light') : S.look.theme;
+  K.setTheme(th, /^#/.test(S.look.accent) ? S.look.accent : null);
+  app.style.setProperty('--stage', K.theme().bg);
+  for (const P of players) P.inst.seek(P.t);
+}
+(scheme.addEventListener ? scheme.addEventListener('change', kitTheme) : scheme.addListener(kitTheme));
+
+// an easing curve as a small SVG path (overshoot drawn above the dashed target line)
+function curvePath(name, w, h) {
+  const f = K.ease(name); const lo = -0.12, hi = 1.3; const y = (v) => (h * (hi - v) / (hi - lo)).toFixed(2);
+  let d = `M0 ${y(0)}`; for (let i = 1; i <= 48; i++) { const u = i / 48; d += ` L${(u * w).toFixed(2)} ${y(f(u))}`; }
+  return { d, target: `M0 ${y(1)} L${w} ${y(1)}` };
+}
+const curveSvg = (name, cls = 'mubf-curve') => { const c = curvePath(name, 46, 26); return `<svg class="${cls}" viewBox="0 0 46 26" aria-hidden="true"><path class="g" d="${c.target}"/><path class="c" d="${c.d}"/></svg>`; };
+
+// ── build the steps ──
+const dot = (box) => `<span class="mubf-dot${box ? ' is-box' : ''}">${ico('check')}</span>`;
+const card = (name, v, title, desc, ic, tag, type = 'radio') => `<label class="mubf-opt"><input type="${type}" name="${name}" value="${esc(v)}"><span class="mubf-card">
+  <span class="mubf-card-top"><span class="mubf-ic">${ico(ic)}</span>${dot(type === 'checkbox')}</span><span class="mubf-card-txt"><b>${esc(title)}${tag ? `<span class="mubf-tag">${esc(tag)}</span>` : ''}</b><span class="mubf-card-d">${esc(desc)}</span></span></span></label>`;
+$('g-goal').innerHTML = GOALS.map(([v, t, d, ic]) => card('goal', v, t, d, ic)).join('');
+$('g-format').innerHTML = FORMATS.map(([v, t, d, r]) => `<label class="mubf-opt"><input type="radio" name="format" value="${v}"><span class="mubf-card">
+  <span class="mubf-card-top"><span class="mubf-glyph"><span class="mubf-frame ${r}"></span></span>${dot()}</span><span class="mubf-card-txt"><b>${v}</b><span class="mubf-fmt-d">${t} · ${d}</span></span></span></label>`).join('');
+$('f-lang').innerHTML = LANGS.map(([v, n, en]) => `<option value="${v}">${esc(en ? `${n} — ${en}` : n)}</option>`).join('');
+$('g-engine').innerHTML = ENGINES.map(([v, t, d, ic, , tag]) => card('engine', v, t, d, ic, tag)).join('');
+$('g-source').innerHTML = SOURCES.map(([v, t, d, ic, , tag]) => card('source', v, t, d, ic, tag)).join('');
+$('g-theme').innerHTML = THEMES.map(([v, t, ic]) => `<label><input type="radio" name="theme" value="${v}"><span>${ico(ic)}${t}</span></label>`).join('');
+$('g-accent').innerHTML = K.ACCENTS.map((c) => `<label class="mubf-sw" title="${c}"><input type="radio" name="accent" value="${c}" aria-label="Accent ${c}"><span style="--c:${c}"></span></label>`).join('')
+  + `<label class="mubf-sw is-custom" id="g-custom" title="Your own colour"><input type="color" id="f-color" value="#3E63DD" aria-label="Your own accent colour"><span></span></label>`
+  + `<span class="mubf-divider" aria-hidden="true"></span><label class="mubf-pill"><input type="radio" name="accent" value="agent"><span>${ico('sparkle')}Agent decides</span></label>`
+  + `<output class="mubf-hex" id="f-hex"></output>`;
+$('g-story').innerHTML = STORY.map(([v, t, d, n]) => `<label class="mubf-opt"><input type="radio" name="storyboard" value="${v}"><span class="mubf-card">
+  <span class="mubf-card-top"><span class="mubf-glyph">${n ? Array.from({ length: n }, () => '<span class="mubf-frame sm"></span>').join('') : `<span class="mubf-ic">${ico('arrow')}</span>`}</span>${dot()}</span>
+  <span class="mubf-card-txt"><b>${esc(t)}</b><span class="mubf-card-d">${esc(d)}</span></span></span></label>`).join('');
+$('g-voice').innerHTML = VOICE.map(([v, t, ic]) => `<label><input type="radio" name="voiceover" value="${v}"><span>${ico(ic)}${t}</span></label>`).join('');
+$('g-output').innerHTML = OUTPUTS.map(([v, t, d, ic]) => card('output', v, t, d, ic, null, 'checkbox')).join('');
+
+// motion presets: the sample item composed with each preset, playing on the shared clock
+$('g-motion').innerHTML = PRESETS.map(([v, t, d, curve, tag]) => `<label class="mubf-opt"><input type="radio" name="preset" value="${v}"><span class="mubf-card">
+  <span class="mubf-scr" data-m="${v}">${v === 'agent' ? `<span class="mubf-agentviz">${agentViz()}${ico('sparkle')}</span>` : ''}</span>
+  <span class="mubf-mhead"><b>${esc(t)}${tag ? `<span class="mubf-tag">${esc(tag)}</span>` : ''}</b>${curve ? curveSvg(curve) : ''}${dot()}</span>
+  <span class="mubf-card-d">${esc(d)}</span></span></label>`).join('');
+function agentViz() {
+  const w = 200, h = 96; let out = '';
+  for (const [, , , c] of PRESETS) if (c) out += `<path class="c" d="${curvePath(c, w, h).d}"/>`;
+  return `<svg viewBox="0 0 ${w} ${h}" aria-hidden="true"><path class="g" d="${curvePath('Linear', w, h).target}"/>${out}</svg>`;
+}
+for (const host of document.querySelectorAll('#g-motion .mubf-scr[data-m]')) {
+  const v = host.dataset.m; if (v === 'agent') continue;
+  const spec = K.compose({ id: 'mubf-' + v, name: v, scenes: [{ item: SAMPLE.id }], motion: v });
+  const M = { v, host, vis: false, P: mount(host, spec, SAMPLE.T * 0.7, SAMPLE.id === 'toggle' ? 1.4 : 1) };
+  host.__M = M; motion.push(M); io.observe(host);
+}
+if (reduced.matches) $('g-play').hidden = false;
+$('g-play').onclick = () => { once = true; mt = 0; wake(); };
+
+// ── uploads (local page only) ──
+const MAX = DATA.maxUpload;
+function renderFilesBody() {
+  const body = $('g-files-body');
+  if (!LOCAL) {
+    body.innerHTML = `<div class="mubf-note">${ico('info')}<span>Attach screenshots, a logo or clips in the chat with your agent. It uses your own pictures before anything it captures.</span></div>`;
+    if (files.length) body.insertAdjacentHTML('beforeend', `<div class="mubf-files" id="g-files-list" style="margin-top:14px"></div>`);
+  } else {
+    body.innerHTML = `<div class="mubf-drop" id="g-drop"><span class="mubf-ic">${ico('upload')}</span><span class="mubf-drop-t"><b>Drop files here</b><span>Your own pictures beat captured ones. PNG, JPG, SVG, WebP, MP4, WebM or MOV, up to 50 MB each.</span></span>
+      <label class="mubf-btn" for="f-files" tabindex="0" id="g-browse">${ico('plus')}Browse files</label><input class="mubf-sr" id="f-files" type="file" multiple accept="image/*,video/mp4,video/webm,video/quicktime,.mov,.m4v,.svg" tabindex="-1"></div>
+      <div class="mubf-files" id="g-files-list"></div>`;
+    const drop = $('g-drop'); const input = $('f-files');
+    input.onchange = () => { [...input.files].forEach(upload); input.value = ''; };
+    $('g-browse').onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); } };
+    ['dragenter', 'dragover'].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.add('is-over'); }));
+    ['dragleave', 'drop'].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); if (ev === 'dragleave' && drop.contains(e.relatedTarget)) return; drop.classList.remove('is-over'); }));
+    drop.addEventListener('drop', (e) => { [...(e.dataTransfer ? e.dataTransfer.files : [])].forEach(upload); });
+  }
+  renderFiles();
+}
+function fileTile(f) {
+  const media = f.thumb ? (f.type === 'video' ? `<video src="${esc(f.thumb)}" muted playsinline preload="metadata"></video>` : `<img src="${esc(f.thumb)}" alt="" loading="lazy">`) : ico(f.type === 'video' ? 'video' : 'image');
+  const bar = f.status === 'up' ? `<span class="mubf-bar-p"><i style="width:${Math.round((f.progress || 0) * 100)}%"></i></span>` : '';
+  const kind = f.status !== 'up' ? `<span class="mubf-kind">${ico(f.type === 'video' ? 'video' : 'image')}${f.type === 'video' ? 'Video' : 'Picture'}</span>` : '';
+  return `<div class="mubf-file" data-k="${f.key}"><span class="mubf-thumb">${media}${bar}${kind}</span>
+    ${LOCAL ? `<button type="button" class="mubf-x" data-rm="${f.key}" aria-label="Remove ${esc(f.name)}">${ico('x')}</button>` : ''}
+    <span class="mubf-file-n${f.status === 'error' ? ' is-err' : ''}" title="${esc(f.name)}">${esc(f.status === 'error' ? `${f.name}: ${f.error}` : f.name)}</span></div>`;
+}
+function renderFiles() {
+  const list = $('g-files-list'); if (!list) return;
+  list.innerHTML = files.map(fileTile).join('');
+  list.hidden = !files.length;
+  for (const im of list.querySelectorAll('img, video')) im.addEventListener('error', () => { const th = im.parentElement; im.remove(); th.insertAdjacentHTML('afterbegin', ico('image')); });
+  updateNav();
+}
+function upload(file) {
+  const ext = (file.name.match(/\.[^.]+$/) || [''])[0].toLowerCase();
+  const video = /^video\//.test(file.type) || ['.mp4', '.webm', '.mov', '.m4v'].includes(ext);
+  const f = { key: ++fileKey, name: file.name, type: video ? 'video' : 'image', status: 'up', progress: 0, thumb: URL.createObjectURL(file) };
+  files.push(f);
+  if (file.size > MAX) { f.status = 'error'; f.error = 'larger than 50 MB'; renderFiles(); return; }
+  const xhr = f.xhr = new XMLHttpRequest();
+  xhr.open('POST', '/mu/brief/asset?name=' + encodeURIComponent(file.name));
+  xhr.setRequestHeader('Content-Type', file.type || 'application/octet-stream');
+  xhr.upload.onprogress = (e) => { if (e.lengthComputable) { f.progress = e.loaded / e.total; const bar = document.querySelector(`.mubf-file[data-k="${f.key}"] .mubf-bar-p i`); if (bar) bar.style.width = Math.round(f.progress * 100) + '%'; } };
+  xhr.onload = () => {
+    let r = {}; try { r = JSON.parse(xhr.responseText); } catch (e) { /* not JSON */ }
+    if (xhr.status === 200 && r.ok) { Object.assign(f, { url: r.asset.url, type: r.asset.type, status: 'ok' }); }
+    else { f.status = 'error'; f.error = (r.detail || `upload failed (${xhr.status})`).replace(/\.$/, '').toLowerCase(); }
+    f.xhr = null; renderFiles(); saveDraft();
+  };
+  xhr.onerror = () => { f.status = 'error'; f.error = 'could not reach the brief server'; f.xhr = null; renderFiles(); };
+  xhr.send(file);
+  renderFiles();
+}
+form.addEventListener('click', (e) => {
+  const rm = e.target.closest('[data-rm]'); if (!rm) return;
+  const i = files.findIndex((f) => String(f.key) === rm.dataset.rm); if (i < 0) return;
+  const [f] = files.splice(i, 1);
+  if (f.xhr) f.xhr.abort();
+  if (f.status === 'ok' && LOCAL && f.url) fetch('/mu/brief/asset/remove', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ url: f.url }) }).catch(() => {});
+  renderFiles(); saveDraft();
+  const next = document.querySelector('#g-files-list [data-rm]') || $('g-browse'); if (next) next.focus();
+});
+renderFilesBody();
+
+// ── the library gallery ──
+const tiles = new Map(); let cat = 'all'; let query = '';
+const grid = $('g-grid');
+for (const spec of ITEMS) {
+  const el = document.createElement('button');
+  el.type = 'button'; el.className = 'mubf-tile'; el.dataset.id = spec.id; el.setAttribute('aria-pressed', 'false');
+  el.setAttribute('aria-label', `${spec.name}, ${K.CATS[spec.cat] || spec.cat}`);
+  el.innerHTML = `<span class="mubf-scr"><span class="mubf-check" aria-hidden="true">${ico('plus', 'i-plus')}${ico('check', 'i-check')}</span></span>
+    <span class="mubf-tile-meta"><span class="mubf-tile-nm">${esc(spec.name)}</span><span class="mubf-tile-du">${spec.T.toFixed(1)} s</span></span><span class="mubf-tile-ct">${esc(K.CATS[spec.cat] || spec.cat)}</span>`;
+  grid.appendChild(el);
+  const T = { el, spec, host: el.querySelector('.mubf-scr'), P: null, vis: false, q: false };
+  T.host.__T = T; tiles.set(spec.id, T); io.observe(T.host);
+}
+const counts = {}; ITEMS.forEach((e) => { counts[e.cat] = (counts[e.cat] || 0) + 1; });
+$('g-chips').innerHTML = [['all', 'All', ITEMS.length], ['picked', 'Picked', 0], ...ORDER.filter((c) => counts[c]).map((c) => [c, K.CATS[c], counts[c]])]
+  .map(([k, l, n]) => `<button type="button" class="mubf-chip" data-k="${k}" aria-pressed="${k === 'all'}">${esc(l)}<span${k === 'picked' ? ' id="g-chip-picked"' : ''}>${n}</span></button>`).join('');
+function chipEdges() { const c = $('g-chips'); c.classList.toggle('is-l', c.scrollLeft > 2); c.classList.toggle('is-r', c.scrollLeft + c.clientWidth < c.scrollWidth - 2); }
+$('g-chips').addEventListener('scroll', chipEdges, { passive: true });
+new ResizeObserver(chipEdges).observe($('g-chips'));
+$('g-chips').addEventListener('click', (e) => {
+  const b = e.target.closest('.mubf-chip'); if (!b) return;
+  cat = b.dataset.k;
+  for (const x of $('g-chips').children) x.setAttribute('aria-pressed', String(x === b));
+  b.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  filter();
+});
+$('g-q').addEventListener('input', (e) => { query = e.target.value; filter(); });
+function filter() {
+  const terms = query.toLowerCase().split(/\s+/).filter(Boolean); let n = 0;
+  for (const T of tiles.values()) {
+    const s = T.spec;
+    const inCat = cat === 'all' || (cat === 'picked' ? S.look.picks.includes(s.id) : s.cat === cat);
+    const hay = `${s.name} ${s.id} ${s.desc || ''} ${K.CATS[s.cat] || ''}`.toLowerCase();
+    const show = inCat && terms.every((t) => hay.includes(t));
+    T.el.hidden = !show; if (show) n++;
+  }
+  const empty = $('g-empty'); empty.hidden = n > 0;
+  if (!n) empty.textContent = cat === 'picked' && !query ? 'Nothing picked yet. Click any item to pick it.' : `No items match “${query.trim()}”${cat !== 'all' ? ' here' : ''}.`;
+  // newly shown tiles that are already in view: the observer does not fire again for them
+  for (const T of tiles.values()) if (!T.el.hidden && !T.P && T.vis && !T.q) { T.q = true; queue.push(T); }
+  wake();
+}
+function syncPicks() {
+  const n = S.look.picks.length;
+  for (const T of tiles.values()) T.el.setAttribute('aria-pressed', String(S.look.picks.includes(T.spec.id)));
+  $('g-count-n').textContent = n; $('g-count').classList.toggle('is-on', n > 0); $('g-chip-picked').textContent = n;
+}
+grid.addEventListener('click', (e) => {
+  const b = e.target.closest('.mubf-tile'); if (!b) return;
+  const id = b.dataset.id; const i = S.look.picks.indexOf(id);
+  if (i >= 0) S.look.picks.splice(i, 1); else S.look.picks.push(id);
+  syncPicks(); updateNav(); saveDraft();
+});
+$('g-clear').onclick = () => { S.look.picks = []; syncPicks(); updateNav(); saveDraft(); if (cat === 'picked') filter(); };
+// hover (or keyboard focus) plays a tile from its start; leaving puts its poster frame back
+const tileOf = (el) => { const b = el && el.closest ? el.closest('.mubf-tile') : null; return b ? tiles.get(b.dataset.id) : null; };
+function playTile(T) {
+  if (!T || still() || hover === T) return;
+  stopTile();
+  if (!T.P) T.P = mount(T.host, T.spec);
+  hover = T; T.P.t = 0; wake();
+}
+function stopTile() { if (hover && hover.P) { hover.P.t = hover.P.poster; hover.P.inst.seek(hover.P.poster); } hover = null; }
+grid.addEventListener('pointerover', (e) => { if (e.pointerType !== 'touch') playTile(tileOf(e.target)); });
+grid.addEventListener('pointerout', (e) => { const T = tileOf(e.target); if (T && T === hover && !T.el.contains(e.relatedTarget)) stopTile(); });
+grid.addEventListener('focusin', (e) => playTile(tileOf(e.target)));
+grid.addEventListener('focusout', (e) => { const T = tileOf(e.target); if (T && T === hover && !T.el.contains(e.relatedTarget)) stopTile(); });
+
+// ── fields ⇄ answers ──
+const setRadio = (name, v) => { for (const i of form.querySelectorAll(`input[name="${name}"]`)) i.checked = String(i.value) === String(v); };
+function fill() {
+  $('f-name').value = S.product.name; $('f-url').value = S.product.url; $('f-about').value = S.product.about; $('f-cta').value = S.film.cta;
+  if (!LANGS.some(([v]) => v === S.film.language)) $('f-lang').insertAdjacentHTML('afterbegin', `<option value="${esc(S.film.language)}">${esc(S.film.language)}</option>`);
+  $('f-lang').value = S.film.language;
+  const dur = $('f-dur'); if (S.film.duration > 60) dur.max = String(S.film.duration); dur.value = String(S.film.duration);
+  setRadio('goal', S.film.goal); setRadio('format', S.film.format); setRadio('engine', S.look.engine); setRadio('source', S.look.source); setRadio('theme', S.look.theme);
+  setRadio('preset', S.motion.preset); setRadio('storyboard', S.workflow.storyboard); setRadio('voiceover', S.workflow.voiceover);
+  for (const i of form.querySelectorAll('input[name="output"]')) i.checked = S.output.includes(i.value);
+  accentUi(); durUi(); engineUi(); syncPicks();
+}
+function accentUi() {
+  const a = S.look.accent; const custom = /^#/.test(a) && !K.ACCENTS.includes(a);
+  setRadio('accent', custom ? '' : a);
+  const c = $('g-custom'); c.classList.toggle('is-on', custom); if (custom) { c.style.setProperty('--c', a); $('f-color').value = a.length === 7 ? a.toLowerCase() : '#3e63dd'; }
+  $('f-hex').textContent = /^#/.test(a) ? a : '';
+  kitTheme();
+}
+function durUi() {
+  const r = $('f-dur'); const d = +r.value; const lo = +r.min, hi = +r.max;
+  r.style.setProperty('--p', `calc(12px + (100% - 24px) * ${(d - lo) / (hi - lo)})`);
+  $('f-dur-out').innerHTML = `${d}<small>s</small>`;
+  const a = Math.max(1, Math.round(d / 5)), b = Math.max(a, Math.round(d / 3));
+  $('f-dur-hint').textContent = `About ${a === b ? a : `${a}–${b}`} scene${b > 1 ? 's' : ''}`;
+}
+function sourceUi() { $('g-lib').hidden = S.look.engine === '3d' || !['library', 'mix'].includes(S.look.source); if (!$('g-lib').hidden) filter(); }
+// the 3D engine builds every scene new (no library items) and has no After Effects export
+function engineUi() {
+  const d3 = S.look.engine === '3d';
+  $('g-source-group').hidden = d3;
+  const ae = form.querySelector('input[name="output"][value="after-effects"]');
+  if (ae) { ae.disabled = d3; if (d3 && ae.checked) { ae.checked = false; S.output = S.output.filter((o) => o !== 'after-effects'); } ae.closest('label').classList.toggle('is-off', d3); }
+  sourceUi();
+}
+form.addEventListener('input', (e) => {
+  const t = e.target;
+  if (t.id === 'f-name') S.product.name = t.value;
+  else if (t.id === 'f-url') { S.product.url = t.value; if (!$('f-url-err').hidden && normUrl(t.value) !== null) urlOk(true); }
+  else if (t.id === 'f-about') S.product.about = t.value;
+  else if (t.id === 'f-cta') S.film.cta = t.value;
+  else if (t.id === 'f-dur') { S.film.duration = +t.value; durUi(); }
+  else if (t.id === 'f-color') { S.look.accent = normHex(t.value); accentUi(); }
+  else return;
+  updateNav(); saveDraftSoon();
+});
+form.addEventListener('change', (e) => {
+  const t = e.target; const v = t.value;
+  switch (t.name) {
+    case 'goal': S.film.goal = v; break;
+    case 'format': S.film.format = v; break;
+    case 'language': S.film.language = v; break;
+    case 'engine': S.look.engine = v; engineUi(); break;
+    case 'source': S.look.source = v; sourceUi(); break;
+    case 'theme': S.look.theme = v; kitTheme(); break;
+    case 'accent': S.look.accent = v === 'agent' ? 'agent' : normHex(v); accentUi(); break;
+    case 'preset': S.motion.preset = v; break;
+    case 'storyboard': S.workflow.storyboard = Number(v); break;
+    case 'voiceover': S.workflow.voiceover = v; break;
+    case 'output': S.output = OUTPUTS.map(([o]) => o).filter((o) => form.querySelector(`input[name="output"][value="${o}"]`).checked); break;
+    case 'url': urlCheck(); break;
+    default: return;
+  }
+  updateNav(); saveDraft();
+});
+function urlOk(ok, msg) { $('f-url').classList.toggle('is-bad', !ok); $('f-url').setAttribute('aria-invalid', String(!ok)); $('f-url-err').hidden = ok; $('f-url-err').textContent = msg || ''; }
+function urlCheck() {
+  const raw = $('f-url').value.trim(); if (!raw) { urlOk(true); return true; }
+  const u = normUrl(raw);
+  if (u === null) { urlOk(false, 'That doesn’t look like a web address. Try acme.com or https://acme.com.'); return false; }
+  if (u !== raw) { $('f-url').value = u; S.product.url = u; }
+  urlOk(true); return true;
+}
+$('f-url').addEventListener('blur', urlCheck);
+let draftT = 0; const saveDraftSoon = () => { clearTimeout(draftT); draftT = setTimeout(saveDraft, 400); };
+
+// ── the brief itself ──
+function toBrief() {
+  const t = (s) => String(s || '').trim();
+  const b = { kind: 'greenlight-motion-brief', version: 1, source: 'onboarding-page' };
+  const p = {};
+  if (t(S.product.name)) p.name = t(S.product.name);
+  const u = normUrl(S.product.url); if (u) p.url = u;
+  if (t(S.product.about)) p.about = t(S.product.about);
+  const ok = files.filter((f) => f.status === 'ok' && f.url);
+  if (ok.length) p.assets = ok.map(({ url, name, type }) => ({ url, name, type }));
+  b.product = p;
+  b.film = { goal: S.film.goal, ...(t(S.film.cta) ? { cta: t(S.film.cta) } : {}), duration: S.film.duration, format: S.film.format, language: S.film.language };
+  b.look = { engine: S.look.engine, ...(S.look.engine === '3d' ? {} : { source: S.look.source, ...(['library', 'mix'].includes(S.look.source) ? { picks: S.look.picks.slice() } : {}) }), theme: S.look.theme, accent: S.look.accent };
+  b.motion = { preset: S.motion.preset };
+  b.workflow = { storyboard: S.workflow.storyboard, voiceover: S.workflow.voiceover };
+  b.output = S.output.slice();
+  return b;
+}
+const langName = (v) => { const l = LANGS.find(([c]) => c === v); return l ? (l[2] ? `${l[1]} (${l[2]})` : l[1]) : v; };
+const AG = `<span class="mubf-ag">${ico('sparkle')}Agent decides</span>`;
+const none = (s) => `<span class="mubf-none">${esc(s)}</span>`;
+function summary(i) {
+  const s = [];
+  if (i === 0) { if (S.product.name.trim()) s.push(S.product.name.trim()); const n = files.filter((f) => f.status === 'ok').length; if (n) s.push(`${n} file${n > 1 ? 's' : ''}`); if (!s.length && S.product.about.trim()) s.push('Described'); }
+  if (i === 1) s.push(GOALS.find((g) => g[0] === S.film.goal)[4], `${S.film.duration} s`, S.film.format);
+  if (i === 2) { if (S.look.engine === '3d') s.push('3D engine'); else { s.push(SOURCES.find((x) => x[0] === S.look.source)[4]); if (['library', 'mix'].includes(S.look.source) && S.look.picks.length) s.push(`${S.look.picks.length} picked`); } if (S.look.theme !== 'agent') s.push(label(THEMES, S.look.theme)); }
+  if (i === 3) s.push(S.motion.preset === 'agent' ? 'Agent’s pick' : label(PRESETS, S.motion.preset));
+  if (i === 4) { s.push(S.workflow.storyboard ? `${S.workflow.storyboard} variants` : 'No storyboard'); if (S.workflow.voiceover !== 'agent') s.push(S.workflow.voiceover === 'yes' ? 'voice-over' : 'no voice-over'); }
+  return s.join(' · ');
+}
+const minis = [];
+function review() {
+  while (minis.length) unmount(minis.pop());
+  const url = normUrl(S.product.url);
+  const ok = files.filter((f) => f.status === 'ok');
+  const picksOn = S.look.engine !== '3d' && ['library', 'mix'].includes(S.look.source);
+  const acc = /^#/.test(S.look.accent) ? `<span class="mubf-inline"><span class="mubf-sw-sm" style="background:${esc(S.look.accent)}"></span>${esc(S.look.accent)}</span>` : AG;
+  const pre = PRESETS.find((p) => p[0] === S.motion.preset);
+  const secs = [
+    [0, 'Product', [
+      ['Name', S.product.name.trim() ? esc(S.product.name.trim()) : none('Not given yet')],
+      ['Website', url ? esc(url) : none('None — no capture')],
+      ['About', S.product.about.trim() ? `<div class="mubf-about">${esc(S.product.about.trim())}</div>` : none('Nothing yet — your agent will ask')],
+      ['Files', ok.length ? `<div class="mubf-minis">${ok.map((f) => `<span class="mubf-mini"><span class="mubf-thumb">${f.thumb ? (f.type === 'video' ? `<video src="${esc(f.thumb)}" muted playsinline preload="metadata"></video>` : `<img src="${esc(f.thumb)}" alt="">`) : ico(f.type === 'video' ? 'video' : 'image')}</span><span>${esc(f.name)}</span></span>`).join('')}</div>` : none('None')],
+    ]],
+    [1, 'Film', [
+      ['Goal', S.film.goal === 'agent' ? AG : esc(label(GOALS, S.film.goal))],
+      ['Call to action', S.film.cta.trim() ? `“${esc(S.film.cta.trim())}”` : AG],
+      ['Length', `${S.film.duration} s`],
+      ['Format', `${esc(S.film.format)} · ${esc(label(FORMATS, S.film.format))}`],
+      ['Language', esc(langName(S.film.language))],
+    ]],
+    [2, 'Look', [
+      ['Engine', S.look.engine === 'agent' ? AG : esc(label(ENGINES, S.look.engine))],
+      ...(S.look.engine === '3d' ? [] : [['Scenes', S.look.source === 'agent' ? AG : esc(label(SOURCES, S.look.source))]]),
+      ...(picksOn ? [['Picked items', S.look.picks.length ? `<div class="mubf-minis" id="g-sum-picks"></div>` : AG]] : []),
+      ['Theme', S.look.theme === 'agent' ? AG : esc(label(THEMES, S.look.theme))],
+      ['Accent', acc],
+    ]],
+    [3, 'Motion', [['Preset', S.motion.preset === 'agent' ? AG : pre ? `<span class="mubf-inline">${curveSvg(pre[3])}${esc(pre[1])}</span>` : esc(S.motion.preset)]]],
+    [4, 'Workflow', [
+      ['Storyboard', esc(label(STORY, S.workflow.storyboard))],
+      ['Voice-over', S.workflow.voiceover === 'agent' ? AG : esc(label(VOICE, S.workflow.voiceover))],
+      ['Deliver', S.output.length ? esc(S.output.map((o) => label(OUTPUTS, o)).join(' · ')) : none('Nothing picked — your agent will ask')],
+    ]],
+  ];
+  $('g-sum').innerHTML = secs.map(([i, t, rows]) => `<section aria-labelledby="g-sum-${i}"><header><span class="n">${i + 1}</span><h2 id="g-sum-${i}">${t}</h2><button type="button" class="mubf-link" data-go="${i}">Edit<span class="mubf-sr"> ${t}</span></button></header>
+    <dl class="mubf-dl">${rows.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl></section>`).join('');
+  const box = $('g-sum-picks');
+  if (box) for (const id of S.look.picks) {
+    const spec = byId.get(id); if (!spec) continue;
+    const el = document.createElement('span'); el.className = 'mubf-mini';
+    el.innerHTML = `<span class="mubf-scr"></span><span>${esc(spec.name)}</span>`; box.appendChild(el);
+    minis.push(mount(el.firstChild, spec));
+  }
+  $('mubf-review-sub').textContent = !HANDOFF
+    ? 'Check your answers, then start. Anything marked Agent decides is your agent’s call, and it tells you what it chose.'
+    : 'Check your answers, then copy them for your agent. Anything marked Agent decides is its call, and it tells you what it chose.';
+  $('g-problems').hidden = true;
+  if (!LOCAL) showJson();
+}
+// the prompt for the user's own agent: the skill, the brief and the project, by path. inline = the brief
+// itself goes in (the artifact, or a server that is gone: there is no brief.json to point at)
+function handoff(inline) {
+  const P = DATA.paths || {};
+  const L = ['Make a motion design film with the GL Motion skill from my brief. Read the skill first, then follow its workflow from the brief: ask only what it leaves open.', '',
+    `- Skill: ${P.skill || 'skills/greenlight-motion/SKILL.md'}`];
+  if (!inline) L.push(`- Brief: ${P.brief || 'brief.json'}`);
+  const also = [];
+  if (inline) also.push('save the brief there as brief.json');
+  if (files.some((f) => f.status === 'ok')) also.push('my pictures and videos are in its assets folder');
+  L.push(`- Project folder: ${P.project || DATA.project}${also.length ? ` (${also.join('; ')})` : ''}`);
+  if (inline) L.push('', 'brief.json:', JSON.stringify(Object.assign(toBrief(), { createdAt: new Date().toISOString() }), null, 2));
+  return L.join('\n');
+}
+function showJson(msg) {
+  $('g-json-pre').textContent = handoff(true);
+  if (msg) $('g-json-p').textContent = msg;
+  $('g-json').hidden = false;
+}
+form.addEventListener('click', (e) => { const g = e.target.closest('[data-go]'); if (g) go(+g.dataset.go); });
+
+async function copyJson(btn, pre = $('g-json-pre')) {
+  const text = pre.textContent; let ok = false;
+  try { await navigator.clipboard.writeText(text); ok = true; } catch (e) { ok = false; }
+  if (!ok) {
+    const ta = document.createElement('textarea'); ta.value = text; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;left:-9999px;top:0';
+    document.body.appendChild(ta); ta.select(); try { ok = document.execCommand('copy'); } catch (e) { ok = false; } ta.remove();
+  }
+  if (!ok) { const r = document.createRange(); r.selectNodeContents(pre); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); }
+  status(ok ? 'Copied. Paste it to your agent.' : 'Selected: press Ctrl+C or ⌘C to copy.');
+  const t = btn && btn.querySelector('span'); if (t && ok) { const was = t.textContent; t.textContent = 'Copied'; setTimeout(() => { t.textContent = was; }, 1800); }
+  return ok;
+}
+$('g-copy').onclick = () => copyJson($('g-copy'));
+$('g-hand-copy').onclick = () => copyJson($('g-hand-copy'), $('g-hand-pre'));
+
+async function start() {
+  if (files.some((f) => f.status === 'up')) { status('Waiting for the uploads to finish…'); return; }
+  const btn = $('b-next'); btn.disabled = true; $('b-next-t').textContent = 'Starting…';
+  try {
+    const r = await fetch('/mu/brief', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(toBrief()) });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok || !j.ok) {
+      $('g-problems').innerHTML = `<b>The brief was not saved.</b><ul>${(j.problems || [j.detail || `HTTP ${r.status}`]).map((p) => `<li>${esc(p)}</li>`).join('')}</ul>`;
+      $('g-problems').hidden = false; status('');
+      return;
+    }
+    done(j);
+  } catch (e) {
+    // the local server is gone: the brief still reaches the agent, by hand
+    $('g-problems').innerHTML = '<b>Couldn’t reach the brief server.</b> Is <b>brief.mjs</b> still running? You can also copy the brief below and paste it into your agent.';
+    $('g-problems').hidden = false; showJson('Copy it, then paste it into your agent.');
+  } finally { btn.disabled = false; updateNav(); }
+}
+function done(j) {
+  try { localStorage.removeItem(DKEY); } catch (e) { /* storage off */ }
+  DATA.stamp = j.createdAt || DATA.stamp;
+  const openNames = { 'product.name': 'product name', 'product.url': 'website', 'product.about': 'what to say', 'product.assets': 'pictures', 'film.goal': 'goal', 'film.cta': 'call to action',
+    'film.duration': 'length', 'film.format': 'format', 'film.language': 'language', 'look.engine': 'engine', 'look.source': 'scenes', 'look.picks': 'library items', 'look.theme': 'theme', 'look.accent': 'accent',
+    'motion.preset': 'motion', 'workflow.storyboard': 'storyboard', 'workflow.voiceover': 'voice-over', output: 'what to deliver' };
+  const open = (j.open || []).map((k) => openNames[k] || k);
+  $('mubf-hd').textContent = HANDOFF ? 'Your brief is ready' : 'Your brief is in';
+  $('g-hand').hidden = !HANDOFF;
+  if (HANDOFF) {
+    $('g-hand-pre').textContent = handoff(false);
+    const say = (copied) => { $('g-done-p').textContent = `${copied ? 'The prompt below is copied.' : 'Copy the prompt below.'} Paste it into your agent: it names the skill, your brief and the project, and the first thing you see is a scenario to approve, before anything is built.`; };
+    say(false);
+    copyJson($('g-hand-copy'), $('g-hand-pre')).then(say);
+  }
+  $('g-facts').innerHTML = `<div><dt>Saved as</dt><dd>${esc(j.file || 'brief.json')} in ${esc(DATA.project)}</dd></div>`
+    + `<div><dt>Your agent decides</dt><dd>${open.length ? esc(open.join(', ')) : 'Nothing — every answer is yours'}</dd></div>`;
+  for (const s of form.querySelectorAll('.mubf-step')) s.hidden = true;
+  $('mubf-done').hidden = false; $('mubf-bar').hidden = true;
+  finished = true; updateNav();
+  window.scrollTo(0, 0); $('mubf-hd').focus({ preventScroll: true });
+  window.__mubfSaved = j;
+}
+$('g-edit').onclick = () => { finished = false; $('mubf-done').hidden = true; $('mubf-bar').hidden = false; go(5); };
+
+// ── steps ──
+stepEls = [...form.querySelectorAll('.mubf-step')];
+$('mubf-nav').innerHTML = STEPS.map(([t], i) => `<li><button type="button" data-step="${i}"><span class="n"></span><span class="l">${t}</span><span class="s"></span></button></li>`).join('');
+$('mubf-prog').innerHTML = STEPS.map(([t], i) => `<button type="button" data-step="${i}" aria-label="${t}"></button>`).join('');
+$('mubf-foot').innerHTML = LOCAL
+  ? `<div class="mubf-proj"><span>Project</span><b title="${esc(DATA.project)}">${esc(DATA.project)}</b></div><p>${HANDOFF ? 'At the end your answers are saved as brief.json there, and you copy a prompt for your agent.' : 'Start saves your answers as brief.json there.'} Nothing leaves this computer.</p>`
+  : '<p>Nothing leaves this page. At the end you copy a prompt with your brief and paste it into your agent.</p>';
+for (const b of document.querySelectorAll('[data-step]')) b.onclick = () => go(+b.dataset.step);
+function updateNav() {
+  if (!stepEls.length) return;
+  document.querySelectorAll('#mubf-nav button').forEach((b, i) => {
+    const cur = i === step && !finished; const isDone = finished || (i < reached && i !== step) || (i < step);
+    b.toggleAttribute('aria-current', false); if (cur) b.setAttribute('aria-current', 'step');
+    b.classList.toggle('is-done', isDone && !cur);
+    b.querySelector('.n').innerHTML = isDone && !cur ? ico('check') : String(i + 1);
+    b.querySelector('.s').textContent = i <= Math.max(reached, step) && i < 5 ? summary(i) : '';
+  });
+  document.querySelectorAll('#mubf-prog button').forEach((b, i) => { b.classList.toggle('is-on', i === step && !finished); b.classList.toggle('is-done', finished || i < Math.max(reached, step)); });
+  $('mubf-top-name').textContent = finished ? 'Done' : STEPS[step][0]; $('mubf-top-n').textContent = finished ? '' : `${step + 1} of 6`;
+  const last = step === 5;
+  $('b-back').hidden = step === 0;
+  $('b-next-t').textContent = last ? (HANDOFF ? 'Copy for your agent' : 'Start') : `Next: ${STEPS[step + 1][0]}`;
+  $('b-next-i').innerHTML = (last && !LOCAL ? ['M8 8h11a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V8Z', 'M16 8V5a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h4'] : ['M5 12h14', 'm12 5 7 7-7 7']).map((d) => `<path d="${d}"/>`).join('');
+  $('b-kbd').innerHTML = last ? (LOCAL ? `<kbd>${MAC ? '⌘' : 'Ctrl'}</kbd><kbd>Enter</kbd> to start` : '') : '<kbd>Enter</kbd> to continue';
+  $('b-kbd').hidden = last && !LOCAL;
+  $('mubf-bar-in').classList.toggle('is-wide', stepEls[step].classList.contains('is-wide'));
+  $('mubf-bar-in').classList.toggle('is-review', stepEls[step].classList.contains('is-review'));
+  const up = files.some((f) => f.status === 'up');
+  if (last && LOCAL) status(up ? 'Waiting for the uploads to finish…' : '');
+}
+let statusT = 0;
+function status(msg, bad) { const s = $('b-status'); s.textContent = msg || ''; s.classList.toggle('is-bad', !!bad); clearTimeout(statusT); if (msg) statusT = setTimeout(() => { s.textContent = ''; }, 4000); }
+function go(i, { focus = true } = {}) {
+  i = Math.max(0, Math.min(5, i));
+  if (i > 0 && step === 0 && !urlCheck()) { if (i !== step) { $('f-url').focus(); status('Check the website address first.', true); } return; }
+  if (finished) { finished = false; $('mubf-done').hidden = true; $('mubf-bar').hidden = false; }
+  if (hover) stopTile();
+  step = i; reached = Math.max(reached, i);
+  stepEls.forEach((s, k) => { s.hidden = k !== i; s.classList.toggle('is-in', k === i); });
+  if (i === 5) review();
+  updateNav(); saveDraft();
+  if (focus) { window.scrollTo(0, 0); const h = $('mubf-h' + i); if (h) h.focus({ preventScroll: true }); }
+  wake();
+}
+$('b-back').onclick = () => go(step - 1);
+$('b-next').onclick = () => { if (step < 5) go(step + 1); else if (LOCAL) start(); else copyJson($('g-copy')); };
+form.addEventListener('submit', (e) => e.preventDefault());
+document.addEventListener('keydown', (e) => {
+  if (finished || e.defaultPrevented) return;
+  if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) { e.preventDefault(); $('b-next').click(); return; }
+  if (e.key !== 'Enter' || e.shiftKey || e.altKey || step === 5) return;
+  const t = e.target;
+  if (t.matches && t.matches('input[type="text"], input[type="url"], input[type="radio"], input[type="range"], select')) { e.preventDefault(); if (t.id === 'f-url' && !urlCheck()) return; go(step + 1); }
+});
+
+fill();
+renderFiles();
+go(step, { focus: false });
+kitTheme();
+window.__mubf = { get state() { return S; }, brief: toBrief, go, get step() { return step; } };
+window.__mubfReady = true;
+})();
+</script>
+<!--/MU:BODY-->
+</body>
+</html>

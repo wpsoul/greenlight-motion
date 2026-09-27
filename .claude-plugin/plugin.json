@@ -1,0 +1,30 @@
+{
+  "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
+  "name": "greenlight-motion",
+  "version": "1.0.0",
+  "description": "GreenLight Motion (GL Motion), the motion design engine for agents: turns a brief into a finished film from 260+ animated UI elements and new ones in the same style, with 3D space or a three.js 3D engine. Scenario, storyboard, a player preview where you edit the design tokens and the elements, voice-over, sound effects, a frame-exact HTML render engine (MP4, WebM alpha, ProRes 4444) and exports to the GreenLight Dash Video Editor or After Effects.",
+  "author": {
+    "name": "WPSoul",
+    "url": "https://greenlightdash.pro"
+  },
+  "homepage": "https://greenlightdash.pro",
+  "repository": "https://github.com/wpsoul/greenlight-motion",
+  "license": "MIT",
+  "keywords": [
+    "motion-design",
+    "agents",
+    "motion-graphics",
+    "animation",
+    "ui",
+    "video",
+    "render",
+    "after-effects",
+    "promo",
+    "voiceover",
+    "3d",
+    "threejs"
+  ],
+  "skills": [
+    "./skills/greenlight-motion"
+  ]
+}

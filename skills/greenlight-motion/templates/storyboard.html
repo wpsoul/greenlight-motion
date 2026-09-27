@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!--MU:HEAD-->
+<title>@@TITLE@@</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style id="mu-tokens">@@TOKENS@@</style>
+<style>
+/* the kit's stage (items are laid out 1:1 around the film's centre) */
+.uik-stage { position: absolute; left: 0; top: 0; overflow: hidden; transform-origin: 0 0; background: transparent;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #0B0B0B; -webkit-font-smoothing: antialiased; }
+.uik-root { position: absolute; left: 50%; top: 50%; width: 0; height: 0; }
+.uik-n { position: absolute; left: 0; top: 0; width: 0; height: 0; }
+.uik-b { position: absolute; box-sizing: border-box; }
+.uik-c { position: absolute; width: 0; height: 0; }
+.uik-t { position: absolute; left: 0; top: 0; white-space: nowrap; line-height: 1.15; }
+.uik-svg { position: absolute; left: 0; top: 0; width: 1px; height: 1px; overflow: visible; }
+.uik-dw { display: inline-grid; position: relative; justify-items: center; vertical-align: top; clip-path: inset(calc((1lh - 1.1em) / 2) -0.5em); }
+.uik-dz { grid-area: 1 / 1; visibility: hidden; height: 1lh; overflow: hidden; }
+.uik-ds { grid-area: 1 / 1; position: relative; }
+.uik-d1 { position: absolute; left: 0; right: 0; top: 1.1em; text-align: center; }
+.uik-caret { display: inline-block; width: .085em; height: 1.02em; vertical-align: -0.15em; margin: 0 .03em; border-radius: 2px; }
+.uik-cursor svg { filter: drop-shadow(0 2px 3px rgba(0,0,0,.28)); }
+
+/* storyboard chrome — every colour is a token (mu-tokens) */
+.musb-app { box-sizing: border-box; position: fixed; inset: 0; overflow: auto; background: var(--mu-bg); color: var(--mu-txt);
+  font: 14px/1.5 Inter, 'Helvetica Neue', system-ui, sans-serif; -webkit-font-smoothing: antialiased;
+  padding: 28px max(16px, 3vw) 56px; display: flex; flex-direction: column; gap: 26px; }
+.musb-app *, .musb-app *::before, .musb-app *::after { box-sizing: border-box; }
+.musb-app button { font: inherit; color: inherit; }
+.musb-head { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px 28px; }
+.musb-title { flex: 1 1 380px; min-width: 0; }
+.musb-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; color: var(--mu-sub); }
+.musb-title h1 { margin: 6px 0 0; font-size: clamp(24px, 3.2vw, 34px); line-height: 1.12; font-weight: 600; letter-spacing: -0.025em; text-wrap: balance; }
+.musb-title p { margin: 8px 0 0; color: var(--mu-sub); max-width: 70ch; }
+.musb-facts { display: flex; flex-wrap: wrap; gap: 8px; }
+.musb-fact { border: 1px solid var(--mu-line); border-radius: 8px; padding: 6px 10px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.musb-fact b { font-weight: 600; margin-right: 4px; }
+.musb-fact span { color: var(--mu-sub); }
+/* one variant = one row */
+.musb-var { border: 1px solid var(--mu-line); border-radius: 14px; background: var(--mu-panel); padding: 16px 16px 18px; display: flex; flex-direction: column; gap: 14px; }
+.musb-var.is-picked { border-color: var(--mu-acc); box-shadow: 0 0 0 1px var(--mu-acc); }
+.musb-vhead { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
+.musb-letter { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; font-weight: 700; font-size: 15px; background: var(--mu-txt); color: var(--mu-bg); flex: none; }
+.musb-vname { min-width: 0; flex: 1 1 260px; }
+.musb-vname h2 { margin: 0; font-size: 17px; font-weight: 600; letter-spacing: -0.01em; }
+.musb-vname p { margin: 2px 0 0; color: var(--mu-sub); font-size: 13px; max-width: 80ch; }
+.musb-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.musb-chip { font-size: 12px; border-radius: 999px; padding: 3px 10px; background: var(--mu-soft); color: var(--mu-sub); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.musb-chip.is-picked { background: var(--mu-acc); color: var(--mu-on-acc); font-weight: 600; }
+.musb-acts { display: flex; gap: 8px; margin-left: auto; }
+.musb-btn { border: 1px solid var(--mu-line); background: transparent; border-radius: 8px; padding: 6px 12px; cursor: pointer; font-weight: 500; white-space: nowrap; }
+.musb-btn:hover { border-color: var(--mu-sub); }
+.musb-btn.is-cta { background: var(--mu-acc); border-color: var(--mu-acc); color: var(--mu-on-acc); font-weight: 600; }
+.musb-btn:focus-visible, .musb-frame:focus-visible { outline: 2px solid var(--mu-acc); outline-offset: 2px; }
+.musb-shots { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 14px; }
+.musb-shot { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.musb-frame { position: relative; width: 100%; max-width: 100%; border-radius: 9px; overflow: hidden; background: var(--mu-stage); border: 1px solid var(--mu-line); cursor: pointer; }
+.musb-num { position: absolute; left: 8px; top: 8px; z-index: 2; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 11px; background: var(--mu-chip); color: var(--mu-chip-txt); font-size: 11.5px; font-weight: 600; display: grid; place-items: center; font-variant-numeric: tabular-nums; }
+.musb-tr { position: absolute; right: 8px; top: 8px; z-index: 2; height: 20px; padding: 0 7px; border-radius: 10px; background: var(--mu-chip); color: var(--mu-chip-txt); font-size: 10.5px; display: grid; place-items: center; }
+.musb-smeta { display: flex; align-items: baseline; gap: 8px; min-width: 0; }
+.musb-smeta b { font-weight: 600; font-size: 13px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.musb-smeta span { margin-left: auto; color: var(--mu-sub); font-size: 12px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.musb-item { color: var(--mu-sub); font-size: 12px; margin-top: -4px; }
+.musb-copy { display: flex; flex-direction: column; gap: 2px; font-size: 12px; }
+.musb-copy q { quotes: '“' '”'; overflow-wrap: anywhere; }
+.musb-vo { font-size: 12px; border-left: 2px solid var(--mu-acc); padding-left: 7px; color: var(--mu-txt); }
+.musb-toast { position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); z-index: 30; background: var(--mu-txt); color: var(--mu-bg); padding: 9px 14px; border-radius: 10px; font-size: 13px; font-weight: 500; box-shadow: 0 8px 30px rgba(0,0,0,.25); }
+.musb-toast[hidden] { display: none !important; }
+/* the big player */
+.musb-dlg { position: fixed; inset: 0; z-index: 20; background: var(--mu-scrim); display: flex; align-items: center; justify-content: center; padding: 16px; }
+.musb-dlg[hidden] { display: none !important; }
+/* anything the page hides stays hidden: a class's own display beats the browser's [hidden] */
+.musb-app [hidden] { display: none !important; }
+.musb-card { width: min(1100px, 100%); max-height: 100%; overflow: auto; background: var(--mu-panel); border: 1px solid var(--mu-line); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.musb-card header { display: flex; align-items: center; gap: 12px; }
+.musb-card header b { font-size: 15px; font-weight: 600; }
+.musb-card header span { color: var(--mu-sub); font-size: 12px; }
+.musb-card header .musb-btn { margin-left: auto; }
+.musb-ctl { display: flex; align-items: center; gap: 10px; }
+.musb-ctl input { flex: 1; min-width: 0; accent-color: var(--mu-acc); }
+.musb-ctl output { font-variant-numeric: tabular-nums; color: var(--mu-sub); font-size: 12px; min-width: 88px; text-align: right; }
+/* the GL Motion items: the directions' items, the alternatives per shot, the ones built new */
+.musb-lib h2 { margin: 0 0 4px; font-size: 16px; font-weight: 600; letter-spacing: -0.01em; }
+.musb-lib > p { margin: 0 0 14px; color: var(--mu-sub); font-size: 13px; }
+.musb-bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 14px; }
+.musb-chip { border: 1px solid var(--mu-line); background: transparent; border-radius: 999px; padding: 5px 12px; cursor: pointer; color: var(--mu-sub); white-space: nowrap; font: inherit; }
+.musb-chip:hover { color: var(--mu-txt); }
+.musb-chip[aria-pressed="true"] { background: var(--mu-txt); color: var(--mu-bg); border-color: var(--mu-txt); }
+.musb-chip:focus-visible { outline: 2px solid var(--mu-acc); outline-offset: 2px; }
+.musb-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 18px 16px; }
+.musb-tile { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.musb-tmeta { display: flex; align-items: baseline; gap: 8px; min-width: 0; }
+.musb-tmeta b { font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.musb-tmeta span { margin-left: auto; color: var(--mu-sub); font-size: 12px; white-space: nowrap; }
+.musb-tag { font-size: 11px; border-radius: 6px; padding: 1px 6px; background: var(--mu-soft); color: var(--mu-sub); white-space: nowrap; }
+.musb-tag.is-used { background: var(--mu-acc); color: var(--mu-on-acc); }
+.musb-tag.is-new { border: 1px solid var(--mu-acc); background: transparent; color: var(--mu-txt); }
+.musb-tdesc { font-size: 12px; color: var(--mu-sub); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+</style>
+<!--/MU:HEAD-->
+</head>
+<body>
+<!--MU:BODY-->
+<div class="musb-app" id="musb">
+  <header class="musb-head">
+    <div class="musb-title">
+      <div class="musb-eyebrow">GL Motion · storyboard</div>
+      <h1 id="musb-name"></h1>
+      <p id="musb-lead"></p>
+    </div>
+    <div class="musb-facts" id="musb-facts"></div>
+  </header>
+  <div id="musb-vars" style="display:flex;flex-direction:column;gap:18px"></div>
+  <section class="musb-lib" id="musb-lib" aria-labelledby="musb-h-lib" hidden>
+    <h2 id="musb-h-lib">GL Motion items</h2>
+    <p>The items these directions use, the alternatives for each shot, and anything built new for this film. Ask the agent to swap one in.</p>
+    <div class="musb-bar" id="musb-filter" role="group" aria-label="Show"></div>
+    <div class="musb-grid" id="musb-grid"></div>
+  </section>
+  <div class="musb-dlg" id="musb-dlg" hidden role="dialog" aria-modal="true" aria-labelledby="musb-dname">
+    <div class="musb-card">
+      <header><b id="musb-dname"></b><span id="musb-dsub"></span><button class="musb-btn" id="musb-dclose" type="button">Close</button></header>
+      <div class="musb-frame" id="musb-dscr" style="cursor:default"></div>
+      <div class="musb-ctl"><button type="button" class="musb-btn is-cta" id="musb-dplay">Pause</button><input type="range" id="musb-dscrub" min="0" max="1" step="0.0005" value="0" aria-label="Time"><output id="musb-dtime"></output></div>
+    </div>
+  </div>
+  <div class="musb-toast" id="musb-toast" hidden role="status"></div>
+</div>
+@@SCRIPTS@@
+<script>
+(function () {
+'use strict';
+const DATA = @@DATA@@;
+const K = window.UIK, MU = window.MU, $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const PRESET = { spring: 'Spring — calm', snappy: 'Snappy', gentle: 'Gentle', playful: 'Playful', elastic: 'Elastic', authored: 'As designed' };
+const vars = DATA.variants.map((v) => Object.assign({}, v, { sc: MU.normalize(v.scenario) }));
+const first = vars[0].sc;
+const W = first.size.w, H = first.size.h, HOLD = 0.7;
+K.setTheme(first.theme, first.accent);
+$('musb').style.setProperty('--mu-stage', first.background || K.theme().bg);
+const fmt = (t) => `${t.toFixed(1)} s`;
+$('musb-name').textContent = DATA.name;
+// a 3D-engine film's shots are stills (its scenes are pages): nothing to hover or play here
+const stillsOnly = vars.every((v) => v.stills);
+$('musb-lead').textContent = vars.length > 1
+  ? `${vars.length} directions for the same film. Each row is one variant; each frame is a shot at its settled moment. ${stillsOnly ? 'Choose one; the preview plays it.' : 'Hover a frame to play the shot, play a whole variant, then choose one.'}`
+  : `Each frame is a shot at its settled moment. ${stillsOnly ? 'The preview plays the film.' : 'Hover a frame to play the shot, or play the whole film.'}`;
+document.title = `${DATA.name} — storyboard`;
+$('musb-facts').innerHTML = [[`${W}×${H}`, W >= H ? (W === H ? 'square' : 'landscape') : 'vertical'], [`${first.fps}`, 'fps'], [first.theme === 'dark' ? 'Dark' : 'Light', 'theme'], [vars.length, vars.length > 1 ? 'variants' : 'variant']]
+  .map(([a, b]) => `<div class="musb-fact"><b>${esc(a)}</b><span>${esc(b)}</span></div>`).join('');
+
+// ── players: a host box at the film's ratio, the stage scaled into it ──
+const players = [];
+const mount = (host, spec, rest) => {
+  host.style.aspectRatio = `${W} / ${H}`;
+  const inst = new K.Instance(spec, host);
+  Object.assign(inst.stage.style, { width: W + 'px', height: H + 'px' });
+  const P = { host, spec, inst, rest, t: 0, vis: false, hover: false };
+  P.fit = () => { inst.stage.style.transform = `scale(${host.clientWidth / W})`; };
+  P.fit(); inst.seek(rest);
+  players.push(P);
+  return P;
+};
+const io = new IntersectionObserver((ents) => { for (const en of ents) { const P = players.find((p) => p.host === en.target); if (P) P.vis = en.isIntersecting; } }, { rootMargin: '120px' });
+const ro = new ResizeObserver(() => players.forEach((P) => P.fit()));
+
+const toast = (msg) => { const el = $('musb-toast'); el.textContent = msg; el.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => { el.hidden = true; }, 2600); };
+const choose = (v) => {
+  const say = `Go with variant ${v.id.toUpperCase()} — “${v.name}”`;
+  const done = () => toast(DATA.target === 'board' ? `Tell the agent: ${say}` : `Copied: ${say} — paste it to your agent`);
+  try { navigator.clipboard.writeText(say).then(done, () => toast(`Tell the agent: ${say}`)); } catch (e) { toast(`Tell the agent: ${say}`); }
+};
+
+const list = $('musb-vars');
+vars.forEach((v) => {
+  const sc = v.sc; const timing = MU.timing(sc); const T = timing.length ? timing[timing.length - 1].end : 0;
+  const picked = DATA.picked === v.id;
+  const sec = document.createElement('section');
+  sec.className = 'musb-var' + (picked ? ' is-picked' : '');
+  sec.setAttribute('aria-labelledby', `musb-v-${v.id}`);
+  sec.innerHTML = `<div class="musb-vhead"><div class="musb-letter" aria-hidden="true">${esc(v.id.toUpperCase())}</div>
+    <div class="musb-vname"><h2 id="musb-v-${esc(v.id)}">${esc(v.name)}</h2>${v.note ? `<p>${esc(v.note)}</p>` : ''}</div>
+    <div class="musb-chips">${picked ? '<span class="musb-chip is-picked">Chosen</span>' : ''}<span class="musb-chip">${esc(PRESET[sc.motion] || sc.motion)}</span><span class="musb-chip">${fmt(T)}</span><span class="musb-chip">${timing.length} shots</span></div>
+    <div class="musb-acts"><button type="button" class="musb-btn" data-play>Play variant</button>${vars.length > 1 ? `<button type="button" class="musb-btn is-cta" data-choose>Choose ${esc(v.id.toUpperCase())}</button>` : ''}</div></div>
+    <div class="musb-shots"></div>`;
+  list.appendChild(sec);
+  const shots = sec.querySelector('.musb-shots');
+  const VO = MU.sceneVoices(Object.assign({}, sc, { voiceover: null }));   // a take's parts go to their own shots
+  timing.forEach((tm, i) => {
+    const s = sc.scenes[i]; const item = K.elements.find((e) => e.id === tm.item);
+    if (v.stills) {
+      // a 3D-engine film: the shot is an HTML page — its rendered still at the settled moment
+      const el = document.createElement('article'); el.className = 'musb-shot';
+      el.innerHTML = `<div class="musb-frame" style="aspect-ratio:${W} / ${H};cursor:default"><img alt="" src="${esc(v.stills[i] || '')}" style="position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover"><span class="musb-num">${i + 1}</span>${i ? `<span class="musb-tr">${s.transition === 'fade' ? 'fade' : 'cut'}</span>` : ''}</div>
+        <div class="musb-smeta"><b>${esc(s.title || `Shot ${i + 1}`)}</b><span>${tm.duration.toFixed(1)} s</span></div>
+        <div class="musb-item">${esc(s.html || 'HTML scene')}</div>${VO[i] ? `<div class="musb-vo">${esc(VO[i])}</div>` : ''}`;
+      shots.appendChild(el);
+      return;
+    }
+    const spec = K.compose(sc, { scene: i });
+    // the shot's settled moment: its own keyframe, else 72 % into it (after a fade-in's overlap)
+    const into = Number.isFinite(+s.keyframe) ? +s.keyframe : tm.duration * 0.72;
+    const rest = Math.max(0, Math.min(spec.T - 0.02, (tm.start - tm.from) + into));
+    const copy = Object.values(s.text || {}).slice(0, 2).map((t) => `<q>${esc(t)}</q>`).join('');
+    const el = document.createElement('article'); el.className = 'musb-shot';
+    el.innerHTML = `<div class="musb-frame" tabindex="0" role="button" aria-label="Play shot ${i + 1}"><span class="musb-num">${i + 1}</span>${i ? `<span class="musb-tr">${s.transition === 'fade' ? 'fade' : 'cut'}</span>` : ''}</div>
+      <div class="musb-smeta"><b>${esc(s.title || item?.name || tm.item)}</b><span>${tm.duration.toFixed(1)} s</span></div>
+      <div class="musb-item">${esc(item?.name || tm.item)}</div>
+      ${copy ? `<div class="musb-copy">${copy}</div>` : ''}${VO[i] ? `<div class="musb-vo">${esc(VO[i])}</div>` : ''}`;
+    shots.appendChild(el);
+    const host = el.querySelector('.musb-frame');
+    const P = mount(host, spec, rest); io.observe(host); ro.observe(host);
+    host.onmouseenter = () => { P.hover = true; P.t = 0; };
+    host.onmouseleave = () => { P.hover = false; P.inst.seek(P.rest); };
+    const open = () => openDlg(spec, `${v.id.toUpperCase()} · shot ${i + 1} · ${s.title || item?.name || tm.item}`, `${item?.name || tm.item} · ${tm.duration.toFixed(1)} s`);
+    host.onclick = open; host.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } };
+  });
+  if (v.stills) sec.querySelector('[data-play]').hidden = true;
+  else sec.querySelector('[data-play]').onclick = () => openDlg(MU.film(sc), `${v.id.toUpperCase()} · ${v.name}`, `${timing.length} shots · ${fmt(T)} · ${PRESET[sc.motion] || sc.motion}`);
+  const ch = sec.querySelector('[data-choose]'); if (ch) ch.onclick = () => choose(v);
+});
+
+// ── the GL Motion items (hover plays one, a click opens it) ──
+const ROLE = { used: vars.length > 1 ? 'In the directions' : 'In the film', alt: 'Alternatives', new: 'Built new' };
+const items = (DATA.items || []).map((it) => Object.assign({}, it, { spec: K.elements.find((e) => e.id === it.id) })).filter((it) => it.spec);
+if (items.length) {
+  $('musb-lib').hidden = false;
+  const counts = { all: items.length }; items.forEach((it) => { counts[it.role] = (counts[it.role] || 0) + 1; });
+  const filterEl = $('musb-filter'); const grid = $('musb-grid');
+  filterEl.innerHTML = [['all', 'All'], ...Object.entries(ROLE)].filter(([k]) => counts[k]).map(([k, l]) => `<button type="button" class="musb-chip" data-k="${k}" aria-pressed="${k === 'all'}">${l} · ${counts[k]}</button>`).join('');
+  const where = (it) => it.where.map((w) => (w.v ? `${w.v.toUpperCase()} · ${w.scene}` : `shot ${w.scene}`)).join(', ');
+  const tiles = items.map((it) => {
+    const el = document.createElement('article'); el.className = 'musb-tile';
+    const tag = it.role === 'new' ? '<span class="musb-tag is-new">new</span>' : it.role === 'used' ? `<span class="musb-tag is-used">${esc(where(it))}</span>` : `<span class="musb-tag">${esc(it.for ? 'for shot ' + it.for : 'alternative')}</span>`;
+    el.innerHTML = `<div class="musb-frame" tabindex="0" role="button" aria-label="Open ${esc(it.spec.name)}"></div><div class="musb-tmeta"><b>${esc(it.spec.name)}</b>${tag}<span>${it.spec.T}s</span></div><div class="musb-tdesc">${esc(it.spec.desc || '')}</div>`;
+    grid.appendChild(el);
+    const host = el.querySelector('.musb-frame');
+    const P = mount(host, it.spec, Math.min(it.spec.T, it.spec.T * 0.7)); io.observe(host); ro.observe(host);
+    host.onmouseenter = () => { P.hover = true; P.t = 0; };
+    host.onmouseleave = () => { P.hover = false; P.inst.seek(P.rest); };
+    const open = () => openDlg(it.spec, it.spec.name, `${K.CATS ? (K.CATS[it.spec.cat] || it.spec.cat) : it.spec.cat} · ${it.spec.id} · ${it.spec.T} s`);
+    host.onclick = open; host.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } };
+    return { it, el };
+  });
+  filterEl.onclick = (e) => {
+    const b = e.target.closest('.musb-chip'); if (!b) return; const show = b.dataset.k;
+    filterEl.querySelectorAll('.musb-chip').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    tiles.forEach(({ it, el }) => { el.hidden = !(show === 'all' || it.role === show); });
+  };
+}
+
+// ── the big player ──
+const D = { P: null, t: 0, playing: true };
+const dlg = $('musb-dlg');
+function openDlg(spec, name, sub) {
+  $('musb-dname').textContent = name; $('musb-dsub').textContent = sub;
+  const host = $('musb-dscr'); host.innerHTML = '';
+  const i = players.findIndex((p) => p === D.P); if (i >= 0) players.splice(i, 1);
+  dlg.hidden = false;
+  D.P = mount(host, spec, 0); D.t = 0; D.playing = true; $('musb-dplay').textContent = 'Pause';
+  requestAnimationFrame(() => D.P.fit());
+  $('musb-dclose').focus();
+}
+const closeDlg = () => { dlg.hidden = true; };
+$('musb-dclose').onclick = closeDlg;
+dlg.onclick = (e) => { if (e.target === dlg) closeDlg(); };
+addEventListener('keydown', (e) => { if (e.key === 'Escape' && !dlg.hidden) closeDlg(); });
+$('musb-dplay').onclick = () => { D.playing = !D.playing; $('musb-dplay').textContent = D.playing ? 'Pause' : 'Play'; };
+$('musb-dscrub').oninput = (e) => { D.playing = false; $('musb-dplay').textContent = 'Play'; D.t = +e.target.value * D.P.spec.T; };
+
+// ── one clock: the open player, and a hovered shot ──
+const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+let last = performance.now();
+const loop = (now) => {
+  const dt = Math.min(0.1, (now - last) / 1000); last = now;
+  if (!document.hidden) {
+    if (!dlg.hidden && D.P) {
+      if (D.playing) { D.t += dt; if (D.t > D.P.spec.T + 0.6) D.t = 0; }
+      const t = Math.min(D.t, D.P.spec.T); D.P.inst.seek(t);
+      $('musb-dscrub').value = (t / D.P.spec.T).toFixed(4); $('musb-dtime').textContent = `${t.toFixed(2)} / ${D.P.spec.T.toFixed(2)} s`;
+    } else if (!still) {
+      for (const P of players) {
+        if (!P.hover || !P.vis || P === D.P) continue;
+        P.t = (P.t + dt) % (P.spec.T + HOLD);
+        P.inst.seek(Math.min(P.t, P.spec.T));
+      }
+    }
+  }
+  requestAnimationFrame(loop);
+};
+requestAnimationFrame(loop);
+window.__muReady = true;
+})();
+</script>
+<!--/MU:BODY-->
+</body>
+</html>
