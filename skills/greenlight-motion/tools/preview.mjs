@@ -43,7 +43,8 @@ if (!B) {
   const W = 1600; const Hh = 1000;
   // app: where the app answers, for a copy of the card opened from the disk (it links to the served page)
   const mode = { kind: 'board', boardId: B.id, boardName, mediaPrefix: A.prefix, folder: A.folder, app: B.api };
-  const cardId = await upsertHtmlCard(B, state, 'preview', { title: `${scenario.name} — preview`, width: W, height: Hh, html: '<!doctype html><title>…</title>' });
+  // interactive: the board lets the user use this page on the canvas (a double-click: Play, the timeline, editing)
+  const cardId = await upsertHtmlCard(B, state, 'preview', { title: `${scenario.name} — preview`, width: W, height: Hh, html: '<!doctype html><title>…</title>', data: { interactive: true } });
   // the card in the pipeline's Preview lane; the agent renders and exports once the user approves it (the card
   // has no Export under a board)
   await showCard(B, project, state, 'preview', cardId, W, Hh);

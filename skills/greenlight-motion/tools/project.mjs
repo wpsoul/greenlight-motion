@@ -358,6 +358,9 @@ export async function upsertHtmlCard(B, state, key, { title, html, width, height
   if (!el || !el.id) {
     el = await B.call('POST', `/api/moodboards/${B.id}/elements`, { type: 'html', x: x ?? 0, y: y ?? 0, width, height, data: { title, ...data } });
     state.st.cards[key] = el.id; state.save();
+  } else if (Object.entries(data).some(([k, v]) => (el.data || {})[k] !== v)) {
+    // a card made before: its flags (data.interactive …) come in on top of what it holds (the user's edits stay)
+    await B.call('PUT', `/api/moodboards/${B.id}/elements/${el.id}`, { data: Object.assign({}, el.data, data), expected_version: el.version });
   }
   await B.call('PUT', `/api/moodboards/${B.id}/elements/${el.id}/html`, { html });
   return el.id;

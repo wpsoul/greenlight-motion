@@ -7,14 +7,14 @@
   },
   "metadata": {
     "description": "GreenLight Motion by WPSoul: the motion design studio for agents. Scene pages and a library of ready-made scenes, the storyboard and the editable preview, the render engine and the exports, as one plugin.",
-    "version": "2.0.0"
+    "version": "2.0.1"
   },
   "plugins": [
     {
       "name": "greenlight-motion",
       "source": "./",
       "description": "GreenLight Motion (GL Motion), the motion design studio for agents: turns a brief into a finished film. Every scene is a web page the agent writes (HTML, CSS, SVG, canvas, three.js), frame-exact on a page clock, or one of 275 ready-made library scenes. Story and art direction, a storyboard of stills, a player preview where you click any element to change it, voice-over, sound effects, a frame-exact HTML render engine (MP4, WebM alpha, ProRes 4444), and exports to the GreenLight Dash Video Editor or an After Effects package an agent builds natively.",
-      "version": "2.0.0",
+      "version": "2.0.1",
       "author": {
         "name": "WPSoul",
         "url": "https://greenlightdash.pro"

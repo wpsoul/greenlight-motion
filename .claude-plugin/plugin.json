@@ -1,7 +1,7 @@
 {
   "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
   "name": "greenlight-motion",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "GreenLight Motion (GL Motion), the motion design studio for agents: turns a brief into a finished film. Every scene is a web page the agent writes (HTML, CSS, SVG, canvas, three.js), frame-exact on a page clock, or one of 275 ready-made library scenes. Story and art direction, a storyboard of stills, a player preview where you click any element to change it, voice-over, sound effects, a frame-exact HTML render engine (MP4, WebM alpha, ProRes 4444), and exports to the GreenLight Dash Video Editor or an After Effects package an agent builds natively.",
   "author": {
     "name": "WPSoul",
