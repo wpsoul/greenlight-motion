@@ -31,8 +31,9 @@ body { margin: 0; }
 .mubf { --ring: color-mix(in srgb, var(--mu-acc) 30%, transparent); --tint: color-mix(in srgb, var(--mu-acc) 8%, var(--mu-panel));
   --hair: color-mix(in srgb, var(--mu-txt) 18%, var(--mu-line)); --stage: #E9E7E2; --ease: cubic-bezier(0.28, 0.35, 0.137, 1);
   --pad: clamp(24px, 5vw, 80px);
-  min-height: 100vh; min-height: 100dvh; display: grid; grid-template-columns: 296px minmax(0, 1fr);
-  background: var(--mu-bg); color: var(--mu-txt); font: 15px/1.55 Inter, 'Helvetica Neue', system-ui, sans-serif;
+  min-height: 100vh; min-height: 100dvh; display: grid; grid-template-columns: minmax(0, 1fr) 368px; --bpad: clamp(24px, 4vw, 64px);
+  /* the board canvas's dot grid (1px dots at 15%, 25px apart), in the text colour so it reads light and dark */
+  background-color: var(--mu-bg); background-image: radial-gradient(circle, color-mix(in srgb, var(--mu-txt) 15%, transparent) 1px, transparent 1px); background-size: 25px 25px; color: var(--mu-txt); font: 15px/1.55 Inter, 'Helvetica Neue', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased; font-feature-settings: 'cv11', 'ss01'; }
 .mubf *, .mubf *::before, .mubf *::after { box-sizing: border-box; }
 .mubf [hidden] { display: none !important; }
@@ -40,42 +41,62 @@ body { margin: 0; }
 .mubf-i { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .mubf-sr { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
-/* rail */
-.mubf-rail { position: sticky; top: 0; height: 100vh; height: 100dvh; overflow-y: auto; display: flex; flex-direction: column; gap: 44px;
-  padding: 34px 22px 28px 30px; border-right: 1px solid var(--mu-line); }
-.mubf-brand { display: flex; align-items: center; gap: 11px; }
-.mubf-mark { position: relative; width: 32px; height: 20px; border-radius: 10px; background: var(--mu-acc); flex: none; }
-.mubf-mark::after { content: ''; position: absolute; right: 3px; top: 3px; width: 14px; height: 14px; border-radius: 50%; background: var(--mu-on-acc); }
-.mubf-brand b { display: block; font-weight: 600; letter-spacing: -0.01em; line-height: 1.2; }
-.mubf-brand span { display: block; font-size: 12.5px; color: var(--mu-sub); line-height: 1.3; }
+/* the header over the steps: the logo */
+.mubf-head { padding: 22px var(--bpad) 0; }
+.mubf-brand { display: flex; align-items: center; gap: 11px; min-width: 0; }
+.mubf-mark { position: relative; width: 28px; height: 18px; border-radius: 9px; background: var(--mu-acc); flex: none; }
+.mubf-mark::after { content: ''; position: absolute; right: 3px; top: 3px; width: 12px; height: 12px; border-radius: 50%; background: var(--mu-on-acc); }
+.mubf-brand b { font-weight: 600; letter-spacing: -0.01em; }
+.mubf-brand span:not(.mubf-mark) { font-size: 13px; color: var(--mu-sub); }
+
+/* the brief panel: the progress, every answer so far, the actions and the project */
+.mubf-rail { grid-column: 2; grid-row: 1; align-self: start; position: sticky; top: 20px; max-height: calc(100vh - 40px); max-height: calc(100dvh - 40px);
+  overflow-y: auto; display: flex; flex-direction: column; gap: 16px; margin: 20px 20px 20px 0; padding: 22px 16px 16px;
+  border: 1px solid var(--mu-line); border-radius: 20px; background: var(--mu-panel); }
+.mubf-rail-title { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 0 8px; }
+.mubf-rail-title b { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; }
+.mubf-rail-title span { font-size: 12.5px; color: var(--mu-sub); font-variant-numeric: tabular-nums; }
+.mubf-prog { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; }
+.mubf-prog button { height: 4px; border-radius: 2px; border: 0; padding: 0; background: var(--mu-line); cursor: pointer; transition: background-color .2s; }
+.mubf-prog button.is-done { background: var(--mu-acc); } .mubf-prog button.is-on { background: var(--mu-txt); }
+.mubf-nav { flex: 0 1 auto; min-height: 0; overflow-y: auto; }
 .mubf-nav ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
-.mubf-nav li { position: relative; }
-.mubf-nav li:not(:last-child)::after { content: ''; position: absolute; left: 21px; top: 42px; bottom: -4px; width: 1px; background: var(--mu-line); }
-.mubf-nav button { width: 100%; display: grid; grid-template-columns: 28px minmax(0, 1fr); column-gap: 14px; align-items: center; text-align: left;
-  padding: 9px 10px 9px 8px; border: 0; border-radius: 10px; background: transparent; cursor: pointer; }
-.mubf-nav button:hover { background: var(--mu-soft); }
+/* hairlines between the rows; the highlighted row (the current one, or one under the pointer) drops the lines on
+   both its sides, so its rounded ground never meets a straight line */
+.mubf-nav li { position: relative; border-top: 1px solid var(--mu-line); }
+.mubf-nav li:first-child,
+.mubf-nav li:has(> button:is([aria-current="step"], :hover)),
+.mubf-nav li:has(> button:is([aria-current="step"], :hover)) + li { border-top-color: transparent; }
+.mubf-nav button { width: 100%; display: grid; grid-template-columns: 28px minmax(0, 1fr); column-gap: 14px; align-items: start; text-align: left;
+  padding: 11px 8px; border: 0; border-radius: 10px; background: transparent; cursor: pointer; }
+.mubf-nav button:hover, .mubf-nav button[aria-current="step"] { background: var(--mu-soft); }
+/* every row is as tall as one with its answer under it, so the panel (and Next) keeps its size as the answers fill in;
+   a row with no answer yet centres its name */
+.mubf-nav button { min-height: 61px; }
+.mubf-nav button:has(.s:empty) { align-items: center; }
 .mubf-nav button:focus-visible { outline: 2px solid var(--mu-txt); outline-offset: -2px; }
-.mubf-nav .n { grid-row: span 2; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 600;
+.mubf-nav .n { grid-row: span 2; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font-size: 11px; font-weight: 600;
   color: var(--mu-sub); box-shadow: inset 0 0 0 1px var(--hair); background: var(--mu-bg); font-variant-numeric: tabular-nums; position: relative; z-index: 1;
   transition: background-color .2s, color .2s, box-shadow .2s; }
 .mubf-nav .n .mubf-i { width: 14px; height: 14px; stroke-width: 2.6; }
 .mubf-nav .l { font-weight: 500; color: var(--mu-sub); line-height: 1.3; }
-.mubf-nav .s { font-size: 12.5px; color: var(--mu-sub); line-height: 1.35; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: .85; }
+.mubf-nav .s { font-size: 12.5px; color: var(--mu-sub); line-height: 1.35; margin-top: 2px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
 .mubf-nav .s:empty { display: none; }
 .mubf-nav .is-done .n { background: var(--mu-acc); color: var(--mu-on-acc); box-shadow: none; }
 .mubf-nav .is-done .l { color: var(--mu-txt); }
 .mubf-nav [aria-current="step"] .n { background: var(--mu-txt); color: var(--mu-bg); box-shadow: none; }
 .mubf-nav [aria-current="step"] .l { color: var(--mu-txt); font-weight: 600; }
-.mubf-rail-foot { margin-top: auto; display: flex; flex-direction: column; gap: 10px; font-size: 12.5px; color: var(--mu-sub); line-height: 1.5; }
-.mubf-rail-foot p { margin: 0; }
+.mubf-rail-foot { display: flex; flex-direction: column; gap: 10px; padding: 14px 8px 0; border-top: 1px solid var(--mu-line); font-size: 12.5px; color: var(--mu-sub); line-height: 1.5; }
+.mubf-rail-foot p { display: none; }
+.mubf-rail-foot:not(:has(.mubf-proj)) { display: none; }
 .mubf-proj { display: flex; align-items: center; gap: 8px; min-width: 0; }
 .mubf-proj b { font-weight: 500; color: var(--mu-txt); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0;
   background: var(--mu-soft); border-radius: 6px; padding: 2px 8px; }
 
 /* main column */
-.mubf-main { min-width: 0; display: flex; flex-direction: column; }
+.mubf-main { grid-column: 1; grid-row: 1; min-width: 0; display: flex; flex-direction: column; }
 .mubf-top { display: none; }
-.mubf-body { flex: 1; padding: clamp(32px, 7vh, 72px) var(--pad) 56px; }
+.mubf-body { flex: 1; padding: 32px var(--bpad) 64px; }
 .mubf-step { max-width: 760px; }
 .mubf-step.is-wide { max-width: 1240px; }
 .mubf-step.is-in { animation: mubf-in .5s var(--ease) both; }
@@ -94,6 +115,8 @@ body { margin: 0; }
 .mubf-row > .mubf-group { margin-top: 0 !important; }
 .mubf-label { font-size: 14px; font-weight: 600; letter-spacing: -0.005em; display: flex; align-items: baseline; gap: 8px; }
 .mubf-label small { font-size: 12.5px; font-weight: 400; color: var(--mu-sub); }
+.mubf-card-a { color: var(--mu-txt); text-decoration: underline; text-decoration-color: var(--hair); text-underline-offset: 3px; white-space: nowrap; }
+.mubf-card-a:hover { text-decoration-color: currentColor; }
 /* a label with an action on its right (What it is · Prompt Presets) */
 .mubf-label-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .mubf-presets { position: relative; flex: none; }
@@ -325,7 +348,8 @@ body { margin: 0; }
 
 /* review */
 .mubf-step.is-review { max-width: 1080px; }
-.mubf-sum { display: grid; gap: 14px; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+/* cards side by side share one height, so a row never ends ragged */
+.mubf-sum { display: grid; gap: 14px; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; }
 .mubf-sum > section:first-child { grid-column: 1 / -1; }
 .mubf-sum > section { background: var(--mu-panel); border: 1px solid var(--mu-line); border-radius: 16px; padding: 20px 22px 22px; }
 .mubf-sum header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
@@ -374,13 +398,15 @@ body { margin: 0; }
 .mubf-facts dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
 .mubf-done .mubf-actions { margin-top: 28px; display: flex; gap: 10px; flex-wrap: wrap; }
 
-/* the bottom bar */
-.mubf-bar { position: sticky; bottom: 0; z-index: 10; padding: 14px var(--pad); padding-bottom: max(14px, env(safe-area-inset-bottom));
-  background: color-mix(in srgb, var(--mu-bg) 86%, transparent); -webkit-backdrop-filter: saturate(1.3) blur(16px); backdrop-filter: saturate(1.3) blur(16px); border-top: 1px solid var(--mu-line); }
-.mubf-bar-in { display: flex; align-items: center; gap: 12px; max-width: 760px; }
-.mubf-bar-in.is-wide { max-width: 1240px; }
-.mubf-bar-in.is-review { max-width: 1080px; }
-.mubf-bar .grow { flex: 1; }
+/* the actions, at the panel's foot: Next across the panel, Back and the key hint under it */
+.mubf-bar-in { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+.mubf-bar .grow { display: none; }
+.mubf-bar #b-next { order: -1; flex: 1 1 100%; justify-content: center; }
+/* Back keeps its place on the first step (hidden, not gone), so Next never moves */
+.mubf-bar #b-back[hidden] { display: inline-flex !important; visibility: hidden; }
+.mubf-bar .mubf-kbd { margin-left: auto; }
+.mubf-bar .mubf-status { flex: 1 1 100%; order: -2; }
+.mubf-bar .mubf-status:empty { display: none; }
 .mubf-kbd { font-size: 12.5px; color: var(--mu-sub); display: inline-flex; align-items: center; gap: 6px; }
 .mubf-kbd kbd { font: 600 11.5px/1 Inter, system-ui, sans-serif; padding: 4px 6px; border-radius: 5px; background: var(--mu-soft); box-shadow: inset 0 -1px 0 var(--mu-line); color: var(--mu-txt); }
 .mubf-status { font-size: 13px; color: var(--mu-sub); }
@@ -388,14 +414,21 @@ body { margin: 0; }
 
 /* narrower screens */
 @media (max-width: 1180px) {
-  .mubf { grid-template-columns: 248px minmax(0, 1fr); }
-  .mubf-rail { padding-left: 22px; padding-right: 16px; }
+  .mubf { grid-template-columns: minmax(0, 1fr) 320px; }
   .mubf-opts.is-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .mubf-motion { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 880px) {
-  .mubf { grid-template-columns: minmax(0, 1fr); --pad: 16px; }
-  .mubf-rail { display: none; }
+  .mubf { grid-template-columns: minmax(0, 1fr); --pad: 16px; --bpad: 16px; }
+  .mubf-head { display: none; }
+  .mubf-rail { grid-column: 1; grid-row: 2; align-self: end; position: sticky; top: auto; bottom: 0; z-index: 10; max-height: none; overflow: visible;
+    margin: 0; gap: 0; padding: 12px 16px; padding-bottom: max(12px, env(safe-area-inset-bottom)); border: 0; border-top: 1px solid var(--mu-line); border-radius: 0;
+    background: color-mix(in srgb, var(--mu-bg) 86%, transparent); -webkit-backdrop-filter: saturate(1.3) blur(16px); backdrop-filter: saturate(1.3) blur(16px); }
+  .mubf-rail-title, .mubf-rail > .mubf-prog, .mubf-rail .mubf-nav, .mubf-rail-foot { display: none; }
+  .mubf-rail:has(> .mubf-bar[hidden]) { display: none; }
+  .mubf-bar-in { flex-wrap: nowrap; gap: 12px; }
+  .mubf-bar #b-next { order: 0; flex: 1; }
+  .mubf-bar #b-back[hidden] { display: none !important; }
   .mubf-top { display: flex; flex-direction: column; gap: 11px; position: sticky; top: 0; z-index: 10; padding: 13px 16px 12px;
     background: color-mix(in srgb, var(--mu-bg) 88%, transparent); -webkit-backdrop-filter: saturate(1.3) blur(16px); backdrop-filter: saturate(1.3) blur(16px); border-bottom: 1px solid var(--mu-line); }
   .mubf-top-row { display: flex; align-items: center; gap: 10px; font-size: 14px; }
@@ -439,9 +472,6 @@ body { margin: 0; }
   .mubf-dl dd { margin-bottom: 12px; }
   .mubf-sum > section { padding: 16px 16px 6px; }
   .mubf-kbd { display: none; }
-  .mubf-bar { padding: 12px 16px; padding-bottom: max(12px, env(safe-area-inset-bottom)); }
-  .mubf-bar .grow { display: none; }
-  .mubf-bar .mubf-btn.is-primary { flex: 1; }
   .mubf-divider { display: none; }
   .mubf-motion { gap: 10px; }
   .mubf-motion .mubf-card { display: grid; grid-template-columns: minmax(0, 46%) minmax(0, 1fr); grid-template-rows: auto 1fr; column-gap: 12px; padding: 8px; }
@@ -462,13 +492,8 @@ body { margin: 0; }
 <body>
 <!--MU:BODY-->
 <div class="mubf" id="mubf">
-  <aside class="mubf-rail" aria-label="Brief">
-    <div class="mubf-brand"><span class="mubf-mark" aria-hidden="true"></span><div><b>GL Motion</b><span>New film brief</span></div></div>
-    <nav class="mubf-nav" aria-label="Steps"><ol id="mubf-nav"></ol></nav>
-    <div class="mubf-rail-foot" id="mubf-foot"></div>
-  </aside>
-
   <div class="mubf-main">
+    <header class="mubf-head"><div class="mubf-brand"><span class="mubf-mark" aria-hidden="true"></span><b>GL Motion</b><span>New film brief</span></div></header>
     <div class="mubf-top" id="mubf-top">
       <div class="mubf-top-row"><span class="mubf-mark" aria-hidden="true"></span><b id="mubf-top-name">Product</b><span id="mubf-top-n">1 of 6</span></div>
       <div class="mubf-prog" id="mubf-prog" role="group" aria-label="Steps"></div>
@@ -589,6 +614,12 @@ body { margin: 0; }
       </section>
     </form>
 
+  </div>
+
+  <aside class="mubf-rail" aria-label="Your brief">
+    <div class="mubf-rail-title"><b>Your brief</b><span id="mubf-rail-n">Step 1 of 6</span></div>
+    <div class="mubf-prog" id="mubf-rail-prog" role="group" aria-label="Steps"></div>
+    <nav class="mubf-nav" aria-label="Steps"><ol id="mubf-nav"></ol></nav>
     <div class="mubf-bar" id="mubf-bar">
       <div class="mubf-bar-in" id="mubf-bar-in">
         <button type="button" class="mubf-btn is-ghost" id="b-back"><svg class="mubf-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>Back</button>
@@ -598,7 +629,8 @@ body { margin: 0; }
         <button type="button" class="mubf-btn is-primary" id="b-next"><span id="b-next-t">Next</span><svg class="mubf-i" id="b-next-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button>
       </div>
     </div>
-  </div>
+    <div class="mubf-rail-foot" id="mubf-foot"></div>
+  </aside>
 </div>
 @@SCRIPTS@@
 <script>
@@ -655,7 +687,7 @@ const MODES = [
 ];
 const STORY = [[2, 'Show 2 variants', 'Two takes on the scenario to choose from.', 2], [3, 'Show 3 variants', 'Three directions, side by side.', 3], [0, 'Skip — do it in one go', 'Straight from the scenario to the preview.', 0]];
 const VOICE = [['yes', 'Yes', 'mic'], ['no', 'No', 'x'], ['agent', 'Agent decides', 'sparkle']];
-const OUTPUTS = [['render', 'Rendered video', 'MP4, WebM with alpha or ProRes 4444.', 'play'], ['video-editor', 'Video Editor project', 'Every scene as an HTML clip in GreenLight Dash.', 'sliders'],
+const OUTPUTS = [['render', 'Rendered video', 'MP4, WebM with alpha or ProRes 4444.', 'play'], ['video-editor', 'GLEA editor project', 'Every scene as an HTML clip in the GLEA editor.', 'sliders', ['https://greenlightdash.pro', 'Download from greenlightdash.pro']],
   ['after-effects', 'After Effects', 'An agent rebuilds the film in After Effects. It must be installed and open.', 'layers']];
 const label = (list, v) => { const r = list.find((x) => String(x[0]) === String(v)); return r ? r[1] : v; };
 
@@ -794,8 +826,8 @@ const curveSvg = (name, cls = 'mubf-curve') => { const c = curvePath(name, 46, 2
 
 // ── build the steps ──
 const dot = (box) => `<span class="mubf-dot${box ? ' is-box' : ''}">${ico('check')}</span>`;
-const card = (name, v, title, desc, ic, tag, type = 'radio') => `<label class="mubf-opt"><input type="${type}" name="${name}" value="${esc(v)}"><span class="mubf-card">
-  <span class="mubf-card-top"><span class="mubf-ic">${ico(ic)}</span>${dot(type === 'checkbox')}</span><span class="mubf-card-txt"><b>${esc(title)}${tag ? `<span class="mubf-tag">${esc(tag)}</span>` : ''}</b><span class="mubf-card-d">${esc(desc)}</span></span></span></label>`;
+const card = (name, v, title, desc, ic, tag, type = 'radio', link = null) => `<label class="mubf-opt"><input type="${type}" name="${name}" value="${esc(v)}"><span class="mubf-card">
+  <span class="mubf-card-top"><span class="mubf-ic">${ico(ic)}</span>${dot(type === 'checkbox')}</span><span class="mubf-card-txt"><b>${esc(title)}${tag ? `<span class="mubf-tag">${esc(tag)}</span>` : ''}</b><span class="mubf-card-d">${esc(desc)}${link ? ` <a class="mubf-card-a" href="${esc(link[0])}" target="_blank" rel="noopener">${esc(link[1])}</a>` : ''}</span></span></span></label>`;
 $('g-goal').innerHTML = GOALS.map(([v, t, d, ic]) => card('goal', v, t, d, ic)).join('');
 $('g-format').innerHTML = FORMATS.map(([v, t, d, r]) => `<label class="mubf-opt"><input type="radio" name="format" value="${v}"><span class="mubf-card">
   <span class="mubf-card-top"><span class="mubf-glyph"><span class="mubf-frame ${r}"></span></span>${dot()}</span><span class="mubf-card-txt"><b>${v}</b><span class="mubf-fmt-d">${t} · ${d}</span></span></span></label>`).join('');
@@ -811,7 +843,7 @@ $('g-story').innerHTML = STORY.map(([v, t, d, n]) => `<label class="mubf-opt"><i
   <span class="mubf-card-top"><span class="mubf-glyph">${n ? Array.from({ length: n }, () => '<span class="mubf-frame sm"></span>').join('') : `<span class="mubf-ic">${ico('arrow')}</span>`}</span>${dot()}</span>
   <span class="mubf-card-txt"><b>${esc(t)}</b><span class="mubf-card-d">${esc(d)}</span></span></span></label>`).join('');
 $('g-voice').innerHTML = VOICE.map(([v, t, ic]) => `<label><input type="radio" name="voiceover" value="${v}"><span>${ico(ic)}${t}</span></label>`).join('');
-$('g-output').innerHTML = OUTPUTS.map(([v, t, d, ic]) => card('output', v, t, d, ic, null, 'checkbox')).join('');
+$('g-output').innerHTML = OUTPUTS.map(([v, t, d, ic, link]) => card('output', v, t, d, ic, null, 'checkbox', link)).join('');
 
 // motion presets: the sample item composed with each preset, playing on the shared clock
 $('g-motion').innerHTML = PRESETS.map(([v, t, d, curve, tag]) => `<label class="mubf-opt"><input type="radio" name="preset" value="${v}"><span class="mubf-card">
@@ -1201,7 +1233,8 @@ $('g-edit').onclick = () => { finished = false; $('mubf-done').hidden = true; $(
 // ── steps ──
 stepEls = [...form.querySelectorAll('.mubf-step')];
 $('mubf-nav').innerHTML = STEPS.map(([t], i) => `<li><button type="button" data-step="${i}"><span class="n"></span><span class="l">${t}</span><span class="s"></span></button></li>`).join('');
-$('mubf-prog').innerHTML = STEPS.map(([t], i) => `<button type="button" data-step="${i}" aria-label="${t}"></button>`).join('');
+const progHtml = STEPS.map(([t], i) => `<button type="button" data-step="${i}" aria-label="${t}"></button>`).join('');
+document.querySelectorAll('.mubf-prog').forEach((p) => { p.innerHTML = progHtml; });   // the panel's and the phone's
 $('mubf-foot').innerHTML = LOCAL
   ? `<div class="mubf-proj"><span>Project</span><b title="${esc(DATA.project)}">${esc(DATA.project)}</b></div><p>${HANDOFF ? 'At the end your answers are saved as brief.json there, and you copy a prompt for your agent.' : 'Start saves your answers as brief.json there.'} Nothing leaves this computer.</p>`
   : '<p>Nothing leaves this page. At the end you copy a prompt with your brief and paste it into your agent.</p>';
@@ -1215,8 +1248,9 @@ function updateNav() {
     b.querySelector('.n').innerHTML = isDone && !cur ? ico('check') : String(i + 1);
     b.querySelector('.s').textContent = i <= Math.max(reached, step) && i < 5 ? summary(i) : '';
   });
-  document.querySelectorAll('#mubf-prog button').forEach((b, i) => { b.classList.toggle('is-on', i === step && !finished); b.classList.toggle('is-done', finished || i < Math.max(reached, step)); });
+  document.querySelectorAll('.mubf-prog').forEach((p) => p.querySelectorAll('button').forEach((b, i) => { b.classList.toggle('is-on', i === step && !finished); b.classList.toggle('is-done', finished || i < Math.max(reached, step)); }));
   $('mubf-top-name').textContent = finished ? 'Done' : STEPS[step][0]; $('mubf-top-n').textContent = finished ? '' : `${step + 1} of 6`;
+  $('mubf-rail-n').textContent = finished ? 'Done' : `Step ${step + 1} of 6`;
   const last = step === 5;
   $('b-back').hidden = step === 0;
   $('b-next-t').textContent = last ? (HANDOFF ? 'Copy for your agent' : 'Start') : `Next: ${STEPS[step + 1][0]}`;

@@ -55,8 +55,8 @@ const page = (target) => build('story.html', { title: `${name} — scenario`, ta
  *  title and idea at ~30 / ~38 characters a line). */
 const W = 1200;
 const lines = (t, n) => Math.max(1, Math.ceil(String(t || '').length / n));
-// the direction block: its title, the idea (20 px, ~105 characters a line), a row per field (15 px, ~125 a line)
-const dirH = (d) => 30 + 32 + 40 + 29 * lines(d.idea, 105) + ['look', 'type', 'motion', 'signature', 'references'].filter((k) => d[k]).reduce((h, k) => h + 14 + 22.5 * lines([].concat(d[k]).join(' · '), 125), 0);
+// the direction block: its title, the idea (20 px, ~105 characters a line), a row per field (15 px, ~125 a line, 20 px apart)
+const dirH = (d) => 30 + 32 + 46 + 29 * lines(d.idea, 105) + ['look', 'type', 'motion', 'signature', 'references'].filter((k) => d[k]).reduce((h, k) => h + 24 + 22.5 * lines([].concat(d[k]).join(' · '), 125), 0);
 const beatH = (b) => 16 + 26 + 6 + 23.4 * lines(b.title, 30) + (b.idea ? 6 + 22.5 * lines(b.idea, 38) : 0) + 18 + 2;
 const height = Math.round(40 + 20 + 8 + 45 * lines(name, 48) + (data.logline ? 14 + 32.7 * lines(data.logline, 62) : 0) + (facts.length ? 20 + 31 : 0)
   + 30 + 86 + data.acts.reduce((h, a) => {
