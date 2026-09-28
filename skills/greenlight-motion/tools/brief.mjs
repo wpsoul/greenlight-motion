@@ -130,8 +130,9 @@ export function validateBrief(b, { ids } = {}) {
  *  page and waits for the brief (no hand-off prompt). */
 export function briefPage(dir, { target = 'local', agent = false } = {}) {
   const K = loadKit();
-  // the whole library: every library scene plays in the Look step, and the motion presets on a sample (film.js)
-  const scripts = [...CORE, ...K.FILES, 'film.js'].map((f) => [f, libSource(f)]);
+  // the whole library: every library scene plays in the Look step, the motion presets on a sample (film.js), and
+  // the prompt library behind Prompt Presets (prompts.js)
+  const scripts = [...CORE, ...K.FILES, 'film.js', 'prompts.js'].map((f) => [f, libSource(f)]);
   const file = path.join(dir, 'brief.json');
   const brief = fs.existsSync(file) ? readJSON(file, null) : null;
   const data = {

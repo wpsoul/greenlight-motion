@@ -42,7 +42,7 @@ field left out, is yours to decide. Choose well and say what you chose.
 |---|---|---|
 | `product.name` | text | The product's name, exactly as written. |
 | `product.url` | URL | Capture it first: `node SKILL/tools/capture.mjs <project> --url <url>` saves screenshots (desktop and phone) to `assets/`, and saves the page's name, description, headings, colours and logo to `site.json`. Use them for copy, accent and showcase screens. |
-| `product.about` | text | The brief's substance: the message, audience, features and exact copy. Never invent claims beyond it. |
+| `product.about` | text | The brief's substance: the message, audience, features and exact copy. Never invent claims beyond it. It can also be a whole prompt: one of the Prompt Presets (the prompt library, `lib/prompts.js`) or the user's own. Then follow it as the user's instructions: its research (visit the pages first), its direction, its build rules and its checks. Where it names a length or a style that differs from another field, the prompt wins, because the form's fields may be untouched defaults. A `[bracketed part]` still in it was not filled in: find the answer yourself (the product's site, the other fields) or ask. |
 | `product.assets[]` | `{ url, name, type }` | The user's own pictures and videos. A `/media/…` url is on the board: download it with `$GREENLIGHT_API_BASE_URL<url>` into `assets/`. Prefer these over captured screenshots. |
 | `film.goal` | `promo` · `explainer` · `tutorial` · `launch` · `social` · `agent` | Shapes the beats: tutorials need steps (feature relay, zoom through), launches need a hook and a CTA. |
 | `film.cta` | text | The last scene's call to action. |

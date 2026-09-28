@@ -1,33 +1,60 @@
 # GreenLight Motion
 
-**GL Motion** for short: the motion design studio for agents. It turns a brief into a finished motion film.
-By [WPSoul](https://greenlightdash.pro), the makers of [GreenLight Dash](https://greenlightdash.pro).
+**An agentic motion engine and workflow.** Your agent designs a motion graphics film as plain web pages.
+GreenLight Motion plays them on one frame-exact clock, lets you fine-tune every element in its Preview Engine, and
+renders the film or carries it into GreenLight Dash's Video Editor (GLEA) and After Effects.
 
-- **Every scene is a web page.** The agent writes each scene as HTML, CSS, SVG, canvas or three.js and animates it
-  any way a web page can: CSS keyframes, the Web Animations API, `requestAnimationFrame`, timers, video. A page clock
-  makes every frame exact, so the preview scrubs it and the render records it frame by frame. Kinetic type, shape
-  systems, generative patterns, real 3D with lights and bloom: if a browser can draw it, the film can have it.
-- **275 ready-made library scenes** in one clean interface style: buttons, toggles, forms, cards, charts, dashboards,
-  checkouts, coupons, countdowns, notifications, chats, AI prompts, galleries, carousels and titles, re-worded and
-  re-pictured with your copy. Use them for a quick UI film, or mix them with new scenes.
-- **Story, art direction, storyboard.** The agent asks what you want and what assets you have, writes the story and
-  (for brand-new films) the concept and art direction, then shows 2–3 directions as a storyboard of stills with every
-  line of copy under them.
-- **A preview you edit like a design tool.** Click anything in the film to change its words, colour, size, weight,
-  picture or position; drag it; double-click words to type over them. The agent's panels for what matters, the
-  scenes' effects, and the film's colours and font sit beside it, with undo and a list of your changes. Your changes
-  go into the render and every export.
-- **Voice-over.** Your own recordings, a quick macOS draft voice, or (inside GreenLight Dash) the board's
-  text-to-speech models. Long, continuous takes, placed on their scenes and mixed into the render.
-- **Sound effects.** Key clicks, pops, whooshes, a hit under the big reveal, from the GreenLight Dash Sound Library
-  (inside the app it installs the Motion Design Pack when the library is empty), or from any folder of sounds. Mixed
-  under the voice-over.
-- **A frame-exact HTML render engine** (`skills/greenlight-motion/render/render.py`) with a virtual clock, parallel
-  recording and motion blur. It writes MP4, WebM with alpha and ProRes 4444, tagged BT.709.
-- **Exports.** A GreenLight Dash Video Editor project (GLEA): every scene an HTML clip that looks exactly like the
-  preview, with the voice-over and sound effects on their own tracks. And an **After Effects package**: the scene
-  pages, reference stills and a prompt, for an agent that rebuilds the film in After Effects as native comps, shape
-  and text layers and keyframes (After Effects must be installed and open).
+By [WPSoul](https://greenlightdash.pro), the makers of [GreenLight Dash](https://greenlightdash.pro). **GL Motion** for short.
+
+## What makes it different
+
+**Native HTML, with no special preparation.** Remotion scenes are React components that must take every value from
+`useCurrentFrame()`. HyperFrames compositions need its `data-*` timing attributes and a paused GSAP timeline
+registered on `window.__timelines`. A GreenLight Motion scene is any web page, written the way the web is written:
+CSS animations and transitions, the Web Animations API, `requestAnimationFrame`, timers, SVG, canvas, WebGL and
+three.js, video. The agent is free to use any library and every new browser feature. The page clock drives all of
+it, so every frame is exact without the agent adapting its code for the renderer.
+
+**Edit inside the Preview Engine before you render.** The preview plays the whole film, and you fine-tune any element
+in any scene: click it to change its words, colour, size, weight, picture or position, drag it, or double-click
+words to type over them. The film's colours and font change in one place. The agent reads your edits and keeps
+working on the same film, and the render and every export include them.
+
+**Reuse the film where you finish it.** Skills and a converter take the film further:
+
+- **GLEA**, the GreenLight Dash Video Editor: every scene becomes an HTML clip that looks exactly like the preview,
+  with the voice-over and sound effects on their own tracks.
+- **After Effects**: a package of scene pages, reference stills and a prompt, for an agent that rebuilds the film as
+  native comps, shape and text layers and keyframes (After Effects must be installed and open).
+
+**Libraries to start from.** A **motion library** of 275 ready scenes in one clean interface style (buttons, forms,
+cards, charts, dashboards, checkouts, countdowns, notifications, chats, AI prompts, carousels, titles), re-worded and
+re-pictured with your copy. And a **prompt library** of Prompt Presets for whole films.
+
+## Two ways to use it
+
+- **As a skill.** Ask any agent that reads Agent Skills for a film: Claude Code, Codex, Gemini CLI, OpenCode. In
+  quick mode it decides everything itself, builds the film and shows it in the preview, where you edit and approve
+  the render.
+- **As a workflow with the Preview Engine.** Fill the brief page (or pick a Prompt Preset), then approve each stage:
+  the story and art direction, a storyboard with 2–3 directions and every line of copy, the preview you edit, then
+  the render and exports. Inside GreenLight Dash the workflow runs as a pipeline on your board.
+
+Along the way it records the **voice-over** in long, continuous takes (your recordings, a macOS draft voice, or
+GreenLight Dash's text-to-speech models) and adds **sound effects** from the GreenLight Dash Sound Library or any
+folder of sounds. The **render engine** records the pages frame by frame with motion blur, and writes MP4, WebM with
+alpha and ProRes 4444, tagged BT.709.
+
+## Prompt library
+
+Ready prompts for a whole film, in `skills/greenlight-motion/lib/prompts.js`. The brief page and GreenLight Dash's
+AI Motion Design offer them as **Prompt Presets** beside the field that describes your product. You can also paste one straight
+into your agent. Fill in the `[bracketed parts]` first.
+
+| Preset | What you get |
+|---|---|
+| **Motion design video** | A dynamic 15-second motion graphics film. The agent studies your product's pages and writes the content itself. |
+| **Explainer video** | A launch-day product video with Dribbble-level UI motion: one morphing shape, driven by a cursor with real clicks and drags, reviewed scene by scene before it's done. |
 
 ## Install
 
@@ -113,8 +140,8 @@ The tools find `~/.greenlight-motion/venv` by themselves. Any other Python with 
 ## Use
 
 **Start from the brief page (optional).** Answer the questions on a visual page instead of in chat:
-the product, the film, the look (brand-new or the library, with the whole library playing to pick from), the motion
-and what to deliver.
+the product (or a Prompt Preset), the film, the look (brand-new or the library, with the whole library playing to
+pick from), the motion and what to deliver.
 
 ```
 node skills/greenlight-motion/tools/brief.mjs my-film
@@ -166,7 +193,8 @@ Restart Claude Code afterwards. If you copied the skill folder instead, copy the
 skills/greenlight-motion/
   SKILL.md             the workflow the agent follows
   lib/                 the scene runtime (page clock, scene kit, edits, the preview's element picker, the player),
-                       the library (its engine and 275 scenes, the HTML export) and three.js (lib/vendor)
+                       the motion library (its engine and 275 scenes, the HTML export), the prompt library
+                       (prompts.js) and three.js (lib/vendor)
   registry.json        every library scene: words you can re-word, picture slots, length (built from lib/)
   tools/               brief page, site capture, storyboard, gallery, preview, local server, render, export,
                        your edits, voice-over, sound effects, checks, and doctor (what this machine can do)
