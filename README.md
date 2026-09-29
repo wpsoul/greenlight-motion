@@ -6,6 +6,8 @@ renders the film or carries it into GreenLight Dash's Video Editor (GLEA) and Af
 
 By [WPSoul](https://greenlightdash.pro), the makers of [GreenLight Dash](https://greenlightdash.pro). **GL Motion** for short.
 
+**[Browse the motion gallery →](https://greenlightdash.pro/greenlight-motion-gallery/)**: all 275 library scenes, playing live.
+
 ## What makes it different
 
 **Native HTML, with no special preparation.** Remotion scenes are React components that must take every value from
@@ -20,6 +22,8 @@ in any scene: click it to change its words, colour, size, weight, picture or pos
 words to type over them. The film's colours and font change in one place. The agent reads your edits and keeps
 working on the same film, and the render and every export include them.
 
+![The Preview Engine: a film paused on a scene, the word "board." selected, and its words, colour and size in the panel beside it](docs/preview-engine.jpg)
+
 **Reuse the film where you finish it.** Skills and a converter take the film further:
 
 - **GLEA**, the GreenLight Dash Video Editor: every scene becomes an HTML clip that looks exactly like the preview,
@@ -30,6 +34,10 @@ working on the same film, and the render and every export include them.
 **Libraries to start from.** A **motion library** of 275 ready scenes in one clean interface style (buttons, forms,
 cards, charts, dashboards, checkouts, countdowns, notifications, chats, AI prompts, carousels, titles), re-worded and
 re-pictured with your copy. And a **prompt library** of Prompt Presets for whole films.
+
+**The motion gallery.** Every library scene plays live in the [motion gallery](https://greenlightdash.pro/greenlight-motion-gallery/). Filter the scenes by
+category or search them, switch them to dark or try another accent, and open any scene large to scrub through it,
+see the words a film can change and the id an agent uses for it (`{ "item": "<id>" }`).
 
 ## Two ways to use it
 
@@ -190,6 +198,7 @@ Restart Claude Code afterwards. If you copied the skill folder instead, copy the
 
 ```
 .claude-plugin/        plugin + marketplace manifests
+docs/                  the README's pictures
 skills/greenlight-motion/
   SKILL.md             the workflow the agent follows
   lib/                 the scene runtime (page clock, scene kit, edits, the preview's element picker, the player),
