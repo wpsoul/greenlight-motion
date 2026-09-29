@@ -22,7 +22,7 @@ in any scene: click it to change its words, colour, size, weight, picture or pos
 words to type over them. The film's colours and font change in one place. The agent reads your edits and keeps
 working on the same film, and the render and every export include them.
 
-![The Preview Engine: a film paused on a scene, the word "board." selected, and its words, colour and size in the panel beside it](docs/preview-engine.jpg)
+![The Preview Engine playing a film: the scene list, the stage and the timeline of its four scenes](docs/preview-engine.png)
 
 **Reuse the film where you finish it.** Skills and a converter take the film further:
 
